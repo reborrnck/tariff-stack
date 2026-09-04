@@ -70,6 +70,8 @@ WATCH = [
     (r"automobile|motor vehicle|auto part", "sec232_autos", r"(\d{1,3})\s*%", "pct"),
     (r"lumber|timber", "sec232_lumber", r"(\d{1,3})\s*%", "pct"),
     (r"forced labor|forced labour", "forced_labor_CN", r"(\d{1,3}(?:\.\d+)?)\s*%", "pct"),
+    (r"european union|us-eu", "eu_deal_cap", r"(\d{1,3}(?:\.\d+)?)\s*%", "pct"),
+    (r"united kingdom|britain|economic prosperity deal", "uk_deal_cap", r"(\d{1,3}(?:\.\d+)?)\s*%", "pct"),
     (r"harmonized tariff schedule", "_hts_revision", r"revision\s+(\d+)", "rev"),
     (r"de minimis", "_deminimis", r"(\d{4}-\d{2}-\d{2})", "date"),
 ]
@@ -77,6 +79,9 @@ WATCH = [
 # 字段 → policy_overlay.json 真实嵌套路径 + 类型（修复 WATCH 字段名与实际结构错位）
 # type: pct=税率(存为 0.x 浮点) / date=生效日(存为字符串) / rev=修订号(int)
 # 生效日类字段写入独立的 overlay["effective_dates"] 字典，避免破坏现有 sec232 标志键结构。
+# 人工维护字段（不进 FIELD_MAP/WATCH，自动刷新绝不覆盖）：eu_members、uk_code、usmca_free、
+#   us_fta_free、notes、source —— 均为静态参考(ISO 代码/成员国/FTA 成员)或人工撰写的政策说明，
+#   无可靠自动源，误刷会覆盖正确值。变更时需人工核对官方公告后手动更新。
 FIELD_MAP = {
     "sec232_steel_alum_copper": (("sec232", "steel_alum_copper"), "pct"),
     "sec232_autos":              (("sec232", "autos_parts"), "pct"),
@@ -87,7 +92,13 @@ FIELD_MAP = {
     "sec232_polysilicon_eff":    (("effective_dates", "sec232_polysilicon"), "date"),
     "_deminimis":                (("effective_dates", "deminimis"), "date"),
     "base_hts_revision":         (("base_hts_revision",), "rev"),
+    "eu_deal_cap":               (("eu_deal_cap",), "pct"),
+    "uk_deal_cap":               (("uk_deal_cap",), "pct"),
 }
+
+# 政策解读型常量（非简单 API 字段）：Federal Register 监控到信号仅 FLAG_REVIEW 标记人工核对，
+# 不直接 APPLY 写回——避免把"EU 对美报复关税"等噪声误写成 US 对 EU 的 301 上限（守全真数据铁律）。
+REVIEW_ONLY_FIELDS = {"eu_deal_cap", "uk_deal_cap"}
 
 
 def get_overlay_val(overlay, field):
@@ -350,6 +361,8 @@ def reconcile(usitc_rev, usitc_date, fr_docs, news_items, overlay):
         "forced_labor_CN": r"section 301.{0,40}forced labor|forced labor.{0,40}section 301",
         "_deminimis": r"de minimis",
         "_hts_revision": r"harmonized tariff schedule",
+        "eu_deal_cap": r"section 301.{0,40}(european union|\beu\b)|(european union|\beu\b).{0,40}section 301|us-eu",
+        "uk_deal_cap": r"section 301.{0,40}(united kingdom|britain)|(united kingdom|britain).{0,40}section 301|economic prosperity deal",
     }
     for doc in fr_docs:
         blob = (doc["title"] + " " + doc["abstract"]).lower()
@@ -402,7 +415,11 @@ def reconcile(usitc_rev, usitc_date, fr_docs, news_items, overlay):
         diff = (cval is not None) and (cur is None or cval != cur)
         # 完全托管：Federal Register 为官方权威源(MEDIUM)，提取到值且确有差异 → 直接写回(APPLY)；
         # 仅当提取不到值(待核)才 FLAG_REVIEW 留痕。新闻 LOW 不在此分支，仅标记不写回。
-        action = "APPLY" if (cval is not None and diff) else "FLAG_REVIEW"
+        # 政策解读型常量(eu/uk cap)仅标记人工核对，不直接写回（避免误刷覆盖正确 cap）
+        if field in REVIEW_ONLY_FIELDS:
+            action = "FLAG_REVIEW"
+        else:
+            action = "APPLY" if (cval is not None and diff) else "FLAG_REVIEW"
         findings.append({"field": field, "confidence": "MEDIUM", "source": "Federal Register",
                         "found": f"{doc['title'][:70]} => {raw or '(待核)'}" + (f" (eff {doc['eff']})" if doc['eff'] else ""),
                         "current": str(cur) if cur is not None else "(无)",
