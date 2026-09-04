@@ -493,9 +493,14 @@ def maybe_rebuild_full():
     if not os.path.exists(PREPROCESS_PATH):
         return "SKIP(no preprocess)"
     try:
-        subprocess.run([sys.executable, PREPROCESS_PATH], cwd=PLATFORM_DIR,
-                       timeout=300, capture_output=True)
-        return "OK"
+        # 把 PLATFORM_DIR 注入子进程环境，便于 preprocess 解析输入/输出路径
+        env = dict(os.environ)
+        env["PLATFORM_DIR"] = PLATFORM_DIR
+        r = subprocess.run([sys.executable, PREPROCESS_PATH], cwd=PLATFORM_DIR,
+                           timeout=300, capture_output=True, env=env)
+        if r.returncode == 2:
+            return "SKIP(no inputs)"
+        return "OK" if r.returncode == 0 else f"FAIL:{r.stderr[:120]}"
     except Exception as e:  # noqa
         return f"FAIL:{e}"
 
@@ -515,8 +520,18 @@ def maybe_deploy(dirty):
             subprocess.run(["git", "add", p], cwd=PLATFORM_DIR, capture_output=True)
         msg = f"data refresh {datetime.now(timezone.utc).strftime('%Y-%m-%d')}"
         subprocess.run(["git", "commit", "-m", msg], cwd=PLATFORM_DIR, capture_output=True)
-        p = subprocess.run(["git", "push", "origin", "HEAD:refs/heads/main"], cwd=PLATFORM_DIR, capture_output=True, text=True)
-        return "OK" if p.returncode == 0 else f"PUSH_FAIL:{p.stderr[:120]}"
+        last_err = ""
+        for _ in range(3):
+            # 先拉取远端最新（防非快进），再推送；瞬时失败重试，避免当天数据 stale
+            subprocess.run(["git", "pull", "--rebase", "origin", "main"],
+                           cwd=PLATFORM_DIR, capture_output=True)
+            p = subprocess.run(["git", "push", "origin", "HEAD:refs/heads/main"],
+                               cwd=PLATFORM_DIR, capture_output=True, text=True)
+            if p.returncode == 0:
+                return "OK"
+            last_err = (p.stderr or "")[:120]
+            time.sleep(2)
+        return f"PUSH_FAIL:{last_err}"
     except Exception as e:  # noqa
         return f"FAIL:{e}"
 
@@ -634,6 +649,11 @@ def main():
     report = write_report(usitc_rev, usitc_date, fr_docs, news_items, findings, deploy, today)
     print(f"[refresh] report: {report}")
     print(f"[refresh] 完成。发现 {len(findings)} 条，实质变更 {dirty}。")
+
+    # 暴露失败给 CI：push 失败 -> run 变红，避免「假绿」让人误以为刷新成功
+    if deploy.startswith("PUSH_FAIL") or deploy.startswith("FAIL"):
+        print(f"[refresh] FAILED: deploy={deploy}")
+        return 1
     return 0
 
 

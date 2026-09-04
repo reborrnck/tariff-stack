@@ -1,12 +1,18 @@
 # 全量关税数据预处理：官方 USITC HTS Rev17 JSON + 官方 China Tariffs 映射表(PDF)
 # -> 生成 tariff_full.json（所有 HTS 的 base + Section301 List4A 叠加层），供生产计算器自由查询。
-import json, re, shutil
+import json, re, shutil, os, sys
 from pypdf import PdfReader
 
-PATH_JSON = "C:/Users/Administrator/WorkBuddy/Claw/tariff-data/hts_2026_rev17.json"
-PATH_PDF  = "C:/Users/Administrator/WorkBuddy/Claw/tariff-data/china_tariffs_2026.html"
-OUT       = "C:/Users/Administrator/WorkBuddy/Claw/tariff-platform/src/data/tariff_full.json"
-PUB       = "C:/Users/Administrator/WorkBuddy/Claw/tariff-platform/public/data/tariff_full.json"
+# 路径全部基于本文件位置推算，避免硬编码旧磁盘路径在 CI(Linux) / 搬盘后失效。
+HERE = os.path.dirname(os.path.abspath(__file__))   # 仓库根（preprocess_full.py 位于根目录）
+ROOT = HERE
+# 输入源目录：CI 用 TARIFF_DATA_DIR 挂载；本地回退旧 C 盘 tariff-data 路径
+TARIFF_DATA_DIR = os.environ.get("TARIFF_DATA_DIR") or r"C:/Users/Administrator/WorkBuddy/Claw/tariff-data"
+PATH_JSON = os.path.join(TARIFF_DATA_DIR, "hts_2026_rev17.json")
+PATH_PDF  = os.path.join(TARIFF_DATA_DIR, "china_tariffs_2026.html")
+# 输出：构建期 SSR 用 src/data，运行时客户端用 public/data，两份须一致
+OUT = os.path.join(ROOT, "src", "data", "tariff_full.json")
+PUB = os.path.join(ROOT, "public", "data", "tariff_full.json")
 
 def parse_rate(s):
     s = (s or "").strip()
@@ -17,6 +23,11 @@ def parse_rate(s):
     m = re.search(r"(\d+(?:\.\d+)?)\s*%", s)
     if m: return float(m.group(1)) / 100.0
     return None
+
+if not (os.path.exists(PATH_JSON) and os.path.exists(PATH_PDF)):
+    # CI 未挂载输入源时明确 SKIP（exit 2），让调用方记录「SKIP(no inputs)」而非静默失败
+    print(f"[preprocess] SKIP: 输入文件缺失 -> 设置 TARIFF_DATA_DIR 指向含 hts_2026_rev17.json / china_tariffs_2026.html 的目录\n  JSON={PATH_JSON}\n  PDF={PATH_PDF}")
+    sys.exit(2)
 
 print("load schedule...")
 data = json.load(open(PATH_JSON, encoding="utf-8"))

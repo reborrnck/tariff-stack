@@ -8,6 +8,11 @@ on:
     - cron: '0 19 * * *'
   workflow_dispatch: {}   # 允许在 Actions 标签页手动触发（调试用）
 
+# 防止定时触发与手动触发重叠导致两个 run 同时向 main 推送（非快进冲突）
+concurrency:
+  group: daily-refresh
+  cancel-in-progress: false
+
 permissions:
   contents: write        # 允许 GITHUB_TOKEN 提交并 push 数据更新
 
