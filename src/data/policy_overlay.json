@@ -1,7 +1,9 @@
 {
   "as_of": "2026-08-29",
+  "base_hts_revision": 18,
+  "base_hts_date": "2026-09-02",
   "last_checked": "2026-09-04",
-  "source": "USITC HTS Rev17 (2026-08-24, latest; no Rev18) + USTR forced-labour determinations (eff 2026-07-24) + Section 232 (pharma 2026-09-29 / drones 2026-09-03 / polysilicon 2026-12-04) + UK EPS deal. Re-verified live 2026-08-29.",
+  "source": "USITC HTS Rev18 (2026-09-02) + USTR forced-labour determinations (eff 2026-07-24) + Section 232 (pharma 2026-09-29 / drones 2026-09-03 / polysilicon 2026-12-04) + UK EPS deal. Re-verified live 2026-09-03.",
   "forced_labor": {
     "CN": 0.125,
     "JP": 0.1,

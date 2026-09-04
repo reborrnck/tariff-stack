@@ -515,7 +515,7 @@ const clkLondon     = fmtClk('Europe/London');
           <div class="news-viewport" role="list" aria-live="polite">
             <ul class="news-track">
               {newsItems.concat(newsItems).map(n => (
-                <li class="news-item" role="listitem"><span class="news-tag">{destLabel(n.tag, 'en')}</span><span class="news-text" data-i18n={n.key}>{t('en', n.key)}</span></li>
+                <li class="news-item" role="listitem"><span class="news-tag">{destLabel(n.tag, 'en')}</span><span class="news-text" data-i18n={n.key}>{t('en', n.key).replace('{rev}', String(overlay.base_hts_revision ?? '')).replace('{date}', overlay.base_hts_date || overlay.as_of || '')}</span></li>
               ))}
             </ul>
           </div>
@@ -910,7 +910,11 @@ const clkLondon     = fmtClk('Europe/London');
       localStorage.setItem('ts-lang', lang);
       document.documentElement.lang = lang;
       document.getElementById('lang').value = lang;
-      document.querySelectorAll('[data-i18n]').forEach(e => { e.textContent = t(lang, e.getAttribute('data-i18n')); });
+      document.querySelectorAll('[data-i18n]').forEach(e => {
+        let s = t(lang, e.getAttribute('data-i18n'));
+        if (s && s.indexOf('{rev}') >= 0) s = s.replace(/\{rev\}/g, String(overlay.base_hts_revision ?? '')).replace(/\{date\}/g, overlay.base_hts_date || overlay.as_of || '');
+        e.textContent = s;
+      });
       document.querySelectorAll('[data-i18n-aria]').forEach(e => { e.setAttribute('aria-label', t(lang, e.getAttribute('data-i18n-aria'))); });
     document.querySelectorAll('[data-i18n-html]').forEach(e => { e.innerHTML = t(lang, e.getAttribute('data-i18n-html')); });
       document.querySelectorAll('[data-i18n-ph]').forEach(e => { const k = e.getAttribute('data-i18n-ph'); if (k) e.placeholder = t(lang, k); });

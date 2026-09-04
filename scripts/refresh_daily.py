@@ -428,7 +428,8 @@ def reconcile(usitc_rev, usitc_date, fr_docs, news_items, overlay):
 
 # ---------- 写回 ----------
 def write_overlay_atomic(overlay):
-    """原子写回；若被 dev server 锁住则落到 .pending.json 并标记 PENDING。"""
+    """原子写回；Windows 下若被 dev server 锁住，尝试先删旧文件再 rename 兜底，
+    仍失败才落到 .pending.json 并标记 PENDING。"""
     tmp = OVERLAY_PATH + ".tmp"
     for attempt in range(5):
         try:
@@ -436,9 +437,15 @@ def write_overlay_atomic(overlay):
                 json.dump(overlay, f, ensure_ascii=False, indent=2)
             os.replace(tmp, OVERLAY_PATH)
             return True
-        except Exception as e:  # noqa
+        except Exception:  # noqa
+            # Windows 文件锁兜底：被锁的旧文件先删掉，再试一次 rename
+            try:
+                os.remove(OVERLAY_PATH)
+                os.replace(tmp, OVERLAY_PATH)
+                return True
+            except Exception:  # noqa
+                pass
             time.sleep(0.4)
-            last = e
     # 锁兜底：写 pending，等 dev server 关闭或人工 apply
     try:
         with open(OVERLAY_PATH + ".pending.json", "w", encoding="utf-8") as f:
@@ -569,8 +576,16 @@ def main():
     # 新闻 LOW 仅标记不写回。FRESHNESS_REPORT 保留为非阻塞审查/审计层（记录旧值→新值+来源）。
     applied = []
     for f in findings:
-        if f.get("action") == "APPLY" and f.get("diff") and f.get("new_value") is not None:
+        act = f.get("action")
+        # 完全托管：官方源(USITC HIGH / Federal Register MEDIUM)的结构化真值直接写回。
+        # base_hts_revision 必须在 APPLY(首次探测) 与 REBUILD_FULL(USITC 升版) 两种动作下都更新——
+        # 否则 USITC 发布新修订后，tariff 数据会重建，但页面版本号永久停留在旧修订
+        # （即此前发生的"页面不更新"类 bug）。REVIEW_REBUILD(FR 文本解析出的新版本) 不在此写回，
+        # 因其可能快于/错于 USITC 权威源；仅触发数据重建，等 USITC 权威确认后才更新版本号（守全真数据铁律）。
+        if f.get("diff") and f.get("new_value") is not None and act in ("APPLY", "REBUILD_FULL"):
             if set_overlay_val(overlay, f["field"], f["new_value"]):
+                if f["field"] == "base_hts_revision" and usitc_date:
+                    overlay["base_hts_date"] = usitc_date
                 applied.append(f)
     print(f"[refresh] auto-applied 官方源变更: {len(applied)} 条")
 
