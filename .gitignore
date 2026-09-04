@@ -22,3 +22,6 @@ _cn_src/
 # ---- 环境变量 ----
 .env
 .env.*
+
+# ---- wrangler 本地运行产物 ----
+.wrangler/
