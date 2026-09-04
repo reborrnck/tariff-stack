@@ -159,16 +159,15 @@ const clkLondon     = fmtClk('Europe/London');
        every window size without crowding/clipping.
        ==================================================================== */
     header{background:var(--card);border-bottom:1px solid var(--line);}
-    /* WIDE: ≥1280 — full 3-column layout with comfortable gaps */
+    /* WIDE: ≥1280 — 3-column with EXPLICIT 1:2:1 proportions (不再用 auto 让两边无限涨挤中间).
+       Brand/Right 用 minmax(min,1fr) 上限固定为 1fr，Middle 用 2fr 拿双倍空间。 */
     .hd-inner{max-width:1700px;margin:0 auto;padding:24px 56px;
-      display:grid;grid-template-columns:minmax(280px,auto) minmax(0,1fr) minmax(340px,auto);align-items:start;gap:28px;}
+      display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,2fr) minmax(300px,1fr);align-items:start;gap:28px;}
 
-    /* MID-WIDE: 1100–1279 — same 3-column layout but tighter (closes the
-       "挤到一坨" gap that existed between 1100 and 1200). Card padding +
-       clock font sizes shrink so city labels + times all fit cleanly. */
+    /* MID-WIDE: 1100–1279 — 收紧比例到 1:1.5:1，padding/gap 也收紧（1100–1280 必单独处理）。 */
     @media (max-width:1279px){
       .hd-inner{padding:22px 36px;gap:20px;
-        grid-template-columns:minmax(240px,auto) minmax(0,1fr) minmax(280px,auto);}
+        grid-template-columns:minmax(220px,1fr) minmax(0,1.5fr) minmax(260px,1fr);}
       .clock-bar{gap:8px;max-width:480px;}
       .clock-card{padding:8px 10px;}
       .clock-card .clk-city{font-size:11px;letter-spacing:.04em;}
@@ -194,7 +193,7 @@ const clkLondon     = fmtClk('Europe/London');
        underneath brand/lang-block. */
     @media (max-width:900px){
       .hd-inner{padding:16px 20px;grid-template-columns:1fr;gap:14px;}
-      .clock-bar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:560px;justify-self:stretch;gap:10px;}
+      .clock-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));max-width:100%;justify-self:stretch;gap:10px;}
       .clock-card .clk-city{font-size:11.5px;}
       .clock-card .clk-time{font-size:18px;}
       .lang-block{align-items:flex-start;text-align:left;max-width:100%;}
@@ -225,10 +224,10 @@ const clkLondon     = fmtClk('Europe/London');
     .brand .lang-row{margin-top:14px;}
 
     /* MIDDLE: clock bar (real-time, updated every second by JS).
-       Uses CSS counter-style attribute selectors + content placeholder so SSR
-       shows initial server time as fallback if JS fails to load. */
-    .clock-bar{display:grid;grid-template-columns:repeat(3,minmax(126px,1fr));gap:10px;
-      max-width:560px;align-self:start;justify-self:center;}
+       改用 auto-fit 真自适应：宽屏 6 个时钟一行、中屏 4/3 列、窄屏 2 列，
+       不再硬锁 3 列 + max-width:560px 强制 3×2。justify-self:stretch 让它撑满中间列。 */
+    .clock-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;
+      align-self:start;justify-self:stretch;max-width:100%;}
     .clock-card{background:#fafbfd;border:1px solid var(--line);border-radius:9px;
       padding:9px 12px;display:flex;flex-direction:column;gap:1px;min-width:0;
       transition:border-color .2s ease;}
