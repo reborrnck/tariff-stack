@@ -16,6 +16,9 @@ server.log
 public_data_old*/
 *_old_*/
 
+# ---- CN 关税源文件/构建中间物（PDF 源+日志，运行时不需要） ----
+_cn_src/
+
 # ---- 环境变量 ----
 .env
 .env.*
