@@ -98,8 +98,6 @@ const zh = {
   s11: '有关广告或隐私的问题可发送至 TariffStack@outlook.com，如需数据更正或删除请求，请附上 HS 编码与目的国，以便我们核查。商务合作请直接联系团队负责人：zmarkz123zxc@gmail.com。',
 };
 
-const data = { en, zh, 'zh-TW': en, ja: en, es: en, de: en, ko: en, fr: en, pt: en, it: en };
-const lang = 'en';
 const d = en;
 import overlay from '../data/policy_overlay.json';
 const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
@@ -188,28 +186,15 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
     <a class="back" href="/" data-i18n="back">{d.back}</a>
   </main>
 
-  <script is:inline>
+  <script is:inline define:vars={{ zh }}>
     // Lightweight zh swap — mirrors the home page language preference (localStorage 'ts-lang').
+    // The full `zh` dictionary is injected from the server-side object above via define:vars,
+    // so the client copy can NEVER drift from the SSR source of truth.
     (function () {
       try {
         (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
         var lang = localStorage.getItem('ts-lang') || 'en';
         if (lang !== 'zh') return;
-        var zh = {
-          h1: '广告与隐私', updated: '最后更新', back: '← 返回 TariffStack', toc: '目录',
-          intro: 'TariffStack 是一个免费、由广告支持的公益工具，用于估算进口关税与到岸成本。本页以通俗语言说明我们处理哪些数据、站内广告如何运作，以及你拥有的选择权。本页是《服务条款与免责声明》的补充，不能替代后者。',
-          s1_h: '1. 本页范围', s1: '本页仅涉及广告与个人信息处理相关事宜。有关责任限制、知识产权、使用规范或适用法律的问题，请查阅《服务条款与免责声明》。如你需要法律条款，请打开该页面。',
-          s2_h: '2. 我们不收集什么', s2: 'TariffStack 无需注册账号，也不收集个人画像。你输入的计算要素——HS 编码、商品描述、申报金额、原产国与目的国——在数据集加载后完全在你的浏览器本地处理，不会发送到我们的服务器，也绝不会与广告主或任何第三方共享。我们不嵌入会为你建立行为画像的第三方分析脚本，也不出售或出租任何个人数据。',
-          s3_h: '3. 我们收集什么', s3: '我们只收集维持广告展示与记住偏好所需的最小数据：(a) 由广告合作伙伴设置的广告标识符与 Cookie（见第 5 节）；(b) 保存在你自己浏览器 localStorage 中的两个值——你选择的语言和上一次计算——以便再次访问时页面保持一致。我们不会收到你的姓名、邮箱、通信地址或任何政府证件号码。',
-          s4_h: '4. Cookie 与同类技术', s4: 'Cookie 是存放在你设备上的小文本文件。在 TariffStack 上，Cookie 几乎全部由我们的广告合作伙伴为了投放与衡量广告而设置；我们自身仅设置上文所述的最小 localStorage 条目。你可以随时通过浏览器设置清除、屏蔽或限制 Cookie。屏蔽广告 Cookie 不会导致计算器失效——只会影响你看到的广告内容。',
-          s5_h: '5. 广告（Google AdSense）', s5: '本工具通过展示由 Google AdSense 投放的情境化与个性化广告保持免费。AdSense 可能使用 Cookie、设备或浏览器标识符，以及你过往的广告互动信息，来挑选与你相关的广告。个性化广告基于 Google 维护的广告画像，而非 TariffStack。未来可能加入其他广告网络，任何此类网络都须遵守同样的“不出售你的输入数据”规则。你计算的关税估算结果绝不会被用作向你投放广告的信号。',
-          s6_h: '6. 你的选择与退出', s6: '你可以随时退出个性化广告：(a) 通过 Google 广告设置 adssettings.google.com；(b) 通过行业退出平台 aboutads.info；或 (c) 在浏览器中开启“请勿追踪”/屏蔽第三方 Cookie。选择非个性化广告不会移除广告——只是广告改为基于页面上下文而非你的画像。通过浏览器拒绝 Cookie 后，本站会予以尊重。',
-          s7_h: '7. 第三方链接及其政策', s7: '当 TariffStack 上的广告或链接导向第三方目的地——例如由 Google AdSense 投放的广告落地页——该目的地不在我们的控制范围内，受其自身隐私政策约束（包括 Google 针对 AdSense 的隐私与条款）。我们不对这些站点的数据做法负责。',
-          s8_h: '8. 数据留存与安全', s8: '由于你的计算输入从不传给我们，我们也不留存任何此类数据。广告合作伙伴设置的广告标识符受其自身留存周期约束。我们采取合理技术措施维护站点与数据集的完整性，但没有任何网络服务能保证绝对安全。',
-          s9_h: '9. 未成年人', s9: 'TariffStack 是面向专业人士的贸易工具，不针对 13 岁以下儿童。我们不会明知而收集儿童个人数据。若你认为有儿童向我们提供了数据，请与我们联系，我们会予以删除。',
-          s10_h: '10. 本政策的变更', s10: '随着广告或数据实践的变化，我们可能更新本《广告与隐私》页。上方“最后更新”日期即当前版本。重大变更将在首页以横幅预告至少十四（14）天后再生效。',
-          s11_h: '11. 联系方式', s11: '有关广告或隐私的问题可发送至 TariffStack@outlook.com，如需数据更正或删除请求，请附上 HS 编码与目的国，以便我们核查。商务合作请直接联系团队负责人：zmarkz123zxc@gmail.com。'
-        };
         var nodes = document.querySelectorAll('[data-i18n]');
         for (var i = 0; i < nodes.length; i++) {
           var k = nodes[i].getAttribute('data-i18n');

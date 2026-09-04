@@ -110,8 +110,6 @@ const zh = {
   back: '← 返回 TariffStack',
 };
 
-const data = { en, zh, 'zh-TW': en, ja: en, es: en, de: en, ko: en, fr: en, pt: en, it: en };
-const lang = 'en';
 import overlay from '../data/policy_overlay.json';
 const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
 // 免责声明引用的 USITC HTS 版本号：从 overlay 真实值注入（随 CI 升版自动更新，不写死）
@@ -120,7 +118,6 @@ const revDt = String(overlay.base_hts_date || overlay.as_of || '');
 const d = en;
 d.s13 = d.s13.replace('{rev}', revNo).replace('{date}', revDt);
 zh.s13 = zh.s13.replace('{rev}', revNo).replace('{date}', revDt);
-const zhS13 = zh.s13;
 ---
 <!doctype html>
 <html lang="en">
@@ -211,32 +208,15 @@ const zhS13 = zh.s13;
     <a class="back" href="/" data-i18n="back">{d.back}</a>
   </main>
 
-  <script is:inline define:vars={{ zhS13 }}>
+  <script is:inline define:vars={{ zh }}>
     // Lightweight zh swap — mirrors the home page language preference (localStorage 'ts-lang').
+    // The full `zh` dictionary is injected from the server-side object above via define:vars,
+    // so the client copy can NEVER drift from the SSR source of truth (incl. the s13 version note).
     (function () {
       try {
         (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
         var lang = localStorage.getItem('ts-lang') || 'en';
         if (lang !== 'zh') return;
-        var zh = {
-          h1: '服务条款与免责声明', updated: '最后更新', intro: 'TariffStack 是一个免费、由广告支持的公益工具，用于估算进口关税与到岸成本。本条款构成你与 TariffStack 运营者之间的法律协议。访问或使用 TariffStack 即表示你接受本条款。如不接受，请勿使用本工具。',
-          toc: '目录',
-          s1_h: '1. 条款的接受', s1: '本条款适用于对 TariffStack 网站、计算器、归类器及任何相关页面的全部使用。加载任何 TariffStack 页面、运行一次计算、查询 HS 编码归类器，或接受 Cookie 提示，即表示你确认已阅读、理解并同意本条款及下方第 13 节《免责声明》。如你代表某组织接受，你声明拥有约束该组织的授权。',
-          s2_h: '2. 服务说明', s2: 'TariffStack 是基于浏览器的估算工具。美国目的地使用完整的官方叠加关税（USITC HTS 子目级：基础 MFN + 301 条款 + 强迫劳动税 + MPF/HMF），结合按原产国适用的 FTA 优惠，针对给定 HS 编码、原产国、目的国与申报金额生成到岸成本。中国目的地使用官方《2026 年关税税则》（国务院关税税则委员会，2026-01-01 起施行），解析自政府发布的税则，在 HS 编码匹配时返回真实税率（最惠国/MFN + 暂定税率（若更低）），无任何虚构数值。本工具免费使用，无需账号，且不向我们的服务器传输你的计算输入——数据集加载后计算完全在客户端进行。',
-          s3_h: '3. 非法律、税务或报关建议', s3: 'TariffStack 是独立的估算工具。它并非律师事务所、税务咨询公司、报关行、持证报关服务、货运代理、贸易合规咨询机构或会计师事务所。本网站任何内容均不构成法律意见、税务意见、律师意见、任何海关机关的约束性或咨询性裁定、归类裁定，或针对任一法域的正式合规意见。如你需要此类建议，必须聘请相关法域的持证律师、报关行或合格专业人士。',
-          s4_h: '4. 无担保', s4: 'TariffStack，包括其源代码、界面、已编译数据集、输出数值与文档，按"现状"和"现有"基础提供，不附带任何明示、暗示、法定或其他形式的担保。我们特别否认关于准确性、完整性、时效性、特定用途适用性、不侵权、以及不间断或无差错运行的任何担保。我们不担保本工具、数据集或任何输出满足你的要求，不担保所示任一税率适用于你的具体交易，也不担保缺陷会在特定时间内修复。针对关税数字的数据准确性补充提示，见第 13 节《免责声明》板块。',
-          s5_h: '5. 责任限制', s5: '在适用法律允许的最大范围内，TariffStack 及其作者、贡献者、运营者与许可方，对于因你使用或无法使用 TariffStack 而产生或与之相关的任何海关罚款、追加关税、税款、罚金、滞纳金、利息、滞期费、仓储费、没收货物、丢失或损毁货件、拒绝入境、退运拒绝、退税拒绝、审计成本、合规成本、专业服务费用，或任何直接、间接、附带、特殊、后果性、惩戒性或惩罚性损失（包括利润或商业机会损失），均不承担责任——即便我们已被告知此类损失的可能性。在责任依法不得排除的范围内，责任限于你在索赔前十二（12）个月内向我们支付的金额（目前为 0 美元，因为本服务免费）。',
-          s6_h: '6. 你自行核实的责任', s6: '在依赖任何 TariffStack 输出之前，你全权负责核实其准确性、完整性与适用性。务必与目的国的相关海关机关确认关税、税款、费用、归类、豁免、阈值、FTA 优惠及原产国资格，并在适当时咨询该法域的持证报关行，并在提交任何报关、退税、豁免申请、反倾销/反补贴（AD-CVD）答复、301/232 条款答复或任何其他合规行动前咨询合格法律顾问。',
-          s7_h: '7. 广告', s7: 'TariffStack 免费并由广告支持（目前为 Google AdSense）。所涉及的 Cookie、标识符与退出选择，详见我们的《广告与隐私》页，而非本页。简而言之：广告提供方可能设置 Cookie/标识符以投放与衡量广告；我们不向广告主出售或共享你的计算输入；你的语言偏好与上一次计算仅保存在你自己的浏览器中。',
-          s8_h: '8. 知识产权', s8: 'TariffStack 源代码、界面设计、归类逻辑与已编译数据集（字段的编排与选取）依据 GNU Affero 通用公共许可证 v3.0（AGPL-3.0）发布。你可在该许可证条款下查看、派生并自行托管代码。底层源数据仍为各自主管机关的财产——USITC 协调关税表、Federal Register、USTR、CBP、美国人口普查局、UN Comtrade（用于原产国贸易联动数据），以及中国海关（官方 2026 年税则，集成进行中）——并依各自开放数据条款使用。TariffStack、其字号与标识为运营者的商标。',
-          s9_h: '9. 禁止用途', s9: '你同意不得：(a) 以任何自动化方式访问 TariffStack，且速率显著影响其他用户的使用体验；(b) 批量抓取数据集并将其作为竞争产品重新发布；(c) 将 TariffStack 输出冒充为具约束力的归类、裁定或持证建议；(d) 试图反向工程、干扰或规避限流、访问频率控制或任何安全机制；(e) 将 TariffStack 用于任何非法目的，包括违反美国出口管制、OFAC 制裁或目的国进口法的交易。',
-          s10_h: '10. 第三方链接与数据来源', s10: 'TariffStack 聚合来自第三方开放数据源的数据。当 TariffStack 链接至第三方来源（如某条 USITC HTS 章节、Federal Register 公告、CBP CROSS 裁定、UN Comtrade 记录）时，该链接仅为方便你而提供，我们不控制被链接内容。访问此类链接风险自负，并受第三方条款与隐私政策约束。',
-          s11_h: '11. 适用法律与争议解决', s11: '本条款受运营实体注册地法域的法律管辖，不考虑法律冲突原则。任何争议应首先友好协商。若在六十（60）日内未能和解，争议应依据 UNCITRAL 仲裁规则以英文进行终局仲裁解决。本条款不限制你依居住地消费者保护法律享有的任何不可放弃权利，包括在你本地法院起诉的权利。',
-          s12_h: '12. 条款变更与联系', s12: '我们可修订本条款，以反映法律、数据源、广告实践或运营的变化。上方的"最后更新"日期记录最新修订。重大变更将在首页以横幅预告至少十四（14）天后再生效。变更生效后继续使用即视为接受修订后的条款。有关本条款的问题可发送至 TariffStack@outlook.com，或联系团队负责人 zmarkz123zxc@gmail.com。',
-          s13_h: '13. 免责声明', s13: zhS13,
-          back: '← 返回 TariffStack'
-        };
-        zh.s13 = zhS13;
         var nodes = document.querySelectorAll('[data-i18n]');
         for (var i = 0; i < nodes.length; i++) {
           var k = nodes[i].getAttribute('data-i18n');
