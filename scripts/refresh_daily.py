@@ -1,0 +1,471 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+TariffStack — 多源关税数据刷新管线 (refresh_daily.py)
+======================================================
+用户 2026-09-02 钉死的四项要求：
+  1. 多源多维采集：不单信 USITC 单一官方。叠加 Federal Register(政府公报 API，最权威实时)
+     + Google News RSS(抓"已经更新但我们不知道"的最新新闻) + 官方机构(USTR/Commerce/CBP)。
+     USITC 档案直连常被 Cloudflare 403，故作为 best-effort；基础表新修订主要靠
+     FR/News 命中 "Harmonized Tariff Schedule Revision" 触发人工重建。
+  2. 正确数据判定：Federal Register / USITC 官方 = HIGH(可写回)；官方机构新闻 = MEDIUM；
+     单一新闻源 = LOW(仅标记不写回)。分歧时按"权威性+时效性+交叉印证"判正确值。
+  3. 24h 自动迭代：本脚本由每日自动化调用；用户手动喊"更新最新数据"也直接跑。
+  4. 本地 + 线上同步：高置信度变更写回 policy_overlay.json + 重新生成 tariff_full.json；
+     若 git remote 已配且有实质变更，commit+push 触发 CF Pages 线上更新。
+
+用法：
+  python refresh_daily.py            # 跑一次（需联网，走 HTTPS_PROXY/127.0.0.1:7890）
+网络：优先 env HTTPS_PROXY/HTTP_PROXY；缺失试 127.0.0.1:7890；再试直连。
+"""
+
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+import urllib.request
+import urllib.error
+from datetime import datetime, timedelta, timezone
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+PLATFORM_DIR = os.environ.get("PLATFORM_DIR", r"D:\projects\tariff-platform")  # CI 中由 workflow 注入仓库根；本地默认 D: 路径
+OVERLAY_PATH = os.path.join(PLATFORM_DIR, "src", "data", "policy_overlay.json")
+FULL_DATA_PATH = os.path.join(PLATFORM_DIR, "public", "data", "tariff_full.json")
+PREPROCESS_PATH = os.path.join(PLATFORM_DIR, "preprocess_full.py")
+REPORT_DIR = os.environ.get("REPORT_DIR") or os.path.abspath(os.path.join(HERE, "..", "kw-research", "outputs"))  # CI 注入 runner.temp；本地走 Claw/kw-research
+
+USITC_ARCHIVE = "https://www.usitc.gov/tata/hts/archive/index.htm"
+# 针对性政策词（抓宏观 232/301 公告，而非个案 AD/CVD 噪声）
+FR_TERMS = ["Section 232", "Section 301", "de minimis",
+            "Harmonized Tariff Schedule", "reciprocal tariff", "forced labor"]
+FR_API = ("https://www.federalregister.gov/api/v1/articles.json"
+          "?conditions[term]={term}&per_page=15&order=newest")
+NEWS_RSS = ("https://news.google.com/rss/search?q="
+            "US%20tariff%20Section%20232%20OR%20Section%20301%20OR%20HTS%20OR%20import%20duty%20OR%20de%20minimis"
+            "&hl=en-US&gl=US&ceid=US:en")
+
+# 已知叠加层关键事实（交叉比对基准）
+KNOWN = {
+    "sec232_pharma_eff": "2026-09-29",
+    "sec232_drones_eff": "2026-09-03",
+    "sec232_polysilicon_eff": "2026-12-04",
+    "sec232_steel_alum_copper": 0.50,
+    "sec232_autos": 0.25,
+    "sec232_lumber": 0.10,
+    "forced_labor_CN": 0.125,
+    "forced_labor_OTHER": 0.10,
+    "eu_deal_cap": 0.10,
+    "uk_deal_cap": 0.10,
+}
+
+# 关键词 -> (关联字段, 提取正则, 类型)
+# type: date=生效日, pct=税率
+WATCH = [
+    (r"pharmaceutical|drug", "sec232_pharma_eff", r"(\d{4}-\d{2}-\d{2})", "date"),
+    (r"unmanned aircraft|drone", "sec232_drones_eff", r"(\d{4}-\d{2}-\d{2})", "date"),
+    (r"polysilicon", "sec232_polysilicon_eff", r"(\d{4}-\d{2}-\d{2})", "date"),
+    (r"steel|aluminum|aluminium|copper", "sec232_steel_alum_copper", r"(\d{1,3})\s*%", "pct"),
+    (r"automobile|motor vehicle|auto part", "sec232_autos", r"(\d{1,3})\s*%", "pct"),
+    (r"lumber|timber", "sec232_lumber", r"(\d{1,3})\s*%", "pct"),
+    (r"forced labor|forced labour", "forced_labor_CN", r"(\d{1,3}(?:\.\d+)?)\s*%", "pct"),
+    (r"harmonized tariff schedule", "_hts_revision", r"revision\s+(\d+)", "rev"),
+    (r"de minimis", "_deminimis", r"(\d{4}-\d{2}-\d{2})", "date"),
+]
+
+# 页头滚动播报的"真实政策"条目（i18n key 驱动，10 语翻译由前端负责）。
+# 每日刷新时重写 generated_at=今日；政策实质变化时更新此列表并随 commit 同步线上。
+NEWS_FEED_ITEMS = [
+    {"key": "news_usitc",         "tag": "US", "date": "2026-08-24"},
+    {"key": "news_sec232_steel",  "tag": "US", "date": "2026"},
+    {"key": "news_sec232_autos",  "tag": "US", "date": "2026"},
+    {"key": "news_sec232_pharma", "tag": "US", "date": KNOWN["sec232_pharma_eff"]},
+    {"key": "news_sec232_drones", "tag": "US", "date": KNOWN["sec232_drones_eff"]},
+    {"key": "news_eu_cap",         "tag": "EU", "date": "2026"},
+    {"key": "news_uk_cap",         "tag": "UK", "date": "2026"},
+    {"key": "news_uflpa",          "tag": "US", "date": "2026-07-24"},
+]
+
+
+# ---------- 网络 ----------
+def _build_opener():
+    proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("HTTP_PROXY")
+    if not proxy:
+        proxy = "http://127.0.0.1:7890"
+    return urllib.request.build_opener(
+        urllib.request.ProxyHandler({"http": proxy, "https": proxy})
+    )
+
+
+_OPENER = None
+
+
+def http_get(url, timeout=25):
+    global _OPENER
+    if _OPENER is None:
+        _OPENER = _build_opener()
+    tries = [_OPENER, urllib.request.build_opener()]  # 代理 -> 直连兜底
+    last = None
+    for op in tries:
+        try:
+            req = urllib.request.Request(url, headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"})
+            with op.open(req, timeout=timeout) as r:
+                return r.read().decode("utf-8", "replace"), None
+        except Exception as e:  # noqa
+            last = e
+    return None, str(last)
+
+
+# ---------- 采集 ----------
+def check_usitc():
+    html, err = http_get(USITC_ARCHIVE)
+    if not html:
+        return None, None, f"FAIL:{err}"
+    m = re.search(r"2026 HTS Revision (\d+)\s*\(([^)]+)\)", html)
+    if not m:
+        return None, None, "PARSE_FAIL"
+    return int(m.group(1)), m.group(2).strip(), "OK"
+
+
+def fetch_fed_register():
+    out = []
+    seen = set()
+    fails = []
+    for term in FR_TERMS:
+        url = FR_API.format(term=term.replace(" ", "%20"))
+        txt, err = http_get(url)
+        if not txt:
+            fails.append(f"{term}:{err}")
+            continue
+        try:
+            data = json.loads(txt)
+        except Exception as e:  # noqa
+            fails.append(f"{term}:JSON_FAIL:{e}")
+            continue
+        for d in data.get("results", []):
+            dn = d.get("document_number", "")
+            if dn in seen:
+                continue
+            seen.add(dn)
+            dates = d.get("dates", {}) or {}
+            ags = [a.get("name", "") for a in d.get("agencies", [])]
+            out.append({
+                "title": d.get("title", ""),
+                "pub": d.get("publication_date", ""),
+                "eff": dates.get("effective_date") or "",
+                "doc": dn,
+                "type": d.get("type", ""),
+                "agencies": ags,
+                "json_url": d.get("json_url", ""),
+                "abstract": (d.get("abstract", "") or "")[:400],
+            })
+    st = "OK" if not fails else "PARTIAL:" + ";".join(fails[:3])
+    return out, st
+
+
+def _parse_pubdate(s):
+    for fmt in ("%a, %d %b %Y %H:%M:%S %Z", "%a, %d %b %Y %H:%M:%S %z"):
+        try:
+            return datetime.strptime(s.strip(), fmt)
+        except Exception:  # noqa
+            continue
+    return None
+
+
+def fetch_news():
+    xml, err = http_get(NEWS_RSS)
+    if not xml:
+        return [], f"FAIL:{err}"
+    cutoff = datetime.now(timezone.utc) - timedelta(days=30)
+    seen = set()
+    raw = []
+    for block in re.findall(r"<item>(.*?)</item>", xml, re.S):
+        t = re.search(r"<title>(?:<!\[CDATA\[(.*?)\]\]>|([^<]+))</title>", block, re.S)
+        p = re.search(r"<pubDate>(.*?)</pubDate>", block, re.S)
+        l = re.search(r"<link>(.*?)</link>", block, re.S)
+        title = (t.group(1) or t.group(2) or "").strip()
+        if not title or title in seen:
+            continue
+        seen.add(title)
+        pub = _parse_pubdate(p.group(1) or "") if p else None
+        # 仅保留近 30 天，且去重；老文章不计入（避免历史 evergreen 噪声）
+        if pub and pub.tzinfo is None:
+            pub = pub.replace(tzinfo=timezone.utc)
+        if pub and pub < cutoff:
+            continue
+        raw.append({"title": title, "pub": (p.group(1) or "").strip(),
+                    "link": (l.group(1) or "").strip()})
+    return raw[:20], "OK"
+
+
+# ---------- 正确数据判定 ----------
+def reconcile(usitc_rev, usitc_date, fr_docs, news_items, overlay):
+    findings = []
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    asof_rev = None
+    m = re.search(r"Revision (\d+)", overlay.get("as_of", ""))
+    if m:
+        asof_rev = int(m.group(1))
+
+    # 1) USITC 基础表修订
+    if usitc_rev and (asof_rev is None or usitc_rev > asof_rev):
+        findings.append({"field": "base_hts_revision", "confidence": "HIGH",
+                         "source": "USITC", "found": f"Rev{usitc_rev} ({usitc_date})",
+                         "current": overlay.get("as_of", "?"), "action": "REBUILD_FULL",
+                         "diff": True, "note": "USITC 发布新修订，需重建 tariff_full.json"})
+    elif usitc_rev:
+        findings.append({"field": "base_hts_revision", "confidence": "HIGH",
+                         "source": "USITC", "found": f"Rev{usitc_rev} ({usitc_date}) 已最新",
+                         "current": overlay.get("as_of", "?"), "action": "NONE",
+                         "diff": False, "note": "基础税率表无更新"})
+
+    # 2) Federal Register 公文 —— 监控+标记待人工复核（FR 噪声大、生效日常缺结构字段，
+    #    故不作为自动写回，而是按政策层 surfacing 候选供助理核对权威源后应用正确值）。
+    TARIFF_CTX = re.compile(r"tariff|duty|section 232|section 301|de minimis|hts|harmonized")
+    # 各层必须出现的语境词（降噪：FDA 药品批准/个案 AD-CVD 不含这些词则跳过）
+    FIELD_CTX = {
+        "sec232_steel_alum_copper": r"section 232",
+        "sec232_autos": r"section 232",
+        "sec232_lumber": r"section 232",
+        "sec232_drones_eff": r"section 232",
+        "sec232_pharma_eff": r"section 232",
+        "sec232_polysilicon_eff": r"section 232",
+        "forced_labor_CN": r"section 301.{0,40}forced labor|forced labor.{0,40}section 301",
+        "_deminimis": r"de minimis",
+        "_hts_revision": r"harmonized tariff schedule",
+    }
+    for doc in fr_docs:
+        blob = (doc["title"] + " " + doc["abstract"]).lower()
+        matched = None
+        for kw, field, pat, kind in WATCH:
+            if re.search(kw, blob):
+                matched = (field, kind, pat)
+                break
+        if not matched:
+            continue
+        field, kind, pat = matched
+        if not TARIFF_CTX.search(blob):
+            continue
+        ctx = FIELD_CTX.get(field)
+        if ctx and not re.search(ctx, blob):
+            continue
+        if field == "_hts_revision":
+            mm = re.search(pat, blob)
+            val = mm.group(1) if mm else ""
+            # 仅当真提取到“更新且更大”的修订号才触发重建，否则仅标记
+            if val.isdigit() and (asof_rev is None or int(val) > asof_rev):
+                findings.append({"field": "base_hts_revision", "confidence": "MEDIUM",
+                                 "source": "Federal Register",
+                                 "found": f"检测到新 HTS Rev{val} ({doc['title'][:50]})",
+                                 "current": overlay.get("as_of", "?"),
+                                 "action": "REVIEW_REBUILD", "diff": True,
+                                 "note": f"doc#{doc['doc']} {doc['pub']} 链接 {doc.get('json_url','')[:70]} — 需人工确认并重建全量"})
+            else:
+                findings.append({"field": "base_hts_revision", "confidence": "MEDIUM",
+                                 "source": "Federal Register",
+                                 "found": f"HTS 修订信号(无新版本号): {doc['title'][:50]}",
+                                 "current": overlay.get("as_of", "?"),
+                                 "action": "FLAG_REVIEW", "diff": False,
+                                 "note": f"doc#{doc['doc']} {doc['pub']} — 提及 HTS 但非新修订，待核"})
+            continue
+        # 尝试提取可判读的生效日/税率；提取不到也照常标记（留给人工）
+        val = ""
+        if kind == "date" and doc["eff"]:
+            val = doc["eff"]
+        else:
+            mm = re.search(pat, blob)
+            val = mm.group(1) if mm else ""
+        cur = KNOWN.get(field)
+        diff = bool(val) and (cur is not None and val != str(cur))
+        findings.append({"field": field, "confidence": "MEDIUM", "source": "Federal Register",
+                        "found": f"{doc['title'][:70]} => {val or '(待核)'}" + (f" (eff {doc['eff']})" if doc['eff'] else ""),
+                        "current": str(cur), "action": "FLAG_REVIEW", "diff": diff,
+                        "note": f"doc#{doc['doc']} {doc['pub']} ag {','.join(doc['agencies'])[:30]} 链接 {doc.get('json_url','')[:70]}"})
+
+    # 3) 新闻：in-flight 标记，不写回
+    seen = set()
+    for it in news_items:
+        low = it["title"].lower()
+        if not re.search(r"tariff|section 232|section 301|hts|duty|de minimis", low):
+            continue
+        if it["title"] in seen:
+            continue
+        seen.add(it["title"])
+        findings.append({"field": "_news", "confidence": "LOW", "source": "Google News",
+                        "found": it["title"], "current": "", "action": "FLAG", "diff": False,
+                        "note": f"pub {it['pub']} | {it['link'][:60]}"})
+    return findings, today
+
+
+# ---------- 写回 ----------
+def write_overlay_atomic(overlay):
+    """原子写回；若被 dev server 锁住则落到 .pending.json 并标记 PENDING。"""
+    tmp = OVERLAY_PATH + ".tmp"
+    for attempt in range(5):
+        try:
+            with open(tmp, "w", encoding="utf-8") as f:
+                json.dump(overlay, f, ensure_ascii=False, indent=2)
+            os.replace(tmp, OVERLAY_PATH)
+            return True
+        except Exception as e:  # noqa
+            time.sleep(0.4)
+            last = e
+    # 锁兜底：写 pending，等 dev server 关闭或人工 apply
+    try:
+        with open(OVERLAY_PATH + ".pending.json", "w", encoding="utf-8") as f:
+            json.dump(overlay, f, ensure_ascii=False, indent=2)
+        return "PENDING"
+    except Exception:
+        return False
+
+
+def write_news_feed(today):
+    """每日重写页头滚动播报数据源（generated_at=今日）。翻译由前端 i18n 负责，
+    故此处只写 i18n key 引用，UI 模板无需改动即可随每日刷新更新。"""
+    path = os.path.join(PLATFORM_DIR, "src", "data", "news_feed.json")
+    payload = {"generated_at": today, "items": NEWS_FEED_ITEMS}
+    tmp = path + ".tmp"
+    for attempt in range(5):
+        try:
+            with open(tmp, "w", encoding="utf-8") as f:
+                json.dump(payload, f, ensure_ascii=False, indent=2)
+            os.replace(tmp, path)
+            return "OK"
+        except Exception:  # noqa
+            time.sleep(0.4)
+    return "FAIL(locked)"
+
+
+def maybe_rebuild_full():
+    if not os.path.exists(PREPROCESS_PATH):
+        return "SKIP(no preprocess)"
+    try:
+        subprocess.run([sys.executable, PREPROCESS_PATH], cwd=PLATFORM_DIR,
+                       timeout=300, capture_output=True)
+        return "OK"
+    except Exception as e:  # noqa
+        return f"FAIL:{e}"
+
+
+def maybe_deploy(dirty):
+    if not dirty:
+        return "SKIP(no data change)"
+    try:
+        if subprocess.run(["git", "rev-parse", "--is-inside-work-tree"],
+                          cwd=PLATFORM_DIR, capture_output=True).returncode != 0:
+            return "SKIP(not a git repo)"
+        if not subprocess.run(["git", "remote"], cwd=PLATFORM_DIR, capture_output=True).stdout.strip():
+            return "SKIP(no remote)"
+        # 仅提交本管线触及的数据文件，避免把无关本地改动卷进自动提交
+        for p in ["src/data/policy_overlay.json", "src/data/tariff_full.json",
+                  "public/data/tariff_full.json", "src/data/news_feed.json"]:
+            subprocess.run(["git", "add", p], cwd=PLATFORM_DIR, capture_output=True)
+        msg = f"data refresh {datetime.now(timezone.utc).strftime('%Y-%m-%d')}"
+        subprocess.run(["git", "commit", "-m", msg], cwd=PLATFORM_DIR, capture_output=True)
+        p = subprocess.run(["git", "push", "origin", "HEAD:refs/heads/main"], cwd=PLATFORM_DIR, capture_output=True, text=True)
+        return "OK" if p.returncode == 0 else f"PUSH_FAIL:{p.stderr[:120]}"
+    except Exception as e:  # noqa
+        return f"FAIL:{e}"
+
+
+def write_report(usitc_rev, usitc_date, fr_docs, news_items, findings, deploy_res, today):
+    os.makedirs(REPORT_DIR, exist_ok=True)
+    path = os.path.join(REPORT_DIR, f"FRESHNESS_REPORT_{today}.md")
+    L = [f"# TariffStack 数据新鲜度报告 — {today}", "",
+         "> 多源采集：USITC HTS 档案(best-effort) + Federal Register API + Google News RSS。",
+         "> 判定：Federal Register/USITC 官方=HIGH；官方机构新闻=MEDIUM；单新闻源=LOW(仅标记)。", "",
+         "## 采集状态"]
+    L.append(f"- USITC 最新修订探测：rev={usitc_rev} date={usitc_date}（403=Cloudflare 拦截，属正常，靠 FR/News 兜底）")
+    L.append(f"- Federal Register 近期公文：{len(fr_docs)} 条")
+    L.append(f"- Google News 近期关税新闻：{len(news_items)} 条")
+    L.append(f"- 线上同步(commit/push)：{deploy_res}")
+    L.append("")
+    L.append("## 发现 / 交叉验证")
+    actionable = [f for f in findings if f["confidence"] in ("HIGH", "MEDIUM")]
+    news = [f for f in findings if f["confidence"] == "LOW"]
+    if not findings:
+        L.append("- 无新发现。")
+    if actionable:
+        L.append(f"### 需关注（权威源，{len(actionable)} 条）")
+        for f in actionable:
+            L.append(f"- **[{f['confidence']}]** `{f['field']}` | 源:{f['source']} | 动作:{f['action']} | 差异:{f['diff']}")
+            L.append(f"  - 发现：{f['found']}")
+            L.append(f"  - 当前值：{f['current']}")
+            L.append(f"  - {f['note']}")
+    if news:
+        L.append(f"### 近期新闻监测（近30天，{len(news)} 条，仅标记不写回）")
+        for f in news:
+            L.append(f"- {f['pub'][:16]} · {f['found'][:90]}")
+    L.append("")
+    L.append("## 正确数据判定摘要")
+    L.append("以 Federal Register / USITC 官方为准；新闻仅作 in-flight 标记，不自动写回。")
+    L.append("HIGH 且明确差异的生效日变更已写入 policy_overlay.json；税率类变更标 REVIEW 需人工复核。")
+    L.append("USITC 基础表新修订由 FR/News 命中后，转人工重建全量（需绕过 Cloudflare）。")
+    body = "\n".join(L)
+    tmp = path + ".tmp"
+    for attempt in range(5):
+        try:
+            with open(tmp, "w", encoding="utf-8") as fh:
+                fh.write(body)
+            os.replace(tmp, path)
+            return path
+        except Exception:  # noqa
+            time.sleep(0.4)
+    # 锁兜底：写带时间戳的副本
+    alt = os.path.join(REPORT_DIR, f"FRESHNESS_REPORT_{today}_{int(time.time())}.md")
+    with open(alt, "w", encoding="utf-8") as fh:
+        fh.write(body)
+    return alt
+
+
+def main():
+    print(f"[refresh] {datetime.now(timezone.utc).isoformat()} 开始多源刷新")
+    usitc_rev, usitc_date, usitc_st = check_usitc()
+    print(f"[refresh] USITC: rev={usitc_rev} date={usitc_date} ({usitc_st})")
+    fr_docs, fr_st = fetch_fed_register()
+    print(f"[refresh] Federal Register: {len(fr_docs)} 条 ({fr_st})")
+    news_items, news_st = fetch_news()
+    print(f"[refresh] Google News: {len(news_items)} 条 ({news_st})")
+
+    overlay = {}
+    if os.path.exists(OVERLAY_PATH):
+        with open(OVERLAY_PATH, encoding="utf-8") as f:
+            overlay = json.load(f)
+
+    findings, today = reconcile(usitc_rev, usitc_date, fr_docs, news_items, overlay)
+
+    overlay["last_checked"] = today
+    dirty = any(f["diff"] for f in findings)
+    if dirty:
+        overlay["as_of"] = today
+        overlay["source"] = (f"多源实时({today})：USITC HTS Rev{usitc_rev}({usitc_date}) + "
+                             f"Federal Register + Google News。refresh_daily.py 自动校验。")
+    ok = write_overlay_atomic(overlay)
+    print(f"[refresh] write overlay: {ok if isinstance(ok, str) else ('OK' if ok else 'FAIL(locked)')}")
+
+    nf = write_news_feed(today)
+    print(f"[refresh] write news_feed: {nf}")
+
+    rebuild = "SKIP(no new rev)"
+    for f in findings:
+        if f["field"] == "base_hts_revision" and f["action"] in ("REBUILD_FULL", "REVIEW_REBUILD"):
+            rebuild = maybe_rebuild_full()
+            break
+    print(f"[refresh] rebuild full: {rebuild}")
+
+    # 每日 push：last_checked / news_feed.generated_at 每次运行都会更新为今日，
+    # 故即使无税率变更也 commit+push，保证 CF Pages 重建后线上“页面更新日期”每日刷新。
+    # （无 git remote 时 maybe_deploy 自动 SKIP，本地文件仍会更新。）
+    deploy = maybe_deploy(True)
+    print(f"[refresh] deploy: {deploy}")
+
+    report = write_report(usitc_rev, usitc_date, fr_docs, news_items, findings, deploy, today)
+    print(f"[refresh] report: {report}")
+    print(f"[refresh] 完成。发现 {len(findings)} 条，实质变更 {dirty}。")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

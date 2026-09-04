@@ -1,0 +1,47 @@
+name: Daily Tariff Data Refresh
+
+# 每天北京时间 03:00 自动刷新关税数据并 push → Cloudflare 自动重建。
+# 运行在 GitHub 服务器（美国），与用户本机开关机无关。
+on:
+  schedule:
+    # 19:00 UTC = 次日 03:00 北京时间 (UTC+8)
+    - cron: '0 19 * * *'
+  workflow_dispatch: {}   # 允许在 Actions 标签页手动触发（调试用）
+
+permissions:
+  contents: write        # 允许 GITHUB_TOKEN 提交并 push 数据更新
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Configure git identity
+        run: |
+          git config user.email "TariffStack@outlook.com"
+          git config user.name "TariffStack"
+
+      - name: Run daily refresh
+        env:
+          # CI 中仓库根即平台目录；报告写到临时目录（作为 artifact 留存）
+          PLATFORM_DIR: ${{ github.workspace }}
+          REPORT_DIR: ${{ runner.temp }}/reports
+        run: python scripts/refresh_daily.py
+
+      - name: Upload freshness report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: freshness-report
+          path: ${{ runner.temp }}/reports/*.md
+          if-no-files-found: ignore
