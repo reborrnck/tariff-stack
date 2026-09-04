@@ -295,6 +295,25 @@ const ja: Dict = {
   hs_hint_us: '米国向けは 10 桁の HTS コード（例: 6109.10.00）',
   hs_hint_cn: '中国向けは 8 桁の HS コード（例: 6109.10）',
   goods_label_cn: '申告貨物価値（関税は人民元で算定）',
+  calc_btn: '計算',
+  calc_hts: 'HTSコード',
+  calc_origin: '原産国',
+  calc_product: '…または商品を選択',
+  calc_select: '— 選択 —',
+  classify_hints_btn: 'ヒント',
+  col_amount: '金額',
+  col_origin: '原産国',
+  col_rate: '税率',
+  col_total: '合計',
+  exp_csv: 'CSV出力',
+  footer_contact_biz_note: '（お問い合わせ）',
+  sec_sub: 'HTS 6109.10.00 · $1,000 商品',
+  section_byorigin: '原産国別比較',
+  section_live: 'リアルタイム結果',
+  tagline: '輸入関税・到岸費用計算ツール — 米国 + 中国',
+  theme_dark: 'ダーク',
+  theme_light: 'ライト',
+  total_row: '関税・手数料合計'
 };
 const es: Dict = {
   clk_beijing: 'Beijing',
@@ -373,6 +392,24 @@ const es: Dict = {
   hs_hint_us: 'EE. UU. usa un codigo HTS de 10 digitos — p. ej. 6109.10.00',
   hs_hint_cn: 'China usa un codigo HS de 8 digitos — p. ej. 6109.10',
   goods_label_cn: 'Valor declarado (arancel en CNY)',
+  calc_btn: 'Calcular',
+  calc_hts: 'Código HTS',
+  calc_origin: 'País de origen',
+  calc_product: '…o elige un producto',
+  calc_select: '— selecciona —',
+  classify_hints_btn: 'Consejos',
+  col_amount: 'Importe',
+  col_origin: 'Origen',
+  col_rate: 'Tasa',
+  col_total: 'Total',
+  exp_csv: 'Exportar CSV',
+  footer_contact_biz_note: '(Consultas comerciales)',
+  sec_sub: 'HTS 6109.10.00 · $1,000 bienes',
+  section_byorigin: 'Comparativa por origen',
+  section_live: 'Resultado en vivo',
+  theme_dark: 'Oscuro',
+  theme_light: 'Claro',
+  total_row: 'Arancel + gastos totales'
 };
 const de: Dict = {
   clk_beijing: 'Beijing',
@@ -451,6 +488,24 @@ const de: Dict = {
   hs_hint_us: 'USA verwenden einen 10-stelligen HTS-Code — z. B. 6109.10.00',
   hs_hint_cn: 'China verwendet einen 8-stelligen HS-Code — z. B. 6109.10',
   goods_label_cn: 'Angemeldeter Wert (Zoll in CNY)',
+  calc_btn: 'Berechnen',
+  calc_hts: 'HTS-Code',
+  calc_origin: 'Ursprungsland',
+  calc_product: '…oder Produkt wählen',
+  calc_select: '— auswählen —',
+  classify_hints_btn: 'Tipps',
+  col_amount: 'Betrag',
+  col_origin: 'Ursprung',
+  col_rate: 'Satz',
+  col_total: 'Gesamt',
+  exp_csv: 'CSV exportieren',
+  footer_contact_biz_note: '(Geschäftliche Anfragen)',
+  sec_sub: 'HTS 6109.10.00 · $1,000 Ware',
+  section_byorigin: 'Vergleich nach Ursprung',
+  section_live: 'Live-Ergebnis',
+  theme_dark: 'Dunkel',
+  theme_light: 'Hell',
+  total_row: 'Zoll + Gebühren gesamt'
 };
 
 const zht: Dict = {
@@ -545,6 +600,9 @@ const zht: Dict = {
   hs_hint_us: '美國目的地使用 10 位 HTS 編碼 — 例如 6109.10.00',
   hs_hint_cn: '中國目的地使用 8 位 HS 編碼 — 例如 6109.10',
   goods_label_cn: '申報貨值（關稅以人民幣計徵）',
+  footer_contact_biz_note: '（商務合作）',
+  theme_dark: '深色',
+  theme_light: '淺色'
 };
 
 const ko: Dict = {
@@ -639,6 +697,9 @@ const ko: Dict = {
   hs_hint_us: '미국은 10자리 HTS 코드 사용 — 예: 6109.10.00',
   hs_hint_cn: '중국은 8자리 HS 코드 사용 — 예: 6109.10',
   goods_label_cn: '신고 물품 가액 (관세는 위안화 기준)',
+  footer_contact_biz_note: '(비즈니스 문의)',
+  theme_dark: '다크',
+  theme_light: '라이트'
 };
 
 const fr: Dict = {
@@ -733,6 +794,9 @@ const fr: Dict = {
   hs_hint_us: 'Etats-Unis : code HTS a 10 chiffres — ex. 6109.10.00',
   hs_hint_cn: 'Chine : code HS a 8 chiffres — ex. 6109.10',
   goods_label_cn: 'Valeur declaree (droits en CNY)',
+  footer_contact_biz_note: '(Demandes commerciales)',
+  theme_dark: 'Sombre',
+  theme_light: 'Clair'
 };
 
 const pt: Dict = {
@@ -827,6 +891,9 @@ const pt: Dict = {
   hs_hint_us: 'EUA usam um codigo HTS de 10 digitos — ex. 6109.10.00',
   hs_hint_cn: 'China usa um codigo HS de 8 digitos — ex. 6109.10',
   goods_label_cn: 'Valor declarado (tarifa em CNY)',
+  footer_contact_biz_note: '(Consultas comerciais)',
+  theme_dark: 'Escuro',
+  theme_light: 'Claro'
 };
 
 const it: Dict = {
@@ -922,6 +989,9 @@ const it: Dict = {
   hs_hint_us: 'Stati Uniti: codice HTS a 10 cifre — es. 6109.10.00',
   hs_hint_cn: 'Cina: codice HS a 8 cifre — es. 6109.10',
   goods_label_cn: 'Valore dichiarato (diritti in CNY)',
+  footer_contact_biz_note: '(Richieste commerciali)',
+  theme_dark: 'Scuro',
+  theme_light: 'Chiaro'
 };
 
 const DICT: Record<Lang, Dict> = { en, zh, 'zh-TW': zht, ja, es, de, ko, fr, pt, it };

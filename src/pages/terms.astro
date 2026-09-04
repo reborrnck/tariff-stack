@@ -56,7 +56,7 @@ const en = {
 
   // 13. Disclaimer (consolidated plain-language statement)
   s13_h: '13. Disclaimer',
-  s13: 'TariffStack is an independent estimation tool. The duties, taxes, and total landed costs shown are ESTIMATES under best-effort assumptions — NOT legal advice, tax advice, a customs-broker service, or licensed compliance advice for any jurisdiction. We make NO WARRANTY of accuracy, completeness, or currency of any rate, rule, exemption, threshold, or fee shown. We accept NO LIABILITY for any customs penalty, additional duty, tax, fine, late fee, demurrage, storage charge, seized goods, lost shipment, or any direct or consequential loss arising from how you use — or fail to verify — these estimates. U.S. rates reflect USITC HTS Rev17 (2026-08-24) plus the official China Tariffs mapping and the 2026-07-24 forced-labor duty (9903.05.31, +12.5%); other markets use each destination\'s own official HS tariff schedule plus your selected origin\'s FTA preference. Exclusions, Section 232 (steel/alum 50%, autos 25%, pharma 100% eff. 2026-09-29), AD/CVD, FTA origin-qualification rules, de minimis thresholds, and destination VAT/GST/sales/consumption taxes may change your actual entry. ALWAYS confirm with the relevant customs authority or a licensed customs broker in the destination country — and consult qualified legal counsel when needed — before filing any entry, return, or refund claim.',
+  s13: 'TariffStack is an independent estimation tool. The duties, taxes, and total landed costs shown are ESTIMATES under best-effort assumptions — NOT legal advice, tax advice, a customs-broker service, or licensed compliance advice for any jurisdiction. We make NO WARRANTY of accuracy, completeness, or currency of any rate, rule, exemption, threshold, or fee shown. We accept NO LIABILITY for any customs penalty, additional duty, tax, fine, late fee, demurrage, storage charge, seized goods, lost shipment, or any direct or consequential loss arising from how you use — or fail to verify — these estimates. U.S. rates reflect USITC HTS Rev {rev} ({date}) plus the official China Tariffs mapping and the 2026-07-24 forced-labor duty (9903.05.31, +12.5%); other markets use each destination\'s own official HS tariff schedule plus your selected origin\'s FTA preference. Exclusions, Section 232 (steel/alum 50%, autos 25%, pharma 100% eff. 2026-09-29), AD/CVD, FTA origin-qualification rules, de minimis thresholds, and destination VAT/GST/sales/consumption taxes may change your actual entry. ALWAYS confirm with the relevant customs authority or a licensed customs broker in the destination country — and consult qualified legal counsel when needed — before filing any entry, return, or refund claim.',
 
   back: '← Back to TariffStack',
 };
@@ -105,16 +105,22 @@ const zh = {
   s12: '我们可修订本条款，以反映法律、数据源、广告实践或运营的变化。上方的"最后更新"日期记录最新修订。重大变更将在首页以横幅预告至少十四（14）天后再生效。变更生效后继续使用即视为接受修订后的条款。有关本条款的问题可发送至 TariffStack@outlook.com，或联系团队负责人 zmarkz123zxc@gmail.com。',
 
   s13_h: '13. 免责声明',
-  s13: 'TariffStack 是独立的估算工具。所示关税、税款与到岸成本总额，均为基于尽力假设的估算值——并非针对任一法域的法律意见、税务意见、报关行服务或持证合规建议。我们对所示任何税率、规则、豁免、阈值或费用的准确性、完整性或时效性不作任何担保。对于因你使用或未能核实这些估算而产生的任何海关罚款、追加关税、税款、罚金、滞纳金、滞期费、仓储费、没收货物、货件丢失，或任何直接或后果性损失，我们概不承担责任。美国税率反映 USITC HTS Rev17（2026-08-24）叠加官方对华关税映射，以及 2026-07-24 生效的强迫劳动税（9903.05.31，+12.5%）；其他市场使用各目的国自身的官方 HS 税则，叠加你所选原产国的 FTA 优惠。排他性条款、232 条款（钢铝 50%、汽车 25%、药品 100%，2026-09-29 生效）、反倾销/反补贴（AD-CVD）、FTA 原产国资格规则、de minimis 免税额，以及目的国增值税/消费税/销售税，均可能改变你的实际报关结果。在提交任何报关、退税或豁免申请前，务必与目的国相关海关机关或持证报关行确认——并在需要时咨询合格法律顾问。',
+  s13: 'TariffStack 是独立的估算工具。所示关税、税款与到岸成本总额，均为基于尽力假设的估算值——并非针对任一法域的法律意见、税务意见、报关行服务或持证合规建议。我们对所示任何税率、规则、豁免、阈值或费用的准确性、完整性或时效性不作任何担保。对于因你使用或未能核实这些估算而产生的任何海关罚款、追加关税、税款、罚金、滞纳金、滞期费、仓储费、没收货物、货件丢失，或任何直接或后果性损失，我们概不承担责任。美国税率反映 USITC HTS Rev {rev}（{date}）叠加官方对华关税映射，以及 2026-07-24 生效的强迫劳动税（9903.05.31，+12.5%）；其他市场使用各目的国自身的官方 HS 税则，叠加你所选原产国的 FTA 优惠。排他性条款、232 条款（钢铝 50%、汽车 25%、药品 100%，2026-09-29 生效）、反倾销/反补贴（AD-CVD）、FTA 原产国资格规则、de minimis 免税额，以及目的国增值税/消费税/销售税，均可能改变你的实际报关结果。在提交任何报关、退税或豁免申请前，务必与目的国相关海关机关或持证报关行确认——并在需要时咨询合格法律顾问。',
 
   back: '← 返回 TariffStack',
 };
 
 const data = { en, zh, 'zh-TW': en, ja: en, es: en, de: en, ko: en, fr: en, pt: en, it: en };
 const lang = 'en';
-const d = en;
 import overlay from '../data/policy_overlay.json';
 const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+// 免责声明引用的 USITC HTS 版本号：从 overlay 真实值注入（随 CI 升版自动更新，不写死）
+const revNo = String(overlay.base_hts_revision ?? '');
+const revDt = String(overlay.base_hts_date || overlay.as_of || '');
+const d = en;
+d.s13 = d.s13.replace('{rev}', revNo).replace('{date}', revDt);
+zh.s13 = zh.s13.replace('{rev}', revNo).replace('{date}', revDt);
+const zhS13 = zh.s13;
 ---
 <!doctype html>
 <html lang="en">
@@ -205,7 +211,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
     <a class="back" href="/" data-i18n="back">{d.back}</a>
   </main>
 
-  <script is:inline>
+  <script is:inline define:vars={{ zhS13 }}>
     // Lightweight zh swap — mirrors the home page language preference (localStorage 'ts-lang').
     (function () {
       try {
@@ -227,9 +233,10 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
           s10_h: '10. 第三方链接与数据来源', s10: 'TariffStack 聚合来自第三方开放数据源的数据。当 TariffStack 链接至第三方来源（如某条 USITC HTS 章节、Federal Register 公告、CBP CROSS 裁定、UN Comtrade 记录）时，该链接仅为方便你而提供，我们不控制被链接内容。访问此类链接风险自负，并受第三方条款与隐私政策约束。',
           s11_h: '11. 适用法律与争议解决', s11: '本条款受运营实体注册地法域的法律管辖，不考虑法律冲突原则。任何争议应首先友好协商。若在六十（60）日内未能和解，争议应依据 UNCITRAL 仲裁规则以英文进行终局仲裁解决。本条款不限制你依居住地消费者保护法律享有的任何不可放弃权利，包括在你本地法院起诉的权利。',
           s12_h: '12. 条款变更与联系', s12: '我们可修订本条款，以反映法律、数据源、广告实践或运营的变化。上方的"最后更新"日期记录最新修订。重大变更将在首页以横幅预告至少十四（14）天后再生效。变更生效后继续使用即视为接受修订后的条款。有关本条款的问题可发送至首页页脚所列地址。',
-          s13_h: '13. 免责声明', s13: 'TariffStack 是独立的估算工具。所示关税、税款与到岸成本总额，均为基于尽力假设的估算值——并非针对任一法域的法律意见、税务意见、报关行服务或持证合规建议。我们对所示任何税率、规则、豁免、阈值或费用的准确性、完整性或时效性不作任何担保。对于因你使用或未能核实这些估算而产生的任何海关罚款、追加关税、税款、罚金、滞纳金、滞期费、仓储费、没收货物、货件丢失，或任何直接或后果性损失，我们概不承担责任。美国税率反映 USITC HTS Rev17（2026-08-24）叠加官方对华关税映射，以及 2026-07-24 生效的强迫劳动税（9903.05.31，+12.5%）；其他市场使用各目的国自身的官方 HS 税则，叠加你所选原产国的 FTA 优惠。排他性条款、232 条款（钢铝 50%、汽车 25%、药品 100%，2026-09-29 生效）、反倾销/反补贴（AD-CVD）、FTA 原产国资格规则、de minimis 免税额，以及目的国增值税/消费税/销售税，均可能改变你的实际报关结果。在提交任何报关、退税或豁免申请前，务必与目的国相关海关机关或持证报关行确认——并在需要时咨询合格法律顾问。',
+          s13_h: '13. 免责声明', s13: 'TariffStack 是独立的估算工具。所示关税、税款与到岸成本总额，均为基于尽力假设的估算值——并非针对任一法域的法律意见、税务意见、报关行服务或持证合规建议。我们对所示任何税率、规则、豁免、阈值或费用的准确性、完整性或时效性不作任何担保。对于因你使用或未能核实这些估算而产生的任何海关罚款、追加关税、税款、罚金、滞纳金、滞期费、仓储费、没收货物、货件丢失，或任何直接或后果性损失，我们概不承担责任。美国税率反映 USITC HTS Rev {rev}（{date}）叠加官方对华关税映射，以及 2026-07-24 生效的强迫劳动税（9903.05.31，+12.5%）；其他市场使用各目的国自身的官方 HS 税则，叠加你所选原产国的 FTA 优惠。排他性条款、232 条款（钢铝 50%、汽车 25%、药品 100%，2026-09-29 生效）、反倾销/反补贴（AD-CVD）、FTA 原产国资格规则、de minimis 免税额，以及目的国增值税/消费税/销售税，均可能改变你的实际报关结果。在提交任何报关、退税或豁免申请前，务必与目的国相关海关机关或持证报关行确认——并在需要时咨询合格法律顾问。',
           back: '← 返回 TariffStack'
         };
+        zh.s13 = zhS13;
         var nodes = document.querySelectorAll('[data-i18n]');
         for (var i = 0; i < nodes.length; i++) {
           var k = nodes[i].getAttribute('data-i18n');
