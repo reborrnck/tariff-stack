@@ -74,6 +74,64 @@ WATCH = [
     (r"de minimis", "_deminimis", r"(\d{4}-\d{2}-\d{2})", "date"),
 ]
 
+# 字段 → policy_overlay.json 真实嵌套路径 + 类型（修复 WATCH 字段名与实际结构错位）
+# type: pct=税率(存为 0.x 浮点) / date=生效日(存为字符串) / rev=修订号(int)
+# 生效日类字段写入独立的 overlay["effective_dates"] 字典，避免破坏现有 sec232 标志键结构。
+FIELD_MAP = {
+    "sec232_steel_alum_copper": (("sec232", "steel_alum_copper"), "pct"),
+    "sec232_autos":              (("sec232", "autos_parts"), "pct"),
+    "sec232_lumber":             (("sec232", "lumber"), "pct"),
+    "forced_labor_CN":           (("forced_labor", "CN"), "pct"),
+    "sec232_pharma_eff":         (("effective_dates", "sec232_pharma"), "date"),
+    "sec232_drones_eff":         (("effective_dates", "sec232_drones"), "date"),
+    "sec232_polysilicon_eff":    (("effective_dates", "sec232_polysilicon"), "date"),
+    "_deminimis":                (("effective_dates", "deminimis"), "date"),
+}
+
+
+def get_overlay_val(overlay, field):
+    """读取 overlay 中某字段当前真值（按 FIELD_MAP 路径），缺失返回 None。"""
+    m = FIELD_MAP.get(field)
+    if not m:
+        return None
+    path, _ = m
+    cur = overlay
+    for k in path:
+        if not isinstance(cur, dict) or k not in cur:
+            return None
+        cur = cur[k]
+    return cur
+
+
+def set_overlay_val(overlay, field, value):
+    """按 FIELD_MAP 路径写入 overlay 真值，中间节点自动建字典。成功返回 True。"""
+    m = FIELD_MAP.get(field)
+    if not m:
+        return False
+    path, _ = m
+    cur = overlay
+    for k in path[:-1]:
+        cur = cur.setdefault(k, {})
+    cur[path[-1]] = value
+    return True
+
+
+def coerce_val(raw, vtype):
+    """把提取到的原始字符串转成类型化值；转换失败返回 None。"""
+    if not raw:
+        return None
+    try:
+        if vtype == "pct":
+            return round(float(raw.replace("%", "").strip()) / 100.0, 4)
+        if vtype == "date":
+            return raw.strip()
+        if vtype == "rev":
+            return int(raw)
+    except Exception:  # noqa
+        return None
+    return None
+
+
 # 页头滚动播报的"真实政策"条目（i18n key 驱动，10 语翻译由前端负责）。
 # 每日刷新时重写 generated_at=今日；政策实质变化时更新此列表并随 commit 同步线上。
 NEWS_FEED_ITEMS = [
@@ -271,18 +329,30 @@ def reconcile(usitc_rev, usitc_date, fr_docs, news_items, overlay):
                                  "note": f"doc#{doc['doc']} {doc['pub']} — 提及 HTS 但非新修订，待核"})
             continue
         # 尝试提取可判读的生效日/税率；提取不到也照常标记（留给人工）
-        val = ""
+        cval = None
+        raw = ""
         if kind == "date" and doc["eff"]:
-            val = doc["eff"]
+            raw = doc["eff"]
+            cval = coerce_val(raw, "date")
         else:
             mm = re.search(pat, blob)
-            val = mm.group(1) if mm else ""
-        cur = KNOWN.get(field)
-        diff = bool(val) and (cur is not None and val != str(cur))
+            raw = mm.group(1) if mm else ""
+            if kind == "pct":
+                cval = coerce_val(raw, "pct")
+            elif kind == "date":
+                cval = coerce_val(raw, "date")
+        cur = get_overlay_val(overlay, field)
+        diff = (cval is not None) and (cur is None or cval != cur)
+        # 完全托管：Federal Register 为官方权威源(MEDIUM)，提取到值且确有差异 → 直接写回(APPLY)；
+        # 仅当提取不到值(待核)才 FLAG_REVIEW 留痕。新闻 LOW 不在此分支，仅标记不写回。
+        action = "APPLY" if (cval is not None and diff) else "FLAG_REVIEW"
         findings.append({"field": field, "confidence": "MEDIUM", "source": "Federal Register",
-                        "found": f"{doc['title'][:70]} => {val or '(待核)'}" + (f" (eff {doc['eff']})" if doc['eff'] else ""),
-                        "current": str(cur), "action": "FLAG_REVIEW", "diff": diff,
-                        "note": f"doc#{doc['doc']} {doc['pub']} ag {','.join(doc['agencies'])[:30]} 链接 {doc.get('json_url','')[:70]}"})
+                        "found": f"{doc['title'][:70]} => {raw or '(待核)'}" + (f" (eff {doc['eff']})" if doc['eff'] else ""),
+                        "current": str(cur) if cur is not None else "(无)",
+                        "new_value": cval, "action": action, "diff": diff,
+                        "note": "doc#%s %s ag %s 链接 %s" % (
+                            doc['doc'], doc['pub'], ','.join(doc['agencies'])[:30],
+                            doc.get('json_url', '')[:70])})
 
     # 3) 新闻：in-flight 标记，不写回
     seen = set()
@@ -393,6 +463,8 @@ def write_report(usitc_rev, usitc_date, fr_docs, news_items, findings, deploy_re
             L.append(f"- **[{f['confidence']}]** `{f['field']}` | 源:{f['source']} | 动作:{f['action']} | 差异:{f['diff']}")
             L.append(f"  - 发现：{f['found']}")
             L.append(f"  - 当前值：{f['current']}")
+            if f.get("action") == "APPLY":
+                L.append(f"  - ✅ 已自动写回真值（旧 {f['current']} → 新 {f['new_value']}）")
             L.append(f"  - {f['note']}")
     if news:
         L.append(f"### 近期新闻监测（近30天，{len(news)} 条，仅标记不写回）")
@@ -400,9 +472,9 @@ def write_report(usitc_rev, usitc_date, fr_docs, news_items, findings, deploy_re
             L.append(f"- {f['pub'][:16]} · {f['found'][:90]}")
     L.append("")
     L.append("## 正确数据判定摘要")
-    L.append("以 Federal Register / USITC 官方为准；新闻仅作 in-flight 标记，不自动写回。")
-    L.append("HIGH 且明确差异的生效日变更已写入 policy_overlay.json；税率类变更标 REVIEW 需人工复核。")
-    L.append("USITC 基础表新修订由 FR/News 命中后，转人工重建全量（需绕过 Cloudflare）。")
+    L.append("完全托管模式：USITC(HIGH) 与 Federal Register(MEDIUM) 官方源变更 → 直接写回 policy_overlay.json 真值（APPLY，无需人工确认）。")
+    L.append("Google News(LOW) 仅作 in-flight 标记，不自动写回（非官方源）。")
+    L.append("本报告为非阻塞审查/审计层：每次运行记录所有『旧值→新值+来源链接』，便于回溯与人工复核异常，但不阻断自动写回。")
     body = "\n".join(L)
     tmp = path + ".tmp"
     for attempt in range(5):
@@ -436,12 +508,21 @@ def main():
 
     findings, today = reconcile(usitc_rev, usitc_date, fr_docs, news_items, overlay)
 
+    # 完全托管：官方源(USITC HIGH / Federal Register MEDIUM)变更直接写回真值，无需人工确认。
+    # 新闻 LOW 仅标记不写回。FRESHNESS_REPORT 保留为非阻塞审查/审计层（记录旧值→新值+来源）。
+    applied = []
+    for f in findings:
+        if f.get("action") == "APPLY" and f.get("diff") and f.get("new_value") is not None:
+            if set_overlay_val(overlay, f["field"], f["new_value"]):
+                applied.append(f)
+    print(f"[refresh] auto-applied 官方源变更: {len(applied)} 条")
+
     overlay["last_checked"] = today
     dirty = any(f["diff"] for f in findings)
     if dirty:
         overlay["as_of"] = today
-        overlay["source"] = (f"多源实时({today})：USITC HTS Rev{usitc_rev}({usitc_date}) + "
-                             f"Federal Register + Google News。refresh_daily.py 自动校验。")
+        overlay["source"] = (f"多源实时自动应用({today})：USITC HTS Rev{usitc_rev}({usitc_date}) + "
+                             f"Federal Register + Google News。refresh_daily.py 完全托管直接写回官方真值。")
     ok = write_overlay_atomic(overlay)
     print(f"[refresh] write overlay: {ok if isinstance(ok, str) else ('OK' if ok else 'FAIL(locked)')}")
 
