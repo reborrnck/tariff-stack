@@ -511,7 +511,7 @@ const clkLondon     = fmtClk('Europe/London');
           <div class="news-viewport" role="list" aria-live="polite">
             <ul class="news-track">
               {newsItems.concat(newsItems).map(n => (
-                <li class="news-item" role="listitem"><span class="news-tag">{destLabel(n.tag, 'en')}</span><span class="news-text" data-i18n={n.key}>{t('en', n.key).replace('{rev}', String(overlay.base_hts_revision ?? '')).replace('{date}', overlay.base_hts_date || overlay.as_of || '')}</span></li>
+                <li class="news-item" role="listitem"><span class="news-tag" data-i18n-dest={n.tag}>{destLabel(n.tag, 'en')}</span><span class="news-text" data-i18n={n.key}>{t('en', n.key).replace('{rev}', String(overlay.base_hts_revision ?? '')).replace('{date}', overlay.base_hts_date || overlay.as_of || '')}</span></li>
               ))}
             </ul>
           </div>
@@ -590,7 +590,7 @@ const clkLondon     = fmtClk('Europe/London');
              SSR-baked default (so zero-JS crawlers + first paint see a real result);
              JS re-renders this on every Calculate / input change. -->
         <section id="result" style="margin-top:18px;">
-          <h2 class="sec"><span data-i18n="section_result">Calculation result</span> — HTS {worked.hts} · {destLabel(worked.dest, 'en')} · {originLabel(worked.origin, 'en')} · {usd(worked.goods)}</h2>
+          <h2 class="sec"><span data-i18n="section_result">Calculation result</span> — HTS {worked.hts} · <span data-i18n-dest={worked.dest}>{destLabel(worked.dest, 'en')}</span> · <span data-i18n-origin={worked.origin}>{originLabel(worked.origin, 'en')}</span> · {usd(worked.goods)}</h2>
           <div class="hero">
             <div class="hero-row1">
               <span class="h-label" data-i18n="eff_row">Effective rate</span>
