@@ -1,6 +1,0 @@
-name = "tariff-stack"
-compatibility_date = "2025-09-04"
-# 纯静态 Astro 站：告诉 wrangler 这是 Cloudflare Pages 静态项目，
-# 直接上传 ./dist，不要自动套 @astrojs/cloudflare SSR 适配器
-# （Astro 7.2.10 与当前 cloudflare 适配器版本不兼容，会报 renderForPrerender 缺失）。
-pages_build_output_dir = "./dist"
