@@ -159,16 +159,16 @@ const clkLondon     = fmtClk('Europe/London');
        every window size without crowding/clipping.
        ==================================================================== */
     header{background:var(--card);border-bottom:1px solid var(--line);}
-    /* WIDE: ≥1280 — 3-column with the MIDDLE column getting ALL the slack.
-       关键：左右两边只给 min-content（不设硬 min-width），中间用 1fr 拿剩余，
-       避免 min-width 把 1fr 剩余空间吃掉、导致中间列太窄塞不下 6 个时钟。 */
+    /* WIDE: ≥1280 — 3-column with EXPLICIT 1:2:1 proportions (用户确认这版三列比例正确).
+       Brand/Right 用 minmax(min,1fr) 上限固定为 1fr，Middle 用 2fr 拿双倍空间。
+       中间列 2fr 在 1280 视口下约 550px，足够放下 3×2 时钟（3×185px）不挤、无空白。 */
     .hd-inner{max-width:1700px;margin:0 auto;padding:24px 56px;
-      display:grid;grid-template-columns:minmax(0,min-content) minmax(0,1fr) minmax(0,min-content);align-items:start;gap:28px;}
+      display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,2fr) minmax(300px,1fr);align-items:start;gap:28px;}
 
-    /* MID-WIDE: 1100–1279 — 同样的"中间拿剩余"策略，左右允许 min-content 收缩。 */
+    /* MID-WIDE: 1100–1279 — 收紧比例到 1:1.5:1（1100–1280 必单独处理）。 */
     @media (max-width:1279px){
       .hd-inner{padding:22px 36px;gap:20px;
-        grid-template-columns:minmax(0,min-content) minmax(0,1fr) minmax(0,min-content);}
+        grid-template-columns:minmax(220px,1fr) minmax(0,1.5fr) minmax(260px,1fr);}
       .clock-bar{gap:8px;}
       .clock-card{padding:8px 10px;}
       .clock-card .clk-city{font-size:11px;letter-spacing:.04em;}
@@ -226,10 +226,11 @@ const clkLondon     = fmtClk('Europe/London');
     .brand .lang-row{margin-top:14px;}
 
     /* MIDDLE: clock bar (real-time, updated every second by JS).
-       关键：改用 repeat(6,minmax(0,1fr)) 强制 6 列等分——无论父容器多宽，6 个时钟永远
-       一排、不换行、不留空白。minmax(0,1fr) 的下限是 0，所以窄时格子会缩，不会把父容器撑大。
-       justify-self:stretch 让它撑满中间列宽。 */
-    .clock-bar{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;
+       用户要求：一排 3 个时钟、共 2 排（3×2）。用 repeat(3,minmax(0,1fr)) 写死 3 列——
+       永远 3 列 2 行、不换行、中间列 2fr 宽度下每格约 185px 不挤。
+       minmax(0,1fr) 下限 0：窄屏格子自动收缩，不撑大父容器。
+       justify-self:stretch 让它撑满中间列宽（无列间空白）。 */
+    .clock-bar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;
       align-self:start;justify-self:stretch;max-width:100%;min-width:0;}
     .clock-card{background:#fafbfd;border:1px solid var(--line);border-radius:9px;
       padding:9px 12px;display:flex;flex-direction:column;gap:1px;min-width:0;
