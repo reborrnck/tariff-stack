@@ -36,11 +36,24 @@ jobs:
           git config user.email "TariffStack@outlook.com"
           git config user.name "TariffStack"
 
+      - name: Fetch sources (US HTS base + China-301 mapping)
+        # 全自动铁律：基表升版不再需要人工跑 preprocess。US HTS 从 USITC 官方直链按最新
+        # rev 自动下载；China-301 映射 PDF 随仓库入库于 data-src/，此处拷到 TARIFF_DATA_DIR。
+        env:
+          TARIFF_DATA_DIR: ${{ runner.temp }}/tariff-data
+        run: python scripts/fetch_sources.py
+
+      - name: Install Python deps
+        # preprocess_full(pypdf) / build_cn_tariff(pdfplumber) 在重建基表时需要；
+        # 仓库无 requirements.txt，此处显式安装，避免 CI 跑预处理时 ModuleNotFoundError。
+        run: python -m pip install pypdf pdfplumber
+
       - name: Run daily refresh
         env:
           # CI 中仓库根即平台目录；报告写到临时目录（作为 artifact 留存）
           PLATFORM_DIR: ${{ github.workspace }}
           REPORT_DIR: ${{ runner.temp }}/reports
+          TARIFF_DATA_DIR: ${{ runner.temp }}/tariff-data
         run: python scripts/refresh_daily.py
 
       - name: Upload freshness report

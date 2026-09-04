@@ -20,6 +20,7 @@ TariffStack — 多源关税数据刷新管线 (refresh_daily.py)
 """
 
 import json
+import hashlib
 import os
 import re
 import subprocess
@@ -310,7 +311,7 @@ def fetch_news():
 
 
 # ---------- 正确数据判定 ----------
-def reconcile(usitc_rev, usitc_date, fr_docs, news_items, overlay):
+def reconcile(usitc_rev, usitc_date, fr_docs, news_items, overlay, provisioned_rev=None):
     findings = []
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     # 当前已记录的基础表修订号：优先读专属字段 base_hts_revision（首次探测后写入），
@@ -327,24 +328,47 @@ def reconcile(usitc_rev, usitc_date, fr_docs, news_items, overlay):
             asof_rev = int(m.group(1))
 
     # 1) USITC 基础表修订（rev 来自 reststop/currentRelease，结构化 JSON）
+    #    served_rev = 当前线上已服务(base)数据的 rev（来自 overlay 记录）。
+    #    关键守全真数据：版本号前进到的 rev 必须等于 preprocess 实际重建出的底层数据 rev，
+    #    绝不"页面显示新版本、底层却是旧税率"。判定：
+    #      - provisioned_rev(可抓到的最新 rev) > served_rev → 重建到 provisioned_rev，版本号前进到它；
+    #        若 provisioned_rev < usitc_rev(announced)，说明 announced 更高但 JSON 暂未可抓取，
+    #        数据先前进到可抓到的最新 rev，并标注 announced rev 待跟进。
+    #      - announced 更新但可抓到的最新 rev 不比已服务新（JSON 暂未可抓取/网络异常）→ FLAG_REVIEW，
+    #        版本号不幻进，数据维持 served_rev，待官方 JSON 上线后次日自动重建。
+    served_rev = asof_rev
     if usitc_rev is None:
         pass  # 取数失败不误报，靠 FR/News 兜底
-    elif asof_rev is None:
-        # 首次探测到修订号 → 记录基准（站点应已反映当前真实税率），不触发重建，避免每日噪声
+    elif served_rev is None:
+        # 首次：以实际已构建的 rev 记录基准（有 provisioned 用它，否则用 announced），不触发重建
+        base = provisioned_rev if provisioned_rev is not None else usitc_rev
         findings.append({"field": "base_hts_revision", "confidence": "HIGH",
                          "source": "USITC", "found": f"Rev{usitc_rev} ({usitc_date})",
-                         "current": "(未记录)", "action": "APPLY", "new_value": usitc_rev,
+                         "current": "(未记录)", "action": "APPLY", "new_value": base,
                          "diff": True,
-                         "note": f"首次探测，记录基准 HTS 修订 Rev{usitc_rev}（{usitc_date}）"})
-    elif usitc_rev > asof_rev:
+                         "note": f"首次探测，记录基准 HTS 修订 Rev{base}（{usitc_date}）"})
+    elif provisioned_rev is not None and provisioned_rev > served_rev:
+        # 可抓到比当前已服务更新的 rev → 重建到该 rev，版本号前进到 provisioned_rev
+        caught_up = (provisioned_rev == usitc_rev)
         findings.append({"field": "base_hts_revision", "confidence": "HIGH",
                          "source": "USITC", "found": f"Rev{usitc_rev} ({usitc_date})",
-                         "current": f"Rev{asof_rev}", "action": "REBUILD_FULL",
-                         "diff": True, "note": "USITC 发布新修订，需重建 tariff_full.json"})
+                         "current": f"Rev{served_rev}", "action": "REBUILD_FULL",
+                         "new_value": provisioned_rev,
+                         "diff": True,
+                         "note": ("USITC 发布新修订，已抓取官方 JSON，重建到 Rev%s" % provisioned_rev)
+                                 + ("" if caught_up else f"；announced Rev{usitc_rev} 的 JSON 暂未可抓取，待其上线后次日继续前进")})
+    elif usitc_rev > served_rev:
+        # announced 更新但可抓到的最新 rev 不比已服务新（JSON 暂未可抓取/网络异常）→ 不幻进版本号
+        findings.append({"field": "base_hts_revision", "confidence": "HIGH",
+                         "source": "USITC", "found": f"Rev{usitc_rev} ({usitc_date}) 已宣布",
+                         "current": f"Rev{served_rev}", "action": "FLAG_REVIEW",
+                         "diff": False,
+                         "note": f"USITC 已宣布 Rev{usitc_rev}，但可抓到的最新 rev(provisioned={provisioned_rev}) 不比已服务 Rev{served_rev} 新；"
+                                 f"数据维持 Rev{served_rev}，待官方 JSON 上线后次日自动重建，版本号暂不前进"})
     else:
         findings.append({"field": "base_hts_revision", "confidence": "HIGH",
                          "source": "USITC", "found": f"Rev{usitc_rev} ({usitc_date}) 已最新",
-                         "current": f"Rev{asof_rev}", "action": "NONE",
+                         "current": f"Rev{served_rev}", "action": "NONE",
                          "diff": False, "note": "基础税率表无更新"})
 
     # 2) Federal Register 公文 —— 监控+标记待人工复核（FR 噪声大、生效日常缺结构字段，
@@ -489,20 +513,70 @@ def write_news_feed(today):
     return "FAIL(locked)"
 
 
+def _tariff_data_dir():
+    """输入源目录：CI 由 TARIFF_DATA_DIR 注入（脚本内 temp）；本地回退旧 C 盘路径。"""
+    return os.environ.get("TARIFF_DATA_DIR") or r"C:/Users/Administrator/WorkBuddy/Claw/tariff-data"
+
+
+def _provisioned_rev():
+    """读 fetch_sources 写出的落地 rev 清单：我们实际已抓取到、可用来重建全量数据的 HTS rev。"""
+    p = os.path.join(_tariff_data_dir(), "hts_provisioned_rev.txt")
+    if os.path.exists(p):
+        try:
+            v = open(p, encoding="utf-8").read().strip()
+            return int(v) if v else None
+        except Exception:  # noqa
+            return None
+    return None
+
+
 def maybe_rebuild_full():
     if not os.path.exists(PREPROCESS_PATH):
         return "SKIP(no preprocess)"
     try:
-        # 把 PLATFORM_DIR 注入子进程环境，便于 preprocess 解析输入/输出路径
+        # 把 PLATFORM_DIR + TARIFF_DATA_DIR 注入子进程环境，便于 preprocess 解析输入/输出路径
         env = dict(os.environ)
         env["PLATFORM_DIR"] = PLATFORM_DIR
+        env["TARIFF_DATA_DIR"] = _tariff_data_dir()
         r = subprocess.run([sys.executable, PREPROCESS_PATH], cwd=PLATFORM_DIR,
-                           timeout=300, capture_output=True, env=env)
+                           timeout=600, capture_output=True, env=env)
         if r.returncode == 2:
             return "SKIP(no inputs)"
-        return "OK" if r.returncode == 0 else f"FAIL:{r.stderr[:120]}"
+        res = "OK" if r.returncode == 0 else f"FAIL:{r.stderr[:120]}"
+        # CN 全量重建：仅本地存在 _cn_src 时触发（CI 无 _cn_src → 跳过，CN 维持已入库静态基表）。
+        cn_res = maybe_rebuild_cn(env)
+        return f"{res} | CN:{cn_res}"
     except Exception as e:  # noqa
         return f"FAIL:{e}"
+
+
+def maybe_rebuild_cn(env):
+    """本地有官方 CN 税则 PDF(_cn_src) 时，按其 sha256 变化判定是否重建 tariff_full_cn.json。
+    CI 不入库 70MB PDF（本机 git-lfs 不可用）→ 此分支在 CI 恒为 SKIP，CN 全量维持静态基表。
+    哈希守卫：PDF 未变则不重复重建，避免每日白跑 pdfplumber 解析大文件。"""
+    cn_script = os.path.join(PLATFORM_DIR, "scripts", "build_cn_tariff.py")
+    full_pdf = os.path.join(PLATFORM_DIR, "_cn_src", "cn_2026_full_tariff.pdf")
+    hash_path = os.path.join(PLATFORM_DIR, "src", "data", "cn_src_hash.txt")
+    if not os.path.exists(cn_script) or not os.path.exists(full_pdf):
+        return "SKIP(no _cn_src)"
+    h = hashlib.sha256()
+    with open(full_pdf, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    digest = h.hexdigest()
+    old = ""
+    if os.path.exists(hash_path):
+        with open(hash_path, encoding="utf-8") as f:
+            old = f.read().strip()
+    if old == digest:
+        return "SKIP(unchanged)"
+    r = subprocess.run([sys.executable, cn_script], cwd=PLATFORM_DIR,
+                       timeout=600, capture_output=True, env=env)
+    if r.returncode != 0:
+        return f"FAIL:{r.stderr[:120]}"
+    with open(hash_path, "w", encoding="utf-8") as f:
+        f.write(digest)
+    return f"OK(sha256={digest[:12]})"
 
 
 def maybe_deploy(dirty):
@@ -514,9 +588,15 @@ def maybe_deploy(dirty):
             return "SKIP(not a git repo)"
         if not subprocess.run(["git", "remote"], cwd=PLATFORM_DIR, capture_output=True).stdout.strip():
             return "SKIP(no remote)"
-        # 仅提交本管线触及的数据文件，避免把无关本地改动卷进自动提交
-        for p in ["src/data/policy_overlay.json", "src/data/tariff_full.json",
-                  "public/data/tariff_full.json", "src/data/news_feed.json"]:
+        # 仅提交本管线触及的数据文件，避免把无关本地改动卷进自动提交。
+        # CN 全量(tariff_full_cn.json) 与 _cn_src 哈希仅在本地重建时存在，CI 下按存在性决定是否纳入。
+        add_list = ["src/data/policy_overlay.json", "src/data/tariff_full.json",
+                    "public/data/tariff_full.json", "src/data/news_feed.json"]
+        for extra in ["src/data/tariff_full_cn.json", "public/data/tariff_full_cn.json",
+                      "src/data/cn_src_hash.txt"]:
+            if os.path.exists(os.path.join(PLATFORM_DIR, extra)):
+                add_list.append(extra)
+        for p in add_list:
             subprocess.run(["git", "add", p], cwd=PLATFORM_DIR, capture_output=True)
         msg = f"data refresh {datetime.now(timezone.utc).strftime('%Y-%m-%d')}"
         subprocess.run(["git", "commit", "-m", msg], cwd=PLATFORM_DIR, capture_output=True)
@@ -602,18 +682,18 @@ def main():
         with open(OVERLAY_PATH, encoding="utf-8") as f:
             overlay = json.load(f)
 
-    findings, today = reconcile(usitc_rev, usitc_date, fr_docs, news_items, overlay)
+    provisioned_rev = _provisioned_rev()
+    findings, today = reconcile(usitc_rev, usitc_date, fr_docs, news_items, overlay, provisioned_rev)
 
     # 完全托管：官方源(USITC HIGH / Federal Register MEDIUM)变更直接写回真值，无需人工确认。
-    # 新闻 LOW 仅标记不写回。FRESHNESS_REPORT 保留为非阻塞审查/审计层（记录旧值→新值+来源）。
+    # base_hts_revision 在 action==REBUILD_FULL 时不在本循环写回——版本号须等全量重建成功后才前进，
+    # 避免「页面显示新版本、底层却是旧税率」的错位（USITC 宣布新 rev 但官方 JSON 暂未可抓取时尤其关键）。
     applied = []
     for f in findings:
         act = f.get("action")
+        if f["field"] == "base_hts_revision" and act == "REBUILD_FULL":
+            continue  # 延后到重建成功后写回
         # 完全托管：官方源(USITC HIGH / Federal Register MEDIUM)的结构化真值直接写回。
-        # base_hts_revision 必须在 APPLY(首次探测) 与 REBUILD_FULL(USITC 升版) 两种动作下都更新——
-        # 否则 USITC 发布新修订后，tariff 数据会重建，但页面版本号永久停留在旧修订
-        # （即此前发生的"页面不更新"类 bug）。REVIEW_REBUILD(FR 文本解析出的新版本) 不在此写回，
-        # 因其可能快于/错于 USITC 权威源；仅触发数据重建，等 USITC 权威确认后才更新版本号（守全真数据铁律）。
         if f.get("diff") and f.get("new_value") is not None and act in ("APPLY", "REBUILD_FULL"):
             if set_overlay_val(overlay, f["field"], f["new_value"]):
                 if f["field"] == "base_hts_revision" and usitc_date:
@@ -639,6 +719,22 @@ def main():
             rebuild = maybe_rebuild_full()
             break
     print(f"[refresh] rebuild full: {rebuild}")
+
+    # 全量重建成功后才把页面版本号前进到新 rev；重建未成功(FAIL/SKIP)则维持旧版本，标记待排查——
+    # 守全真数据：绝不出现「版本号=新 rev 而底层数据=旧 rev」的错位。
+    for f in findings:
+        if f["field"] == "base_hts_revision" and f["action"] == "REBUILD_FULL":
+            if rebuild.startswith("OK"):
+                set_overlay_val(overlay, "base_hts_revision", f["new_value"])
+                if usitc_date:
+                    overlay["base_hts_date"] = usitc_date
+                overlay["last_checked"] = today
+                write_overlay_atomic(overlay)
+                print(f"[refresh] base_hts_revision advanced -> Rev{f['new_value']}")
+            else:
+                f["action"] = "FLAG_REVIEW"
+                f["note"] = (f.get("note") or "") + f" | 重建未成功({rebuild})，版本号不前进，待排查"
+                print(f"[refresh] WARN: rebuild 未成功({rebuild})，版本号不前进")
 
     # 每日 push：last_checked / news_feed.generated_at 每次运行都会更新为今日，
     # 故即使无税率变更也 commit+push，保证 CF Pages 重建后线上“页面更新日期”每日刷新。

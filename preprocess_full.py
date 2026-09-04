@@ -1,6 +1,6 @@
 # 全量关税数据预处理：官方 USITC HTS Rev17 JSON + 官方 China Tariffs 映射表(PDF)
 # -> 生成 tariff_full.json（所有 HTS 的 base + Section301 List4A 叠加层），供生产计算器自由查询。
-import json, re, shutil, os, sys
+import json, re, shutil, os, sys, glob
 from pypdf import PdfReader
 
 # 路径全部基于本文件位置推算，避免硬编码旧磁盘路径在 CI(Linux) / 搬盘后失效。
@@ -8,7 +8,18 @@ HERE = os.path.dirname(os.path.abspath(__file__))   # 仓库根（preprocess_ful
 ROOT = HERE
 # 输入源目录：CI 用 TARIFF_DATA_DIR 挂载；本地回退旧 C 盘 tariff-data 路径
 TARIFF_DATA_DIR = os.environ.get("TARIFF_DATA_DIR") or r"C:/Users/Administrator/WorkBuddy/Claw/tariff-data"
-PATH_JSON = os.path.join(TARIFF_DATA_DIR, "hts_2026_rev17.json")
+
+def _latest_hts_json(tdir):
+    """glob hts_2026_rev*.json，取最大修订号的文件（CI 自动拉取最新 rev 后此即最新）。无则回退 rev17 路径。"""
+    best, best_rev = None, -1
+    for p in glob.glob(os.path.join(tdir, "hts_2026_rev*.json")):
+        m = re.search(r"hts_2026_rev(\d+)\.json$", os.path.basename(p))
+        if m and int(m.group(1)) > best_rev:
+            best_rev, best = int(m.group(1)), p
+    return best
+
+# 输入：US HTS 基础表 JSON（按最新 rev 自动选取）+ China-301 映射 PDF
+PATH_JSON = _latest_hts_json(TARIFF_DATA_DIR) or os.path.join(TARIFF_DATA_DIR, "hts_2026_rev17.json")
 PATH_PDF  = os.path.join(TARIFF_DATA_DIR, "china_tariffs_2026.html")
 # 输出：构建期 SSR 用 src/data，运行时客户端用 public/data，两份须一致
 OUT = os.path.join(ROOT, "src", "data", "tariff_full.json")
@@ -26,7 +37,7 @@ def parse_rate(s):
 
 if not (os.path.exists(PATH_JSON) and os.path.exists(PATH_PDF)):
     # CI 未挂载输入源时明确 SKIP（exit 2），让调用方记录「SKIP(no inputs)」而非静默失败
-    print(f"[preprocess] SKIP: 输入文件缺失 -> 设置 TARIFF_DATA_DIR 指向含 hts_2026_rev17.json / china_tariffs_2026.html 的目录\n  JSON={PATH_JSON}\n  PDF={PATH_PDF}")
+    print(f"[preprocess] SKIP: 输入文件缺失 -> 设置 TARIFF_DATA_DIR 指向含 hts_2026_rev*.json / china_tariffs_2026.html 的目录\n  JSON={PATH_JSON}\n  PDF={PATH_PDF}")
     sys.exit(2)
 
 print("load schedule...")
