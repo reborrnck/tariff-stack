@@ -6,8 +6,8 @@ TariffStack — 多源关税数据刷新管线 (refresh_daily.py)
 用户 2026-09-02 钉死的四项要求：
   1. 多源多维采集：不单信 USITC 单一官方。叠加 Federal Register(政府公报 API，最权威实时)
      + Google News RSS(抓"已经更新但我们不知道"的最新新闻) + 官方机构(USTR/Commerce/CBP)。
-     USITC 档案直连常被 Cloudflare 403，故作为 best-effort；基础表新修订主要靠
-     FR/News 命中 "Harmonized Tariff Schedule Revision" 触发人工重建。
+     USITC 基础表新修订改从官方交互式 HTS 的 reststop API(hts.usitc.gov/reststop，
+     结构化 JSON，未被 Cloudflare 拦截)探测 currentRelease；命中新 Rev 即触发重建。
   2. 正确数据判定：Federal Register / USITC 官方 = HIGH(可写回)；官方机构新闻 = MEDIUM；
      单一新闻源 = LOW(仅标记不写回)。分歧时按"权威性+时效性+交叉印证"判正确值。
   3. 24h 自动迭代：本脚本由每日自动化调用；用户手动喊"更新最新数据"也直接跑。
@@ -36,7 +36,7 @@ FULL_DATA_PATH = os.path.join(PLATFORM_DIR, "public", "data", "tariff_full.json"
 PREPROCESS_PATH = os.path.join(PLATFORM_DIR, "preprocess_full.py")
 REPORT_DIR = os.environ.get("REPORT_DIR") or os.path.abspath(os.path.join(HERE, "..", "kw-research", "outputs"))  # CI 注入 runner.temp；本地走 Claw/kw-research
 
-USITC_ARCHIVE = "https://www.usitc.gov/tata/hts/archive/index.htm"
+USITC_REST_BASE = "https://hts.usitc.gov/reststop"  # 官方交互式 HTS 的 reststop API（hts.usitc.gov，未被 Cloudflare 拦截，结构化 JSON）
 # 针对性政策词（抓宏观 232/301 公告，而非个案 AD/CVD 噪声）
 FR_TERMS = ["Section 232", "Section 301", "de minimis",
             "Harmonized Tariff Schedule", "reciprocal tariff", "forced labor"]
@@ -86,6 +86,7 @@ FIELD_MAP = {
     "sec232_drones_eff":         (("effective_dates", "sec232_drones"), "date"),
     "sec232_polysilicon_eff":    (("effective_dates", "sec232_polysilicon"), "date"),
     "_deminimis":                (("effective_dates", "deminimis"), "date"),
+    "base_hts_revision":         (("base_hts_revision",), "rev"),
 }
 
 
@@ -159,16 +160,21 @@ def _build_opener():
 _OPENER = None
 
 
-def http_get(url, timeout=25):
+def http_get(url, timeout=25, extra_headers=None):
     global _OPENER
     if _OPENER is None:
         _OPENER = _build_opener()
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+    if extra_headers:
+        headers.update(extra_headers)
     tries = [_OPENER, urllib.request.build_opener()]  # 代理 -> 直连兜底
     last = None
     for op in tries:
         try:
-            req = urllib.request.Request(url, headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"})
+            req = urllib.request.Request(url, headers=headers)
             with op.open(req, timeout=timeout) as r:
                 return r.read().decode("utf-8", "replace"), None
         except Exception as e:  # noqa
@@ -177,14 +183,48 @@ def http_get(url, timeout=25):
 
 
 # ---------- 采集 ----------
+def _norm_us_date(s):
+    """把 USITC releaseList 的 MM/DD/YYYY 归一成 YYYY-MM-DD（非该格式原样返回）。"""
+    if not s or not isinstance(s, str):
+        return s
+    m = re.match(r"^(\d{2})/(\d{2})/(\d{4})$", s.strip())
+    return f"{m.group(3)}-{m.group(1)}-{m.group(2)}" if m else s
+
+
 def check_usitc():
-    html, err = http_get(USITC_ARCHIVE)
-    if not html:
-        return None, None, f"FAIL:{err}"
-    m = re.search(r"2026 HTS Revision (\d+)\s*\(([^)]+)\)", html)
+    """探测当前 USITC HTS 修订号+生效日期。
+    改用官方交互式 HTS 的 reststop API（hts.usitc.gov，未被 Cloudflare 拦），
+    比旧 www.usitc.gov 文案正则更稳、结构化。currentRelease 给修订号，
+    releaseList 当前条目给日期（优先生效日期 target/releaseStartDate，回退创建日期 date）。
+    """
+    txt, err = http_get(USITC_REST_BASE + "/currentRelease",
+                        extra_headers={"Accept": "application/json"})
+    if not txt:
+        return None, None, f"FAIL:currentRelease:{err}"
+    try:
+        cur = json.loads(txt)
+    except Exception as e:  # noqa
+        return None, None, f"JSON_FAIL:currentRelease:{e}"
+    name = cur.get("name", "") or cur.get("description", "") or ""
+    m = re.search(r"HTSRev(\d+)", name) or re.search(r"Revision\s+(\d+)", name)
     if not m:
-        return None, None, "PARSE_FAIL"
-    return int(m.group(1)), m.group(2).strip(), "OK"
+        return None, None, "PARSE_FAIL:rev"
+    rev = int(m.group(1))
+    # 取日期：releaseList 中 status=current 或 name 命中的条目
+    date = ""
+    ltxt, lerr = http_get(USITC_REST_BASE + "/releaseList",
+                          extra_headers={"Accept": "application/json"})
+    if ltxt:
+        try:
+            for it in json.loads(ltxt):
+                if it.get("status") == "current" or it.get("name") == name:
+                    date = (it.get("target") or it.get("releaseStartDate")
+                            or it.get("date") or "")
+                    date = _norm_us_date(date)
+                    break
+        except Exception:  # noqa
+            pass
+    return rev, date, "OK"
 
 
 def fetch_fed_register():
@@ -262,21 +302,38 @@ def fetch_news():
 def reconcile(usitc_rev, usitc_date, fr_docs, news_items, overlay):
     findings = []
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    # 当前已记录的基础表修订号：优先读专属字段 base_hts_revision（首次探测后写入），
+    # 旧部署可能把版本号藏在 as_of 文案里，做一次兼容回退。
     asof_rev = None
-    m = re.search(r"Revision (\d+)", overlay.get("as_of", ""))
-    if m:
-        asof_rev = int(m.group(1))
+    br = overlay.get("base_hts_revision")
+    if isinstance(br, int):
+        asof_rev = br
+    elif isinstance(br, str) and br.isdigit():
+        asof_rev = int(br)
+    else:
+        m = re.search(r"Revision (\d+)", overlay.get("as_of", ""))
+        if m:
+            asof_rev = int(m.group(1))
 
-    # 1) USITC 基础表修订
-    if usitc_rev and (asof_rev is None or usitc_rev > asof_rev):
+    # 1) USITC 基础表修订（rev 来自 reststop/currentRelease，结构化 JSON）
+    if usitc_rev is None:
+        pass  # 取数失败不误报，靠 FR/News 兜底
+    elif asof_rev is None:
+        # 首次探测到修订号 → 记录基准（站点应已反映当前真实税率），不触发重建，避免每日噪声
         findings.append({"field": "base_hts_revision", "confidence": "HIGH",
                          "source": "USITC", "found": f"Rev{usitc_rev} ({usitc_date})",
-                         "current": overlay.get("as_of", "?"), "action": "REBUILD_FULL",
+                         "current": "(未记录)", "action": "APPLY", "new_value": usitc_rev,
+                         "diff": True,
+                         "note": f"首次探测，记录基准 HTS 修订 Rev{usitc_rev}（{usitc_date}）"})
+    elif usitc_rev > asof_rev:
+        findings.append({"field": "base_hts_revision", "confidence": "HIGH",
+                         "source": "USITC", "found": f"Rev{usitc_rev} ({usitc_date})",
+                         "current": f"Rev{asof_rev}", "action": "REBUILD_FULL",
                          "diff": True, "note": "USITC 发布新修订，需重建 tariff_full.json"})
-    elif usitc_rev:
+    else:
         findings.append({"field": "base_hts_revision", "confidence": "HIGH",
                          "source": "USITC", "found": f"Rev{usitc_rev} ({usitc_date}) 已最新",
-                         "current": overlay.get("as_of", "?"), "action": "NONE",
+                         "current": f"Rev{asof_rev}", "action": "NONE",
                          "diff": False, "note": "基础税率表无更新"})
 
     # 2) Federal Register 公文 —— 监控+标记待人工复核（FR 噪声大、生效日常缺结构字段，
@@ -447,7 +504,7 @@ def write_report(usitc_rev, usitc_date, fr_docs, news_items, findings, deploy_re
          "> 多源采集：USITC HTS 档案(best-effort) + Federal Register API + Google News RSS。",
          "> 判定：Federal Register/USITC 官方=HIGH；官方机构新闻=MEDIUM；单新闻源=LOW(仅标记)。", "",
          "## 采集状态"]
-    L.append(f"- USITC 最新修订探测：rev={usitc_rev} date={usitc_date}（403=Cloudflare 拦截，属正常，靠 FR/News 兜底）")
+    L.append(f"- USITC 最新修订探测(reststop API)：rev={usitc_rev} date={usitc_date}（OK=结构化 JSON 命中；FAIL/JSON_FAIL/PARSE_FAIL=取数异常，靠 FR/News 兜底）")
     L.append(f"- Federal Register 近期公文：{len(fr_docs)} 条")
     L.append(f"- Google News 近期关税新闻：{len(news_items)} 条")
     L.append(f"- 线上同步(commit/push)：{deploy_res}")
