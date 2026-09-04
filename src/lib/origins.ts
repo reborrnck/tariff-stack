@@ -42,11 +42,3 @@ export function originName(iso2: string, lang: string): string {
   return o.en;
 }
 
-export function originTradesUs(iso2: string): boolean {
-  const o = ORIGINS.find((x) => x.iso2 === iso2);
-  return o ? o.tradesUs : true;
-}
-export function originTradesCn(iso2: string): boolean {
-  const o = ORIGINS.find((x) => x.iso2 === iso2);
-  return o ? o.tradesCn : true;
-}

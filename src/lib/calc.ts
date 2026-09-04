@@ -14,10 +14,6 @@
 //                       chapter) + origin-aware FTA preference + consumption tax +
 //                       clearance fee. Never a U.S. proxy; origin is always honored.
 
-import type { Lang } from './i18n.ts';
-
-const pct = (x: number) => (x * 100).toFixed(2) + '%';
-
 export interface Rate {
   desc: string;
   base: number;
