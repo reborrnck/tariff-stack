@@ -1,0 +1,244 @@
+---
+const en = {
+  title: 'Terms of Service & Disclaimer — TariffStack',
+  h1: 'Terms of Service & Disclaimer',
+  updated: 'Last updated',
+  intro: 'TariffStack is a free, ad-supported public-good estimator for import duties and landed costs. These Terms form a legal agreement between you and the operator of TariffStack. By accessing or using TariffStack you accept these Terms. If you do not accept them, please do not use the tool.',
+  toc: 'Contents',
+
+  // 1. Acceptance
+  s1_h: '1. Acceptance of Terms',
+  s1: 'These Terms apply to all use of the TariffStack website, calculator, classifier and any related pages. By loading any TariffStack page, by running a calculation, by querying the HS-code classifier, or by accepting the cookie notice, you confirm that you have read, understood and agreed to these Terms and to the Disclaimer (section 13 below). If you are accepting on behalf of an organization, you represent that you have authority to bind that organization.',
+
+  // 2. Service description
+  s2_h: '2. Service Description',
+  s2: 'TariffStack is a browser-based estimator. The U.S. destination uses the full official stacked tariff (USITC HTS, subheading-level: base MFN + Section 301 + forced-labour duty + MPF/HMF) with origin-aware FTA preferences to produce landed-cost figures for a given HS code, origin, destination and declared value. The China destination uses the OFFICIAL 2026 China Customs import tariff schedule (State Council Tariff Commission, effective 2026-01-01), parsed from the published government schedule, and returns REAL rates (最惠国/MFN + 暂定/provisional where lower) where the HS code is matched — no fabricated figures. The tool is free to use, requires no account, and does not transmit your calculation inputs to our servers — calculations run entirely client-side once the dataset is loaded.',
+
+  // 3. NOT legal/tax/broker advice
+  s3_h: '3. Not Legal, Tax or Customs-Broker Advice',
+  s3: 'TariffStack is an independent estimation tool. It is NOT a law firm, tax advisory firm, customs brokerage, licensed customs broker service, freight forwarder, trade-compliance consultancy, or accounting practice. Nothing on this site constitutes legal advice, tax advice, an opinion of counsel, a binding or advisory ruling from any customs authority, a classification ruling, or a formal compliance opinion for any jurisdiction. If you require such advice, you must engage a licensed attorney, customs broker or qualified professional in the relevant jurisdiction.',
+
+  // 4. No Warranty
+  s4_h: '4. No Warranty',
+  s4: 'TariffStack, including its source code, UI, compiled dataset, output values, and documentation, is provided "AS IS" and "AS AVAILABLE", without warranty of any kind, express, implied, statutory or otherwise. We specifically disclaim any warranty of accuracy, completeness, currency, fitness for a particular purpose, non-infringement, and uninterrupted or error-free operation. We do not warrant that the tool, the dataset, or any output will meet your requirements, that any rate shown is correct for your specific transaction, or that defects will be corrected within a particular time. See the Disclaimer block (section 13) for additional data-accuracy caveats specific to tariff numbers.',
+
+  // 5. Limitation of liability
+  s5_h: '5. Limitation of Liability',
+  s5: 'To the maximum extent permitted by applicable law, TariffStack, its authors, contributors, operators and licensors shall NOT be liable for any customs penalty, additional duty, tax, fine, late fee, interest, demurrage, storage charge, seized goods, lost or destroyed shipment, refused entry, return denial, refund denial, audit cost, compliance cost, professional-fee cost, or any direct, indirect, incidental, special, consequential, exemplary or punitive loss, including lost profits or business opportunity, arising from or related to your use of, or inability to use, TariffStack — even if we have been advised of the possibility of such loss. Where liability cannot lawfully be excluded, it is limited to the amount you have paid us in the twelve (12) months preceding the claim (which is currently USD 0, because the service is free).',
+
+  // 6. User responsibility
+  s6_h: '6. Your Responsibility to Verify',
+  s6: 'You are solely responsible for verifying the accuracy, completeness and applicability of any TariffStack output before relying on it. ALWAYS confirm the duty, tax, fee, classification, exemption, threshold, FTA preference and origin qualification with the relevant customs authority of the destination country, and where appropriate with a licensed customs broker in that jurisdiction, and consult qualified legal counsel before filing any entry, return, refund claim, exemption claim, AD-CVD response, Section 301 / 232 response, or any other compliance action.',
+
+  // 7. Advertising — kept SHORT here; full detail lives on the Advertising & Privacy page
+  s7_h: '7. Advertising',
+  s7: 'TariffStack is free and supported by advertising (currently Google AdSense). The cookies, identifiers and opt-out choices involved are described on our Advertising & Privacy page, not here. In short: ad providers may set cookies/identifiers to deliver and measure ads; we do not sell or share your calculation inputs with advertisers; your language and last calculation are stored only in your own browser.',
+
+  // 8. IP
+  s8_h: '8. Intellectual Property',
+  s8: 'The TariffStack source code, UI design, classifier logic, and the compiled dataset (the arrangement and selection of fields) are released under the GNU Affero General Public License v3.0 (AGPL-3.0). You may view, fork and self-host the code under the terms of that license. The underlying source data remain the property of their respective authorities — USITC Harmonized Tariff Schedule, Federal Register, USTR, CBP, U.S. Census Bureau, UN Comtrade (used for the export-country trade-linkage data), and China Customs (official 2026 tariff schedule, integration in progress) — and are used in accordance with their respective open-data terms. TariffStack, the wordmark and the logo are trademarks of the operator.',
+
+  // 9. Prohibited use
+  s9_h: '9. Prohibited Use',
+  s9: 'You agree not to (a) access TariffStack by any automated means at a rate that meaningfully degrades the service for other users, (b) scrape the dataset in bulk to republish it as a competing product, (c) misrepresent TariffStack output as a binding classification, ruling or licensed advice, (d) attempt to reverse-engineer, interfere with, or circumvent rate-limiting, rate-of-access controls, or any security mechanism, (e) use TariffStack for any unlawful purpose, including any transaction that violates U.S. export controls, sanctions administered by OFAC, or the destination country\'s import laws.',
+
+  // 10. Third-party links & data sources
+  s10_h: '10. Third-Party Links & Data Sources',
+  s10: 'TariffStack aggregates data from third-party open-data feeds. Where TariffStack links to a third-party source (e.g. a specific USITC HTS chapter, a Federal Register notice, a CBP CROSS ruling, a UN Comtrade record), that link is provided for your convenience and we do not control the linked content. Following such a link is at your own risk and subject to the third party\'s terms and privacy policy.',
+
+  // 11. Governing law & disputes
+  s11_h: '11. Governing Law & Dispute Resolution',
+  s11: 'These Terms are governed by the laws of the jurisdiction in which the operating entity is registered, without regard to conflict-of-law principles. Any dispute shall first be attempted in good-faith negotiation. Failing settlement within sixty (60) days, the dispute shall be finally resolved by binding arbitration under the UNCITRAL Arbitration Rules, in the English language. Nothing in these Terms limits any non-waivable rights you have under the consumer-protection laws of your country of residence, including any right to bring an action in your local courts.',
+
+  // 12. Changes & contact
+  s12_h: '12. Changes to Terms & Contact',
+  s12: 'We may revise these Terms to reflect changes in the law, in our data sources, in our advertising practices, or in our operations. The "Last updated" date above records the latest revision. Material changes will be announced by a banner on the home page for at least fourteen (14) days before they take effect. Continued use after a change takes effect constitutes acceptance of the revised Terms. Questions about these Terms may be sent to TariffStack@outlook.com, or to the team lead at zmarkz123zxc@gmail.com.',
+
+  // 13. Disclaimer (consolidated plain-language statement)
+  s13_h: '13. Disclaimer',
+  s13: 'TariffStack is an independent estimation tool. The duties, taxes, and total landed costs shown are ESTIMATES under best-effort assumptions — NOT legal advice, tax advice, a customs-broker service, or licensed compliance advice for any jurisdiction. We make NO WARRANTY of accuracy, completeness, or currency of any rate, rule, exemption, threshold, or fee shown. We accept NO LIABILITY for any customs penalty, additional duty, tax, fine, late fee, demurrage, storage charge, seized goods, lost shipment, or any direct or consequential loss arising from how you use — or fail to verify — these estimates. U.S. rates reflect USITC HTS Rev17 (2026-08-24) plus the official China Tariffs mapping and the 2026-07-24 forced-labor duty (9903.05.31, +12.5%); other markets use each destination\'s own official HS tariff schedule plus your selected origin\'s FTA preference. Exclusions, Section 232 (steel/alum 50%, autos 25%, pharma 100% eff. 2026-09-29), AD/CVD, FTA origin-qualification rules, de minimis thresholds, and destination VAT/GST/sales/consumption taxes may change your actual entry. ALWAYS confirm with the relevant customs authority or a licensed customs broker in the destination country — and consult qualified legal counsel when needed — before filing any entry, return, or refund claim.',
+
+  back: '← Back to TariffStack',
+};
+
+const zh = {
+  title: '服务条款与免责声明 — TariffStack',
+  h1: '服务条款与免责声明',
+  updated: '最后更新',
+  intro: 'TariffStack 是一个免费、由广告支持的公益工具，用于估算进口关税与到岸成本。本条款构成你与 TariffStack 运营者之间的法律协议。访问或使用 TariffStack 即表示你接受本条款。如不接受，请勿使用本工具。',
+  toc: '目录',
+
+  s1_h: '1. 条款的接受',
+  s1: '本条款适用于对 TariffStack 网站、计算器、归类器及任何相关页面的全部使用。加载任何 TariffStack 页面、运行一次计算、查询 HS 编码归类器，或接受 Cookie 提示，即表示你确认已阅读、理解并同意本条款及下方第 13 节《免责声明》。如你代表某组织接受，你声明拥有约束该组织的授权。',
+
+  s2_h: '2. 服务说明',
+  s2: 'TariffStack 是基于浏览器的估算工具。美国目的地使用完整的官方叠加关税（USITC HTS 子目级：基础 MFN + 301 条款 + 强迫劳动税 + MPF/HMF），结合按原产国适用的 FTA 优惠，针对给定 HS 编码、原产国、目的国与申报金额生成到岸成本。中国目的地使用官方《2026 年关税税则》（国务院关税税则委员会，2026-01-01 起施行），解析自政府发布的税则，在 HS 编码匹配时返回真实税率（最惠国/MFN + 暂定税率（若更低）），无任何虚构数值。本工具免费使用，无需账号，且不向我们的服务器传输你的计算输入——数据集加载后计算完全在客户端进行。',
+
+  s3_h: '3. 非法律、税务或报关建议',
+  s3: 'TariffStack 是独立的估算工具。它并非律师事务所、税务咨询公司、报关行、持证报关服务、货运代理、贸易合规咨询机构或会计师事务所。本网站任何内容均不构成法律意见、税务意见、律师意见、任何海关机关的约束性或咨询性裁定、归类裁定，或针对任一法域的正式合规意见。如你需要此类建议，必须聘请相关法域的持证律师、报关行或合格专业人士。',
+
+  s4_h: '4. 无担保',
+  s4: 'TariffStack，包括其源代码、界面、已编译数据集、输出数值与文档，按"现状"和"现有"基础提供，不附带任何明示、暗示、法定或其他形式的担保。我们特别否认关于准确性、完整性、时效性、特定用途适用性、不侵权、以及不间断或无差错运行的任何担保。我们不担保本工具、数据集或任何输出满足你的要求，不担保所示任一税率适用于你的具体交易，也不担保缺陷会在特定时间内修复。针对关税数字的数据准确性补充提示，见第 13 节《免责声明》板块。',
+
+  s5_h: '5. 责任限制',
+  s5: '在适用法律允许的最大范围内，TariffStack 及其作者、贡献者、运营者与许可方，对于因你使用或无法使用 TariffStack 而产生或与之相关的任何海关罚款、追加关税、税款、罚金、滞纳金、利息、滞期费、仓储费、没收货物、丢失或损毁货件、拒绝入境、退运拒绝、退税拒绝、审计成本、合规成本、专业服务费用，或任何直接、间接、附带、特殊、后果性、惩戒性或惩罚性损失（包括利润或商业机会损失），均不承担责任——即便我们已被告知此类损失的可能性。在责任依法不得排除的范围内，责任限于你在索赔前十二（12）个月内向我们支付的金额（目前为 0 美元，因为本服务免费）。',
+
+  s6_h: '6. 你自行核实的责任',
+  s6: '在依赖任何 TariffStack 输出之前，你全权负责核实其准确性、完整性与适用性。务必与目的国的相关海关机关确认关税、税款、费用、归类、豁免、阈值、FTA 优惠及原产国资格，并在适当时咨询该法域的持证报关行，并在提交任何报关、退税、豁免申请、反倾销/反补贴（AD-CVD）答复、301/232 条款答复或任何其他合规行动前咨询合格法律顾问。',
+
+  s7_h: '7. 广告',
+  s7: 'TariffStack 免费并由广告支持（目前为 Google AdSense）。所涉及的 Cookie、标识符与退出选择，详见我们的《广告与隐私》页，而非本页。简而言之：广告提供方可能设置 Cookie/标识符以投放与衡量广告；我们不向广告主出售或共享你的计算输入；你的语言偏好与上一次计算仅保存在你自己的浏览器中。',
+
+  s8_h: '8. 知识产权',
+  s8: 'TariffStack 源代码、界面设计、归类逻辑与已编译数据集（字段的编排与选取）依据 GNU Affero 通用公共许可证 v3.0（AGPL-3.0）发布。你可在该许可证条款下查看、派生并自行托管代码。底层源数据仍为各自主管机关的财产——USITC 协调关税表、Federal Register、USTR、CBP、美国人口普查局、UN Comtrade（用于原产国贸易联动数据），以及中国海关（官方 2026 年税则，集成进行中）——并依各自开放数据条款使用。TariffStack、其字号与标识为运营者的商标。',
+
+  s9_h: '9. 禁止用途',
+  s9: '你同意不得：(a) 以任何自动化方式访问 TariffStack，且速率显著影响其他用户的使用体验；(b) 批量抓取数据集并将其作为竞争产品重新发布；(c) 将 TariffStack 输出冒充为具约束力的归类、裁定或持证建议；(d) 试图反向工程、干扰或规避限流、访问频率控制或任何安全机制；(e) 将 TariffStack 用于任何非法目的，包括违反美国出口管制、OFAC 制裁或目的国进口法的交易。',
+
+  s10_h: '10. 第三方链接与数据来源',
+  s10: 'TariffStack 聚合来自第三方开放数据源的数据。当 TariffStack 链接至第三方来源（如某条 USITC HTS 章节、Federal Register 公告、CBP CROSS 裁定、UN Comtrade 记录）时，该链接仅为方便你而提供，我们不控制被链接内容。访问此类链接风险自负，并受第三方条款与隐私政策约束。',
+
+  s11_h: '11. 适用法律与争议解决',
+  s11: '本条款受运营实体注册地法域的法律管辖，不考虑法律冲突原则。任何争议应首先友好协商。若在六十（60）日内未能和解，争议应依据 UNCITRAL 仲裁规则以英文进行终局仲裁解决。本条款不限制你依居住地消费者保护法律享有的任何不可放弃权利，包括在你本地法院起诉的权利。',
+
+  s12_h: '12. 条款变更与联系',
+  s12: '我们可修订本条款，以反映法律、数据源、广告实践或运营的变化。上方的"最后更新"日期记录最新修订。重大变更将在首页以横幅预告至少十四（14）天后再生效。变更生效后继续使用即视为接受修订后的条款。有关本条款的问题可发送至 TariffStack@outlook.com，或联系团队负责人 zmarkz123zxc@gmail.com。',
+
+  s13_h: '13. 免责声明',
+  s13: 'TariffStack 是独立的估算工具。所示关税、税款与到岸成本总额，均为基于尽力假设的估算值——并非针对任一法域的法律意见、税务意见、报关行服务或持证合规建议。我们对所示任何税率、规则、豁免、阈值或费用的准确性、完整性或时效性不作任何担保。对于因你使用或未能核实这些估算而产生的任何海关罚款、追加关税、税款、罚金、滞纳金、滞期费、仓储费、没收货物、货件丢失，或任何直接或后果性损失，我们概不承担责任。美国税率反映 USITC HTS Rev17（2026-08-24）叠加官方对华关税映射，以及 2026-07-24 生效的强迫劳动税（9903.05.31，+12.5%）；其他市场使用各目的国自身的官方 HS 税则，叠加你所选原产国的 FTA 优惠。排他性条款、232 条款（钢铝 50%、汽车 25%、药品 100%，2026-09-29 生效）、反倾销/反补贴（AD-CVD）、FTA 原产国资格规则、de minimis 免税额，以及目的国增值税/消费税/销售税，均可能改变你的实际报关结果。在提交任何报关、退税或豁免申请前，务必与目的国相关海关机关或持证报关行确认——并在需要时咨询合格法律顾问。',
+
+  back: '← 返回 TariffStack',
+};
+
+const data = { en, zh, 'zh-TW': en, ja: en, es: en, de: en, ko: en, fr: en, pt: en, it: en };
+const lang = 'en';
+const d = en;
+import overlay from '../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="TariffStack Terms of Service & Disclaimer — the legal agreement and liability disclaimer covering use of the free, ad-supported import-duty estimator." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;--scroll-thumb:#c8d0dd;--scroll-thumb-hover:#a8b3c5;--scroll-track:transparent;}
+    *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) var(--scroll-track);}
+    *::-webkit-scrollbar{width:10px;height:10px;}
+    *::-webkit-scrollbar-track{background:var(--scroll-track);}
+    *::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:10px;border:2px solid transparent;background-clip:padding-box;}
+    *::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover);background-clip:padding-box;border:2px solid transparent;}
+    *::-webkit-scrollbar-corner{background:transparent;}
+    [data-theme="dark"]{
+      --bg:#0b1120; --card:#121a2b; --ink:#e8edf6; --ink-deep:#f4f8fd; --content:#c4cedb;
+      --mut:#8b99ad; --line:#1e2a3e; --line2:#2b3a52;
+      --accent:#8aa7d8; --accent-soft:#1a2740;
+      --good:#6fbf9c; --warn:#d8a866; --bad:#d88686;
+      --scroll-thumb:#2b3a52; --scroll-thumb-hover:#3d5070;
+    }
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    [data-theme="dark"] .lead{background:var(--accent-soft);border-color:var(--line2);}
+    [data-theme="dark"] .toc{background:#16223a;border-color:var(--line2);}
+    body{margin:0;font:19px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:20px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:24px;line-height:1.6;}
+    .toc{background:#fafbfd;border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:28px;font-size:14.5px;line-height:1.8;}
+    .toc ol{margin:0;padding-left:20px;}
+    .toc a{color:var(--ink);text-decoration:none;font-weight:600;}
+    .toc a:hover{color:var(--accent);}
+    h2{margin:30px 0 10px;font-size:21px;font-weight:700;color:var(--ink);letter-spacing:-.005em;scroll-margin-top:80px;}
+    h2.disclaimer{color:var(--warn);border-top:3px solid var(--warn);padding-top:18px;margin-top:36px;}
+    p{margin:0 0 14px;line-height:1.65;}
+    .back{margin-top:36px;display:inline-block;font-weight:700;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:19px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">Terms of Service & Disclaimer</span></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc" aria-label="Table of contents">
+      <strong data-i18n="toc">{d.toc}</strong>
+      <ol>
+        <li><a href="#s1" data-i18n="s1_h">{d.s1_h}</a></li>
+        <li><a href="#s2" data-i18n="s2_h">{d.s2_h}</a></li>
+        <li><a href="#s3" data-i18n="s3_h">{d.s3_h}</a></li>
+        <li><a href="#s4" data-i18n="s4_h">{d.s4_h}</a></li>
+        <li><a href="#s5" data-i18n="s5_h">{d.s5_h}</a></li>
+        <li><a href="#s6" data-i18n="s6_h">{d.s6_h}</a></li>
+        <li><a href="#s7" data-i18n="s7_h">{d.s7_h}</a></li>
+        <li><a href="#s8" data-i18n="s8_h">{d.s8_h}</a></li>
+        <li><a href="#s9" data-i18n="s9_h">{d.s9_h}</a></li>
+        <li><a href="#s10" data-i18n="s10_h">{d.s10_h}</a></li>
+        <li><a href="#s11" data-i18n="s11_h">{d.s11_h}</a></li>
+        <li><a href="#s12" data-i18n="s12_h">{d.s12_h}</a></li>
+        <li><a href="#disclaimer" data-i18n="s13_h">{d.s13_h}</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="s1" data-i18n="s1_h">{d.s1_h}</h2><p data-i18n="s1">{d.s1}</p>
+    <h2 id="s2" data-i18n="s2_h">{d.s2_h}</h2><p data-i18n="s2">{d.s2}</p>
+    <h2 id="s3" data-i18n="s3_h">{d.s3_h}</h2><p data-i18n="s3">{d.s3}</p>
+    <h2 id="s4" data-i18n="s4_h">{d.s4_h}</h2><p data-i18n="s4">{d.s4}</p>
+    <h2 id="s5" data-i18n="s5_h">{d.s5_h}</h2><p data-i18n="s5">{d.s5}</p>
+    <h2 id="s6" data-i18n="s6_h">{d.s6_h}</h2><p data-i18n="s6">{d.s6}</p>
+    <h2 id="s7" data-i18n="s7_h">{d.s7_h}</h2><p data-i18n="s7">{d.s7}</p>
+    <h2 id="s8" data-i18n="s8_h">{d.s8_h}</h2><p data-i18n="s8">{d.s8}</p>
+    <h2 id="s9" data-i18n="s9_h">{d.s9_h}</h2><p data-i18n="s9">{d.s9}</p>
+    <h2 id="s10" data-i18n="s10_h">{d.s10_h}</h2><p data-i18n="s10">{d.s10}</p>
+    <h2 id="s11" data-i18n="s11_h">{d.s11_h}</h2><p data-i18n="s11">{d.s11}</p>
+    <h2 id="s12" data-i18n="s12_h">{d.s12_h}</h2><p data-i18n="s12">{d.s12}</p>
+    <h2 id="disclaimer" class="disclaimer" data-i18n="s13_h">{d.s13_h}</h2><p data-i18n="s13">{d.s13}</p>
+
+    <a class="back" href="/" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline>
+    // Lightweight zh swap — mirrors the home page language preference (localStorage 'ts-lang').
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        if (lang !== 'zh') return;
+        var zh = {
+          h1: '服务条款与免责声明', updated: '最后更新', intro: 'TariffStack 是一个免费、由广告支持的公益工具，用于估算进口关税与到岸成本。本条款构成你与 TariffStack 运营者之间的法律协议。访问或使用 TariffStack 即表示你接受本条款。如不接受，请勿使用本工具。',
+          toc: '目录',
+          s1_h: '1. 条款的接受', s1: '本条款适用于对 TariffStack 网站、计算器、归类器及任何相关页面的全部使用。加载任何 TariffStack 页面、运行一次计算、查询 HS 编码归类器，或接受 Cookie 提示，即表示你确认已阅读、理解并同意本条款及下方第 13 节《免责声明》。如你代表某组织接受，你声明拥有约束该组织的授权。',
+          s2_h: '2. 服务说明', s2: 'TariffStack 是基于浏览器的估算工具。美国目的地使用完整的官方叠加关税（USITC HTS 子目级：基础 MFN + 301 条款 + 强迫劳动税 + MPF/HMF），结合按原产国适用的 FTA 优惠，针对给定 HS 编码、原产国、目的国与申报金额生成到岸成本。中国目的地使用官方《2026 年关税税则》（国务院关税税则委员会，2026-01-01 起施行），解析自政府发布的税则，在 HS 编码匹配时返回真实税率（最惠国/MFN + 暂定税率（若更低）），无任何虚构数值。本工具免费使用，无需账号，且不向我们的服务器传输你的计算输入——数据集加载后计算完全在客户端进行。',
+          s3_h: '3. 非法律、税务或报关建议', s3: 'TariffStack 是独立的估算工具。它并非律师事务所、税务咨询公司、报关行、持证报关服务、货运代理、贸易合规咨询机构或会计师事务所。本网站任何内容均不构成法律意见、税务意见、律师意见、任何海关机关的约束性或咨询性裁定、归类裁定，或针对任一法域的正式合规意见。如你需要此类建议，必须聘请相关法域的持证律师、报关行或合格专业人士。',
+          s4_h: '4. 无担保', s4: 'TariffStack，包括其源代码、界面、已编译数据集、输出数值与文档，按"现状"和"现有"基础提供，不附带任何明示、暗示、法定或其他形式的担保。我们特别否认关于准确性、完整性、时效性、特定用途适用性、不侵权、以及不间断或无差错运行的任何担保。我们不担保本工具、数据集或任何输出满足你的要求，不担保所示任一税率适用于你的具体交易，也不担保缺陷会在特定时间内修复。针对关税数字的数据准确性补充提示，见第 13 节《免责声明》板块。',
+          s5_h: '5. 责任限制', s5: '在适用法律允许的最大范围内，TariffStack 及其作者、贡献者、运营者与许可方，对于因你使用或无法使用 TariffStack 而产生或与之相关的任何海关罚款、追加关税、税款、罚金、滞纳金、利息、滞期费、仓储费、没收货物、丢失或损毁货件、拒绝入境、退运拒绝、退税拒绝、审计成本、合规成本、专业服务费用，或任何直接、间接、附带、特殊、后果性、惩戒性或惩罚性损失（包括利润或商业机会损失），均不承担责任——即便我们已被告知此类损失的可能性。在责任依法不得排除的范围内，责任限于你在索赔前十二（12）个月内向我们支付的金额（目前为 0 美元，因为本服务免费）。',
+          s6_h: '6. 你自行核实的责任', s6: '在依赖任何 TariffStack 输出之前，你全权负责核实其准确性、完整性与适用性。务必与目的国的相关海关机关确认关税、税款、费用、归类、豁免、阈值、FTA 优惠及原产国资格，并在适当时咨询该法域的持证报关行，并在提交任何报关、退税、豁免申请、反倾销/反补贴（AD-CVD）答复、301/232 条款答复或任何其他合规行动前咨询合格法律顾问。',
+          s7_h: '7. 广告', s7: 'TariffStack 免费并由广告支持（目前为 Google AdSense）。所涉及的 Cookie、标识符与退出选择，详见我们的《广告与隐私》页，而非本页。简而言之：广告提供方可能设置 Cookie/标识符以投放与衡量广告；我们不向广告主出售或共享你的计算输入；你的语言偏好与上一次计算仅保存在你自己的浏览器中。',
+          s8_h: '8. 知识产权', s8: 'TariffStack 源代码、界面设计、归类逻辑与已编译数据集（字段的编排与选取）依据 GNU Affero 通用公共许可证 v3.0（AGPL-3.0）发布。你可在该许可证条款下查看、派生并自行托管代码。底层源数据仍为各自主管机关的财产——USITC 协调关税表、Federal Register、USTR、CBP、美国人口普查局、UN Comtrade（用于原产国贸易联动数据），以及中国海关（官方 2026 年税则，集成进行中）——并依各自开放数据条款使用。TariffStack、其字号与标识为运营者的商标。',
+          s9_h: '9. 禁止用途', s9: '你同意不得：(a) 以任何自动化方式访问 TariffStack，且速率显著影响其他用户的使用体验；(b) 批量抓取数据集并将其作为竞争产品重新发布；(c) 将 TariffStack 输出冒充为具约束力的归类、裁定或持证建议；(d) 试图反向工程、干扰或规避限流、访问频率控制或任何安全机制；(e) 将 TariffStack 用于任何非法目的，包括违反美国出口管制、OFAC 制裁或目的国进口法的交易。',
+          s10_h: '10. 第三方链接与数据来源', s10: 'TariffStack 聚合来自第三方开放数据源的数据。当 TariffStack 链接至第三方来源（如某条 USITC HTS 章节、Federal Register 公告、CBP CROSS 裁定、UN Comtrade 记录）时，该链接仅为方便你而提供，我们不控制被链接内容。访问此类链接风险自负，并受第三方条款与隐私政策约束。',
+          s11_h: '11. 适用法律与争议解决', s11: '本条款受运营实体注册地法域的法律管辖，不考虑法律冲突原则。任何争议应首先友好协商。若在六十（60）日内未能和解，争议应依据 UNCITRAL 仲裁规则以英文进行终局仲裁解决。本条款不限制你依居住地消费者保护法律享有的任何不可放弃权利，包括在你本地法院起诉的权利。',
+          s12_h: '12. 条款变更与联系', s12: '我们可修订本条款，以反映法律、数据源、广告实践或运营的变化。上方的"最后更新"日期记录最新修订。重大变更将在首页以横幅预告至少十四（14）天后再生效。变更生效后继续使用即视为接受修订后的条款。有关本条款的问题可发送至首页页脚所列地址。',
+          s13_h: '13. 免责声明', s13: 'TariffStack 是独立的估算工具。所示关税、税款与到岸成本总额，均为基于尽力假设的估算值——并非针对任一法域的法律意见、税务意见、报关行服务或持证合规建议。我们对所示任何税率、规则、豁免、阈值或费用的准确性、完整性或时效性不作任何担保。对于因你使用或未能核实这些估算而产生的任何海关罚款、追加关税、税款、罚金、滞纳金、滞期费、仓储费、没收货物、货件丢失，或任何直接或后果性损失，我们概不承担责任。美国税率反映 USITC HTS Rev17（2026-08-24）叠加官方对华关税映射，以及 2026-07-24 生效的强迫劳动税（9903.05.31，+12.5%）；其他市场使用各目的国自身的官方 HS 税则，叠加你所选原产国的 FTA 优惠。排他性条款、232 条款（钢铝 50%、汽车 25%、药品 100%，2026-09-29 生效）、反倾销/反补贴（AD-CVD）、FTA 原产国资格规则、de minimis 免税额，以及目的国增值税/消费税/销售税，均可能改变你的实际报关结果。在提交任何报关、退税或豁免申请前，务必与目的国相关海关机关或持证报关行确认——并在需要时咨询合格法律顾问。',
+          back: '← 返回 TariffStack'
+        };
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (zh[k] != null) nodes[i].textContent = zh[k];
+        }
+        document.documentElement.lang = 'zh';
+        document.title = '服务条款与免责声明 — TariffStack';
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

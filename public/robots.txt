@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# 明确允许 AI 回答引擎抓取，以利 GEO / AI 推荐（ChatGPT/Claude/Perplexity 等）引用本站结构化数据
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# 部署时把域名换成真实域名（与 astro.config.mjs 的 site 一致）
+Sitemap: https://tariff-platform.example.com/sitemap.xml

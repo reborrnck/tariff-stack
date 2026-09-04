@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-09-04",
+  "items": [
+    {
+      "key": "news_usitc",
+      "tag": "US",
+      "date": "2026-08-24"
+    },
+    {
+      "key": "news_sec232_steel",
+      "tag": "US",
+      "date": "2026"
+    },
+    {
+      "key": "news_sec232_autos",
+      "tag": "US",
+      "date": "2026"
+    },
+    {
+      "key": "news_sec232_pharma",
+      "tag": "US",
+      "date": "2026-09-29"
+    },
+    {
+      "key": "news_sec232_drones",
+      "tag": "US",
+      "date": "2026-09-03"
+    },
+    {
+      "key": "news_eu_cap",
+      "tag": "EU",
+      "date": "2026"
+    },
+    {
+      "key": "news_uk_cap",
+      "tag": "UK",
+      "date": "2026"
+    },
+    {
+      "key": "news_uflpa",
+      "tag": "US",
+      "date": "2026-07-24"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "revision": "2026 HTS Revision 17 (2026-08-24)",
+  "last_updated": "2026-08-24",
+  "source": "USITC HTS JSON + official China Tariffs mapping",
+  "fixed": {
+    "forced_labor_cn": 0.125,
+    "mpf": 0.003464,
+    "hmf": 0.00125,
+    "sec122_expired": "2026-07-24"
+  },
+  "rates": {
+    "6109.10.00": {
+      "desc": "Of cotton",
+      "base": 0.165,
+      "ch99": "9903.88.15",
+      "ch99_rate": 0.075
+    },
+    "9503.00.00": {
+      "desc": "Tricycles, scooters, pedal cars and similar wheeled toys; dollsʼ carriages; dolls, other t",
+      "base": 0.0,
+      "ch99": null,
+      "ch99_rate": 0.0
+    },
+    "6205.20.20": {
+      "desc": "Other",
+      "base": 0.19699999999999998,
+      "ch99": "9903.88.15",
+      "ch99_rate": 0.075
+    },
+    "6110.30.30": {
+      "desc": "Other",
+      "base": 0.32,
+      "ch99": "9903.88.15",
+      "ch99_rate": 0.075
+    },
+    "9403.60.80": {
+      "desc": "Other",
+      "base": 0.0,
+      "ch99": "9903.88.03",
+      "ch99_rate": 0.25
+    },
+    "6403.99.90": {
+      "desc": "Valued over $2.50/pair",
+      "base": 0.1,
+      "ch99": "9903.88.15",
+      "ch99_rate": 0.075
+    }
+  }
+}

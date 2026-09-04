@@ -1,0 +1,21 @@
+# ---- 构建产物（CF Pages 会自动重新构建，不入库） ----
+dist/
+dist_old/
+dist_old_*/
+.astro/
+
+# ---- 依赖 ----
+node_modules/
+
+# ---- 日志 / 回收站 ----
+npm.log
+server.log
+.trash/
+
+# ---- 搬迁/历史备份（2026-09-03 搬盘遗留） ----
+public_data_old*/
+*_old_*/
+
+# ---- 环境变量 ----
+.env
+.env.*

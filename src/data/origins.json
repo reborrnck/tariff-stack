@@ -1,0 +1,1689 @@
+{
+  "generated": "2026-09-03",
+  "source": "ISO 3166-1 alpha-2 country/territory list. tradesUs=False only for U.S. comprehensive-embargoed states per OFAC 2026 (Cuba, Iran, North Korea, Syria). tradesCn=True for all (China maintains no comprehensive trade embargo).",
+  "destinations": [
+    "US",
+    "CN"
+  ],
+  "usEmbargoed": [
+    "CU",
+    "IR",
+    "KP",
+    "SY"
+  ],
+  "origins": [
+    {
+      "iso2": "AF",
+      "en": "Afghanistan",
+      "zh": "阿富汗",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "AL",
+      "en": "Albania",
+      "zh": "阿尔巴尼亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "DZ",
+      "en": "Algeria",
+      "zh": "阿尔及利亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "AS",
+      "en": "American Samoa",
+      "zh": "美属萨摩亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "AD",
+      "en": "Andorra",
+      "zh": "安道尔",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "AO",
+      "en": "Angola",
+      "zh": "安哥拉",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "AI",
+      "en": "Anguilla",
+      "zh": "安圭拉",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "AG",
+      "en": "Antigua and Barbuda",
+      "zh": "安提瓜和巴布达",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "AR",
+      "en": "Argentina",
+      "zh": "阿根廷",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "AM",
+      "en": "Armenia",
+      "zh": "亚美尼亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "AU",
+      "en": "Australia",
+      "zh": "澳大利亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "AT",
+      "en": "Austria",
+      "zh": "奥地利",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "AZ",
+      "en": "Azerbaijan",
+      "zh": "阿塞拜疆",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BS",
+      "en": "Bahamas",
+      "zh": "巴哈马",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BH",
+      "en": "Bahrain",
+      "zh": "巴林",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BD",
+      "en": "Bangladesh",
+      "zh": "孟加拉国",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BB",
+      "en": "Barbados",
+      "zh": "巴巴多斯",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BY",
+      "en": "Belarus",
+      "zh": "白俄罗斯",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BE",
+      "en": "Belgium",
+      "zh": "比利时",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BZ",
+      "en": "Belize",
+      "zh": "伯利兹",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BJ",
+      "en": "Benin",
+      "zh": "贝宁",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BM",
+      "en": "Bermuda",
+      "zh": "百慕大",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BT",
+      "en": "Bhutan",
+      "zh": "不丹",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BO",
+      "en": "Bolivia",
+      "zh": "玻利维亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BA",
+      "en": "Bosnia and Herzegovina",
+      "zh": "波斯尼亚和黑塞哥维那",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BW",
+      "en": "Botswana",
+      "zh": "博茨瓦纳",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BR",
+      "en": "Brazil",
+      "zh": "巴西",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "IO",
+      "en": "British Indian Ocean Territory",
+      "zh": "英属印度洋领地",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "VG",
+      "en": "British Virgin Islands",
+      "zh": "英属维尔京群岛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BN",
+      "en": "Brunei",
+      "zh": "文莱",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BG",
+      "en": "Bulgaria",
+      "zh": "保加利亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BF",
+      "en": "Burkina Faso",
+      "zh": "布基纳法索",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BI",
+      "en": "Burundi",
+      "zh": "布隆迪",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CV",
+      "en": "Cabo Verde",
+      "zh": "佛得角",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "KH",
+      "en": "Cambodia",
+      "zh": "柬埔寨",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CM",
+      "en": "Cameroon",
+      "zh": "喀麦隆",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CA",
+      "en": "Canada",
+      "zh": "加拿大",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "KY",
+      "en": "Cayman Islands",
+      "zh": "开曼群岛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CF",
+      "en": "Central African Republic",
+      "zh": "中非",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TD",
+      "en": "Chad",
+      "zh": "乍得",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CL",
+      "en": "Chile",
+      "zh": "智利",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CN",
+      "en": "China",
+      "zh": "中国",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CX",
+      "en": "Christmas Island",
+      "zh": "圣诞岛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CC",
+      "en": "Cocos (Keeling) Islands",
+      "zh": "科科斯（基林）群岛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CO",
+      "en": "Colombia",
+      "zh": "哥伦比亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "KM",
+      "en": "Comoros",
+      "zh": "科摩罗",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CR",
+      "en": "Costa Rica",
+      "zh": "哥斯达黎加",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "HR",
+      "en": "Croatia",
+      "zh": "克罗地亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CU",
+      "en": "Cuba",
+      "zh": "古巴",
+      "tradesUs": false,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CW",
+      "en": "Curaçao",
+      "zh": "库拉索",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CY",
+      "en": "Cyprus",
+      "zh": "塞浦路斯",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CZ",
+      "en": "Czechia",
+      "zh": "捷克",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CI",
+      "en": "Côte d'Ivoire",
+      "zh": "科特迪瓦",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CD",
+      "en": "DR Congo",
+      "zh": "刚果（金）",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "DK",
+      "en": "Denmark",
+      "zh": "丹麦",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "DJ",
+      "en": "Djibouti",
+      "zh": "吉布提",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "DM",
+      "en": "Dominica",
+      "zh": "多米尼克",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "DO",
+      "en": "Dominican Republic",
+      "zh": "多米尼加",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "EC",
+      "en": "Ecuador",
+      "zh": "厄瓜多尔",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "EG",
+      "en": "Egypt",
+      "zh": "埃及",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SV",
+      "en": "El Salvador",
+      "zh": "萨尔瓦多",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GQ",
+      "en": "Equatorial Guinea",
+      "zh": "赤道几内亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "ER",
+      "en": "Eritrea",
+      "zh": "厄立特里亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "EE",
+      "en": "Estonia",
+      "zh": "爱沙尼亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SZ",
+      "en": "Eswatini",
+      "zh": "斯威士兰",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "ET",
+      "en": "Ethiopia",
+      "zh": "埃塞俄比亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "FO2",
+      "en": "Faroe (alt)",
+      "zh": "法罗群岛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "FO",
+      "en": "Faroe Islands",
+      "zh": "法罗群岛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "FJ",
+      "en": "Fiji",
+      "zh": "斐济",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "FI",
+      "en": "Finland",
+      "zh": "芬兰",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "FR",
+      "en": "France",
+      "zh": "法国",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GF",
+      "en": "French Guiana",
+      "zh": "法属圭亚那",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "PF",
+      "en": "French Polynesia",
+      "zh": "法属波利尼西亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TF",
+      "en": "French Southern Territories",
+      "zh": "法属南方领地",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GA",
+      "en": "Gabon",
+      "zh": "加蓬",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GM",
+      "en": "Gambia",
+      "zh": "冈比亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GE",
+      "en": "Georgia",
+      "zh": "格鲁吉亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "DE",
+      "en": "Germany",
+      "zh": "德国",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GH",
+      "en": "Ghana",
+      "zh": "加纳",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GI",
+      "en": "Gibraltar",
+      "zh": "直布罗陀",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GR",
+      "en": "Greece",
+      "zh": "希腊",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GL",
+      "en": "Greenland",
+      "zh": "格陵兰",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GD",
+      "en": "Grenada",
+      "zh": "格林纳达",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GP",
+      "en": "Guadeloupe",
+      "zh": "瓜德罗普",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GU",
+      "en": "Guam",
+      "zh": "关岛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GT",
+      "en": "Guatemala",
+      "zh": "危地马拉",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GG",
+      "en": "Guernsey",
+      "zh": "根西",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GN",
+      "en": "Guinea",
+      "zh": "几内亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GW",
+      "en": "Guinea-Bissau",
+      "zh": "几内亚比绍",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GY",
+      "en": "Guyana",
+      "zh": "圭亚那",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "HT",
+      "en": "Haiti",
+      "zh": "海地",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "VA",
+      "en": "Holy See",
+      "zh": "梵蒂冈",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "HN",
+      "en": "Honduras",
+      "zh": "洪都拉斯",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "HK",
+      "en": "Hong Kong",
+      "zh": "中国香港",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "HU",
+      "en": "Hungary",
+      "zh": "匈牙利",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "IS",
+      "en": "Iceland",
+      "zh": "冰岛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "IN",
+      "en": "India",
+      "zh": "印度",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "ID",
+      "en": "Indonesia",
+      "zh": "印度尼西亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "IR",
+      "en": "Iran",
+      "zh": "伊朗",
+      "tradesUs": false,
+      "tradesCn": true
+    },
+    {
+      "iso2": "IQ",
+      "en": "Iraq",
+      "zh": "伊拉克",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "IE",
+      "en": "Ireland",
+      "zh": "爱尔兰",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "IM",
+      "en": "Isle of Man",
+      "zh": "马恩岛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "IL",
+      "en": "Israel",
+      "zh": "以色列",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "IT",
+      "en": "Italy",
+      "zh": "意大利",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "JM",
+      "en": "Jamaica",
+      "zh": "牙买加",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "JP",
+      "en": "Japan",
+      "zh": "日本",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "JE",
+      "en": "Jersey",
+      "zh": "泽西",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "JO",
+      "en": "Jordan",
+      "zh": "约旦",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "KZ",
+      "en": "Kazakhstan",
+      "zh": "哈萨克斯坦",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "KE",
+      "en": "Kenya",
+      "zh": "肯尼亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "KI",
+      "en": "Kiribati",
+      "zh": "基里巴斯",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "XK",
+      "en": "Kosovo",
+      "zh": "科索沃",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "KW",
+      "en": "Kuwait",
+      "zh": "科威特",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "KG",
+      "en": "Kyrgyzstan",
+      "zh": "吉尔吉斯斯坦",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "LA",
+      "en": "Laos",
+      "zh": "老挝",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "LV",
+      "en": "Latvia",
+      "zh": "拉脱维亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "LB",
+      "en": "Lebanon",
+      "zh": "黎巴嫩",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "LS",
+      "en": "Lesotho",
+      "zh": "莱索托",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "LR",
+      "en": "Liberia",
+      "zh": "利比里亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "LY",
+      "en": "Libya",
+      "zh": "利比亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "LI",
+      "en": "Liechtenstein",
+      "zh": "列支敦士登",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "LT",
+      "en": "Lithuania",
+      "zh": "立陶宛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "LU",
+      "en": "Luxembourg",
+      "zh": "卢森堡",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MO",
+      "en": "Macao",
+      "zh": "中国澳门",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MG",
+      "en": "Madagascar",
+      "zh": "马达加斯加",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MW",
+      "en": "Malawi",
+      "zh": "马拉维",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MY",
+      "en": "Malaysia",
+      "zh": "马来西亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MV",
+      "en": "Maldives",
+      "zh": "马尔代夫",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "ML",
+      "en": "Mali",
+      "zh": "马里",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MT",
+      "en": "Malta",
+      "zh": "马耳他",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MH",
+      "en": "Marshall Islands",
+      "zh": "马绍尔群岛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MQ",
+      "en": "Martinique",
+      "zh": "马提尼克",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MR",
+      "en": "Mauritania",
+      "zh": "毛里塔尼亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MU",
+      "en": "Mauritius",
+      "zh": "毛里求斯",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "YT",
+      "en": "Mayotte",
+      "zh": "马约特",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MX",
+      "en": "Mexico",
+      "zh": "墨西哥",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "FM",
+      "en": "Micronesia",
+      "zh": "密克罗尼西亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MD",
+      "en": "Moldova",
+      "zh": "摩尔多瓦",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MC",
+      "en": "Monaco",
+      "zh": "摩纳哥",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MN",
+      "en": "Mongolia",
+      "zh": "蒙古",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "ME",
+      "en": "Montenegro",
+      "zh": "黑山",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MA",
+      "en": "Morocco",
+      "zh": "摩洛哥",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MZ",
+      "en": "Mozambique",
+      "zh": "莫桑比克",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MM",
+      "en": "Myanmar",
+      "zh": "缅甸",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "NA",
+      "en": "Namibia",
+      "zh": "纳米比亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "NR",
+      "en": "Nauru",
+      "zh": "瑙鲁",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "NP",
+      "en": "Nepal",
+      "zh": "尼泊尔",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "NL",
+      "en": "Netherlands",
+      "zh": "荷兰",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "NC",
+      "en": "New Caledonia",
+      "zh": "新喀里多尼亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "NZ",
+      "en": "New Zealand",
+      "zh": "新西兰",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "NI",
+      "en": "Nicaragua",
+      "zh": "尼加拉瓜",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "NE",
+      "en": "Niger",
+      "zh": "尼日尔",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "NG",
+      "en": "Nigeria",
+      "zh": "尼日利亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "NU",
+      "en": "Niue",
+      "zh": "纽埃",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "NF",
+      "en": "Norfolk Island",
+      "zh": "诺福克岛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "KP",
+      "en": "North Korea",
+      "zh": "朝鲜",
+      "tradesUs": false,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MK",
+      "en": "North Macedonia",
+      "zh": "北马其顿",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MP",
+      "en": "Northern Mariana Islands",
+      "zh": "北马里亚纳群岛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "NO",
+      "en": "Norway",
+      "zh": "挪威",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "OM",
+      "en": "Oman",
+      "zh": "阿曼",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "PK",
+      "en": "Pakistan",
+      "zh": "巴基斯坦",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "PW",
+      "en": "Palau",
+      "zh": "帕劳",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "PS",
+      "en": "Palestine",
+      "zh": "巴勒斯坦",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "PA",
+      "en": "Panama",
+      "zh": "巴拿马",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "PG",
+      "en": "Papua New Guinea",
+      "zh": "巴布亚新几内亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "PY",
+      "en": "Paraguay",
+      "zh": "巴拉圭",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "PE",
+      "en": "Peru",
+      "zh": "秘鲁",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "PH",
+      "en": "Philippines",
+      "zh": "菲律宾",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "PL",
+      "en": "Poland",
+      "zh": "波兰",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "PT",
+      "en": "Portugal",
+      "zh": "葡萄牙",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "PR",
+      "en": "Puerto Rico",
+      "zh": "波多黎各",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "QA",
+      "en": "Qatar",
+      "zh": "卡塔尔",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CG",
+      "en": "Republic of the Congo",
+      "zh": "刚果（布）",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "RO",
+      "en": "Romania",
+      "zh": "罗马尼亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "RU",
+      "en": "Russia",
+      "zh": "俄罗斯",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "RW",
+      "en": "Rwanda",
+      "zh": "卢旺达",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "RE",
+      "en": "Réunion",
+      "zh": "留尼汪",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "BL",
+      "en": "Saint Barthélemy",
+      "zh": "圣巴泰勒米",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "KN",
+      "en": "Saint Kitts and Nevis",
+      "zh": "圣基茨和尼维斯",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "LC",
+      "en": "Saint Lucia",
+      "zh": "圣卢西亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "MF",
+      "en": "Saint Martin",
+      "zh": "圣马丁",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "PM",
+      "en": "Saint Pierre and Miquelon",
+      "zh": "圣皮埃尔和密克隆",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "VC",
+      "en": "Saint Vincent and the Grenadines",
+      "zh": "圣文森特和格林纳丁斯",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "WS",
+      "en": "Samoa",
+      "zh": "萨摩亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SM",
+      "en": "San Marino",
+      "zh": "圣马力诺",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "ST",
+      "en": "Sao Tome and Principe",
+      "zh": "圣多美和普林西比",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SA",
+      "en": "Saudi Arabia",
+      "zh": "沙特阿拉伯",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SN",
+      "en": "Senegal",
+      "zh": "塞内加尔",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "RS",
+      "en": "Serbia",
+      "zh": "塞尔维亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SC",
+      "en": "Seychelles",
+      "zh": "塞舌尔",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SL",
+      "en": "Sierra Leone",
+      "zh": "塞拉利昂",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SG",
+      "en": "Singapore",
+      "zh": "新加坡",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SX",
+      "en": "Sint Maarten",
+      "zh": "圣马丁（荷属）",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SK",
+      "en": "Slovakia",
+      "zh": "斯洛伐克",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SI",
+      "en": "Slovenia",
+      "zh": "斯洛文尼亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SB",
+      "en": "Solomon Islands",
+      "zh": "所罗门群岛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SO",
+      "en": "Somalia",
+      "zh": "索马里",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "ZA",
+      "en": "South Africa",
+      "zh": "南非",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "KR",
+      "en": "South Korea",
+      "zh": "韩国",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SS",
+      "en": "South Sudan",
+      "zh": "南苏丹",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "ES",
+      "en": "Spain",
+      "zh": "西班牙",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "LK",
+      "en": "Sri Lanka",
+      "zh": "斯里兰卡",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SD",
+      "en": "Sudan",
+      "zh": "苏丹",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SR",
+      "en": "Suriname",
+      "zh": "苏里南",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SE",
+      "en": "Sweden",
+      "zh": "瑞典",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "CH",
+      "en": "Switzerland",
+      "zh": "瑞士",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "SY",
+      "en": "Syria",
+      "zh": "叙利亚",
+      "tradesUs": false,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TW",
+      "en": "Taiwan",
+      "zh": "中国台湾",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TJ",
+      "en": "Tajikistan",
+      "zh": "塔吉克斯坦",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TZ",
+      "en": "Tanzania",
+      "zh": "坦桑尼亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TH",
+      "en": "Thailand",
+      "zh": "泰国",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TL",
+      "en": "Timor-Leste",
+      "zh": "东帝汶",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TG",
+      "en": "Togo",
+      "zh": "多哥",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TK",
+      "en": "Tokelau",
+      "zh": "托克劳",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TO",
+      "en": "Tonga",
+      "zh": "汤加",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TT",
+      "en": "Trinidad and Tobago",
+      "zh": "特立尼达和多巴哥",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TN",
+      "en": "Tunisia",
+      "zh": "突尼斯",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TR",
+      "en": "Turkey",
+      "zh": "土耳其",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TM",
+      "en": "Turkmenistan",
+      "zh": "土库曼斯坦",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TC",
+      "en": "Turks and Caicos Islands",
+      "zh": "特克斯和凯科斯群岛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "TV",
+      "en": "Tuvalu",
+      "zh": "图瓦卢",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "UM",
+      "en": "U.S. Minor Outlying Islands",
+      "zh": "美国本土外小岛屿",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "VI",
+      "en": "U.S. Virgin Islands",
+      "zh": "美属维尔京群岛",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "UG",
+      "en": "Uganda",
+      "zh": "乌干达",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "UA",
+      "en": "Ukraine",
+      "zh": "乌克兰",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "US",
+      "en": "United States",
+      "zh": "美国",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "AE",
+      "en": "United Arab Emirates",
+      "zh": "阿联酋",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "GB",
+      "en": "United Kingdom",
+      "zh": "英国",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "UY",
+      "en": "Uruguay",
+      "zh": "乌拉圭",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "UZ",
+      "en": "Uzbekistan",
+      "zh": "乌兹别克斯坦",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "VU",
+      "en": "Vanuatu",
+      "zh": "瓦努阿图",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "VE",
+      "en": "Venezuela",
+      "zh": "委内瑞拉",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "VN",
+      "en": "Vietnam",
+      "zh": "越南",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "WF",
+      "en": "Wallis and Futuna",
+      "zh": "瓦利斯和富图纳",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "EH",
+      "en": "Western Sahara",
+      "zh": "西撒哈拉",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "YE",
+      "en": "Yemen",
+      "zh": "也门",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "ZM",
+      "en": "Zambia",
+      "zh": "赞比亚",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "ZW",
+      "en": "Zimbabwe",
+      "zh": "津巴布韦",
+      "tradesUs": true,
+      "tradesCn": true
+    },
+    {
+      "iso2": "AX",
+      "en": "Åland Islands",
+      "zh": "奥兰群岛",
+      "tradesUs": true,
+      "tradesCn": true
+    }
+  ]
+}
