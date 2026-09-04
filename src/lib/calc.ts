@@ -66,6 +66,58 @@ export interface Result {
   pending?: boolean;
 }
 
+// Section 232 scope classifier.
+// Maps an HTS code to the applicable IN-FORCE Section 232 measure(s) using the
+// published USTR/CBP 232 proclamation scopes at HS chapter/heading level.
+// 232 duties are ADDITIVE on top of MFN (and 301 where applicable) and, per the
+// policy note, still apply to U.S. FTA partners (MX/CA) for metals/autos.
+//
+// PRECISION NOTE (honest limitation): the primary(50%) vs derivative(25%) sub-split
+// within the metal chapters (72/73/74/76) is approximated at CHAPTER level — all
+// primary metal articles in these chapters are charged the 50% rate; the separate
+// 25% "derivatives" tier is NOT yet separately distinguished, so further-processed
+// metal goods may be over-stated by up to 25 points. Refine with the official CBP
+// 232 annex list when higher precision is required. Future-effective measures
+// (pharma 2026-09-29, polysilicon 2026-12-04) are gated by their effective date.
+function sec232Matches(
+  hts: string,
+  overlay: Overlay,
+  now: Date
+): { rate: number; label: string }[] {
+  const code = hts.replace(/[^0-9]/g, '');
+  const ch = code.slice(0, 2);
+  const hs4 = code.slice(0, 4);
+  const s = overlay.sec232;
+  const out: { rate: number; label: string }[] = [];
+  const inForce = (eff?: string) => !eff || now >= new Date(eff + 'T00:00:00Z');
+
+  // Autos & parts — 25% (Chapter 87, headings 8701–8708)
+  if (ch === '87' && ['8701', '8702', '8703', '8704', '8705', '8708'].includes(hs4)) {
+    out.push({ rate: s.autos_parts, label: 'Section 232 — autos & parts (25%)' });
+  }
+  // Lumber — 10% (Chapter 44)
+  if (ch === '44') {
+    out.push({ rate: s.lumber, label: 'Section 232 — lumber (10%)' });
+  }
+  // Drones over 25kg — 100% (eff 2026-09-03, Chapter 88 / 8806)
+  if (ch === '88' && hs4 === '8806' && inForce('2026-09-03')) {
+    out.push({ rate: s.drones_over_25kg_eff_2026_09_03, label: 'Section 232 — drones >25kg (100%, eff 2026-09-03)' });
+  }
+  // Polysilicon — 15% (eff 2026-12-04, 2804.61)
+  if (hs4 === '2804' && code.slice(4, 6) === '61' && inForce('2026-12-04')) {
+    out.push({ rate: s.polysilicon_eff_2026_12_04, label: 'Section 232 — polysilicon (15%, eff 2026-12-04)' });
+  }
+  // Pharmaceuticals — 100% (eff 2026-09-29, Chapters 29/30)
+  if ((ch === '29' || ch === '30') && inForce('2026-09-29')) {
+    out.push({ rate: s.pharma_eff_2026_09_29, label: 'Section 232 — pharmaceuticals (100%, eff 2026-09-29)' });
+  }
+  // Steel / aluminum / copper — 50% (primary articles, Chapters 72/73/74/76)
+  if (ch === '72' || ch === '73' || ch === '74' || ch === '76') {
+    out.push({ rate: s.steel_alum_copper, label: 'Section 232 — steel/alum/copper (50%)' });
+  }
+  return out;
+}
+
 export function computeStack(
   dest: string,
   hts: string,
@@ -94,7 +146,7 @@ export function computeStack(
     const isFta = overlay.us_fta_free.includes(origin);
 
     if (isFta) {
-      note = "U.S. FTA partner: MFN base & forced-labour duty waived (Section 232 may still apply to metals/autos).";
+      note = "U.S. FTA partner: MFN base & forced-labour duty waived (Section 232 still applies where in scope, e.g. metals/autos).";
     } else if (overlay.eu_members.includes(origin)) {
       const cap = overlay.eu_deal_cap;
       if (base < cap) {
@@ -139,10 +191,22 @@ export function computeStack(
     ];
     if (ch301 > 0) layers.push({ name: `Section 301 (${r.ch99 || "—"})`, rate: ch301, amt: duty301 });
     if (fl > 0) layers.push({ name: flName, rate: fl, amt: dutyFl });
+
+    // Section 232 — real, in-force 232 measures (additive on top of MFN; still
+    // applies to U.S. FTA partners for metals/autos per policy note).
+    const s2 = sec232Matches(hts, overlay, new Date());
+    let duty232 = 0;
+    for (const m of s2) {
+      const amt = goods * m.rate;
+      duty232 += amt;
+      layers.push({ name: m.label, rate: m.rate, amt });
+    }
+
     layers.push({ name: "MPF (0.3464%)", rate: mpfRate, amt: mpf });
     layers.push({ name: "HMF (0.125%)", rate: hmfRate, amt: hmf });
 
-    const total = dutyBase + duty301 + dutyFl + mpf + hmf;
+    const total = dutyBase + duty301 + dutyFl + duty232 + mpf + hmf;
+    if (s2.length) note += ` Section 232 applied: ${s2.map((m) => m.label.split(' — ')[1] ?? m.label).join(', ')}.`;
     return { dest, hts, origin, goods, layers, total, effective: total / goods, note, indicative: false };
   }
 
