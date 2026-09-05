@@ -156,12 +156,7 @@ const clkLondon     = fmtClk('Europe/London');
        (brand | live clock grid | lang-block) collapses GRACEFULLY through
        every window size without crowding/clipping.
        ==================================================================== */
-    header{background:var(--card);border-bottom:1px solid var(--line);position:relative;}
-    /* Header-tools = Dark + Guides 按钮。**放在 .hd-inner 网格之外**，绝对定位到 header 右上角——
-       绝不放回 .brand 列内（用户 2026-09-05 钉死铁律：放在 .brand 列内会被中间 2fr 时钟列挤压，
-       单个 flex-shrink:0 救不了根因）。独立于 grid → 永远不被挤。 */
-    .header-tools{position:absolute;top:8px;right:56px;display:flex;gap:8px;z-index:6;}
-    .lang-block .tag2{padding-right:220px;}  /* 给 .header-tools 绝对定位的按钮让出横向空间，否则 Light/Guides 会盖住 tag2 行文字（2026-09-05 钉死） */
+    header{background:var(--card);border-bottom:1px solid var(--line);}
     /* WIDE: ≥1280 — 3-column with EXPLICIT 1:2:1 proportions (用户确认这版三列比例正确).
        Brand/Right 用 minmax(min,1fr) 上限固定为 1fr，Middle 用 2fr 拿双倍空间。
        中间列 2fr 在 1280 视口下约 550px，足够放下 3×2 时钟（3×185px）不挤、无空白。 */
@@ -173,8 +168,6 @@ const clkLondon     = fmtClk('Europe/London');
       .hd-inner{padding:22px 36px;gap:20px;
         grid-template-columns:minmax(220px,1fr) minmax(0,1.5fr) minmax(260px,1fr);}
       .clock-bar{gap:8px;}
-      .header-tools{top:8px;right:36px;}
-      .lang-block .tag2{padding-right:200px;}
       .clock-card{padding:8px 10px;}
       .clock-card .clk-city{font-size:11px;letter-spacing:.04em;}
       .clock-card .clk-time{font-size:16px;}
@@ -193,17 +186,12 @@ const clkLondon     = fmtClk('Europe/London');
       .hd-inner{grid-template-columns:minmax(0,min-content) minmax(0,1fr);
         gap:18px;padding:18px 24px;}
       .clock-bar{display:none;}
-      .header-tools{top:6px;right:24px;}
-      .lang-block .tag2{padding-right:180px;}
     }
 
     /* TABLET: ≤900 — single column; clocks come back as a 3-col grid
        underneath brand/lang-block. */
     @media (max-width:900px){
       .hd-inner{padding:16px 20px;grid-template-columns:1fr;gap:14px;}
-      .header-tools{top:6px;right:20px;gap:6px;}
-      .header-tools .theme-toggle{padding:6px 10px;font-size:13px;}
-      .lang-block .tag2{padding-right:0;font-size:14px;line-height:1.35;}
       /* mobile: 3×2 grid 紧凑排版，不强制 6 列（屏幕不够） */
       .clock-bar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:100%;justify-self:stretch;gap:10px;}
       .clock-card .clk-city{font-size:11.5px;}
@@ -233,7 +221,12 @@ const clkLondon     = fmtClk('Europe/London');
     .brand h1{margin:0;font-size:clamp(28px,2.6vw,40px);line-height:1.05;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
     .brand .tag{margin-top:10px;font-size:clamp(15px,1.4vw,19px);color:var(--ink);font-weight:600;line-height:1.4;}
     .brand .badge{display:inline-block;margin-top:12px;font-size:14px;color:var(--good);background:#ecfdf3;border:1px solid #c8f0d4;border-radius:999px;padding:6px 16px;font-weight:600;}
-    .brand .lang-row{margin-top:14px;}
+    .brand .lang-row{margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .brand .lang-row label{flex-shrink:0;}
+    .brand .lang-row select{flex:1 1 130px;min-width:110px;max-width:200px;}
+    /* Dark + Guides 按钮：跟 Language 同一行（用户 2026-09-05 钉死"放在语言旁边"）。
+       flex-shrink:0 保证按钮文字永远完整不被压窄；select 用 flex:1 可压缩吸收空间。
+       空间不够时 flex-wrap 让按钮自动换到下一行，绝不挤压。 */
 
     /* MIDDLE: clock bar (real-time, updated every second by JS).
        用户要求：一排 3 个时钟、共 2 排（3×2）。用 repeat(3,minmax(0,1fr)) 写死 3 列——
@@ -498,6 +491,12 @@ const clkLondon     = fmtClk('Europe/London');
             <option value="de">Deutsch</option>
             <option value="it">Italiano</option>
           </select>
+          <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="切换深色 / 浅色">
+            <span class="tt-ico">🌙</span><span class="tt-txt" data-i18n="theme_dark">深色</span>
+          </button>
+          <a id="guides-btn" class="theme-toggle" href="/guides" aria-label="Tariff guides and explainers" title="关税科普与指南">
+            <span class="tt-ico">📖</span><span class="tt-txt" data-i18n="guides_btn">关税指南</span>
+          </a>
         </div>
       </div>
 
@@ -527,15 +526,6 @@ const clkLondon     = fmtClk('Europe/London');
           </div>
         </div>
       </div>
-    </div>
-    <!-- Dark + Guides 按钮：独立于 .hd-inner 三列 grid，绝对定位右上角，永不被挤。 -->
-    <div class="header-tools">
-      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="切换深色 / 浅色">
-        <span class="tt-ico">🌙</span><span class="tt-txt" data-i18n="theme_dark">深色</span>
-      </button>
-      <a id="guides-btn" class="theme-toggle" href="/guides" aria-label="Tariff guides and explainers" title="关税科普与指南">
-        <span class="tt-ico">📖</span><span class="tt-txt" data-i18n="guides_btn">关税指南</span>
-      </a>
     </div>
   </header>
 
