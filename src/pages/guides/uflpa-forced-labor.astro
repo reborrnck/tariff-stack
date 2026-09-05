@@ -1,5 +1,6 @@
 ---
 // UFLPA / forced-labor import controls — the +12.5% assessment.
+import CookieConsent from '../../components/CookieConsent.astro';
 const en = {
   title: 'UFLPA and forced-labor import controls — the 12.5% cost — TariffStack',
   h1: 'UFLPA and forced-labor import controls',
@@ -233,6 +234,8 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
 
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
+
+  <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>
     (function () {

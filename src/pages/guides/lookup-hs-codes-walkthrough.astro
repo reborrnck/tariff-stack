@@ -1,6 +1,7 @@
 ---
 // Guide: lookup-hs-codes-walkthrough — standalone page (per-page en + zh dict).
 // Original, factual explainer. Sourced from USITC / CBP / USTR / Federal Register / 商务部 / WCO.
+import CookieConsent from '../../components/CookieConsent.astro';
 const en = {
   title: 'How to look up an HS code (the right way) — TariffStack Guide',
   h1: 'How to look up an HS code the right way',
@@ -129,6 +130,8 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
 
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
+
+  <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>
     (function () {

@@ -1,6 +1,7 @@
 ---
 // Guide: china-retaliatory-tariffs — standalone page (per-page en + zh dict).
 // Original, factual explainer. Sourced from USITC / CBP / USTR / Federal Register / 商务部 / WCO.
+import CookieConsent from '../../components/CookieConsent.astro';
 const en = {
   title: "China's retaliatory tariffs on U.S. goods — TariffStack Guide",
   h1: "How China's retaliatory tariffs on U.S. goods actually work",
@@ -129,6 +130,8 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
 
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
+
+  <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>
     (function () {

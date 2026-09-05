@@ -1,5 +1,6 @@
 ---
 // Binding rulings — CROSS & HQ. Original, factual explainer.
+import CookieConsent from '../../components/CookieConsent.astro';
 const en = {
   title: "Binding rulings: how to get certainty on classification — TariffStack",
   h1: "Binding rulings (CROSS & HQ)",
@@ -207,6 +208,8 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
 
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
+
+  <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>
     (function () {

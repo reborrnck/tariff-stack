@@ -1,5 +1,6 @@
 ---
 // Section 301 tariffs on Chinese goods — what they cover, who pays, when they apply.
+import CookieConsent from '../../components/CookieConsent.astro';
 const en = {
   title: 'Section 301 tariffs on Chinese goods — a practical guide — TariffStack',
   h1: 'Section 301 tariffs on Chinese goods',
@@ -214,6 +215,8 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
 
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
+
+  <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>
     (function () {

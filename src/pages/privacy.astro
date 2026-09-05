@@ -1,6 +1,7 @@
 ---
 // Advertising & Privacy — standalone page (NOT a copy of the Terms).
 // en + zh fully translated; other languages fall back to en (per i18n convention).
+import CookieConsent from '../components/CookieConsent.astro';
 const en = {
   title: 'Advertising & Privacy — TariffStack',
   h1: 'Advertising & Privacy',
@@ -205,5 +206,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
       } catch (e) {}
     })();
   </script>
+
+  <CookieConsent />
 </body>
 </html>

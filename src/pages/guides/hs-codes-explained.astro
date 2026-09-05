@@ -1,6 +1,7 @@
 ---
 // Guide: What is an HS / HTS code — standalone page (per-page en + zh dict).
 // Original, factual explainer. References only verifiable facts about the Harmonized System.
+import CookieConsent from '../../components/CookieConsent.astro';
 const en = {
   title: 'What is an HS / HTS code? — TariffStack Guide',
   h1: 'What is an HS / HTS code (and why it decides your duty)?',
@@ -149,6 +150,8 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
 
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
+
+  <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>
     (function () {

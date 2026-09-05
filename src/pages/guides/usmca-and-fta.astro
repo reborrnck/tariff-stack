@@ -1,5 +1,6 @@
 ---
 // USMCA and FTAs — when you actually pay 0% on a U.S.-bound shipment.
+import CookieConsent from '../../components/CookieConsent.astro';
 const en = {
   title: 'USMCA and FTAs: when you actually pay 0% — TariffStack',
   h1: 'USMCA and FTAs: when you actually pay 0%',
@@ -220,6 +221,8 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
 
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
+
+  <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>
     (function () {

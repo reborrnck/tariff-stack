@@ -1,5 +1,6 @@
 ---
 // Customs valuation — transaction value method. Original, factual explainer.
+import CookieConsent from '../../components/CookieConsent.astro';
 const en = {
   title: "How U.S. customs value is calculated (transaction value) — TariffStack",
   h1: "How U.S. customs value is calculated",
@@ -219,6 +220,8 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
 
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
+
+  <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>
     (function () {

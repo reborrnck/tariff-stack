@@ -1,6 +1,7 @@
 ---
 // About TariffStack — standalone page (per-page en + zh dict, mirrors privacy.astro).
 // Other languages fall back to en (per i18n convention); nothing added to the global i18n.ts.
+import CookieConsent from '../components/CookieConsent.astro';
 const en = {
   title: 'About TariffStack',
   h1: 'About TariffStack',
@@ -160,5 +161,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
       } catch (e) {}
     })();
   </script>
+
+  <CookieConsent />
 </body>
 </html>

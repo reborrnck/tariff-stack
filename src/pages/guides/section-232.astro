@@ -1,5 +1,6 @@
 ---
 // Section 232 tariffs: steel, aluminum, copper, autos, lumber, pharma, drones.
+import CookieConsent from '../../components/CookieConsent.astro';
 const en = {
   title: 'Section 232 tariffs: steel, aluminum, copper, autos & what is next — TariffStack',
   h1: 'Section 232 tariffs: steel, aluminum, copper, autos',
@@ -205,6 +206,8 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
 
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
+
+  <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>
     (function () {

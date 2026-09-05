@@ -1,5 +1,6 @@
 ---
 // Incoterms 2020. Original, factual explainer.
+import CookieConsent from '../../components/CookieConsent.astro';
 const en = {
   title: "Incoterms 2020: who pays the duty and freight — TariffStack",
   h1: "Incoterms 2020",
@@ -207,6 +208,8 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
 
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
+
+  <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>
     (function () {

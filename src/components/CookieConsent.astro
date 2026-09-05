@@ -1,0 +1,66 @@
+---
+// Site-wide cookie / consent banner. Self-contained: scoped style + HTML + inline script.
+// Fully self-localizes (paragraph + link labels + button) via an inline 9-language dict,
+// so it works on every page WITHOUT depending on the page's own i18n dictionary.
+// Exposes window.tsConsent.accepted() and dispatches a 'ts-consent' event on accept,
+// so future Google AdSense (or any ad) code can GATE loading behind consent (GDPR/ePrivacy
+// for EEA/UK visitors: do not load personalized ads or set ad cookies before consent).
+---
+<div class="cookie hidden" id="cookie">
+  <div class="c-text">
+    <span id="ck-text">TariffStack is supported by advertising. We display contextual and personalized ads via Google AdSense to keep this tool free. Google may set cookies or use identifiers to deliver and measure ads. Your language and last calculation are stored only in your own browser. By continuing, you accept this and our</span>
+    <a id="ck-terms" href="/terms">Terms of Service</a>
+    <span id="ck-and">and</span>
+    <a id="ck-priv" href="/privacy">Advertising &amp; Privacy</a>.
+  </div>
+  <button class="c-btn" id="ck-btn" type="button">Got it</button>
+</div>
+
+<style>
+  .cookie{position:fixed;left:14px;right:14px;bottom:14px;z-index:50;display:flex;align-items:center;gap:14px;justify-content:center;flex-wrap:wrap;padding:13px 18px;background:var(--card);color:var(--content);border:1px solid var(--line2);border-radius:12px;box-shadow:0 -6px 24px rgba(0,0,0,.18);font-size:14px;line-height:1.6;}
+  .cookie.hidden{display:none;}
+  .cookie .c-text{flex:1 1 auto;min-width:240px;max-width:1100px;}
+  .cookie .c-text a{color:var(--accent);font-weight:700;text-decoration:underline;}
+  .cookie .c-btn{flex:0 0 auto;background:var(--accent);color:#fff;border:0;border-radius:9px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;}
+  .cookie .c-btn:hover{filter:brightness(1.06);}
+  [data-theme="dark"] .cookie{background:#121a2b;color:#c4cedb;border-color:#2b3a52;}
+  @media (max-width:600px){.cookie{left:8px;right:8px;bottom:8px;padding:12px 14px;gap:10px;font-size:13.5px;}.cookie .c-btn{padding:9px 14px;font-size:13.5px;}}
+</style>
+
+<script is:inline>
+  (function () {
+    var KEY = 'ts-cookie-accepted';
+    var L = {
+      en:{t:'TariffStack is supported by advertising. We display contextual and personalized ads via Google AdSense to keep this tool free. Google may set cookies or use identifiers to deliver and measure ads. Your language and last calculation are stored only in your own browser. By continuing, you accept this and our', terms:'Terms of Service', and:'and', priv:'Advertising & Privacy', btn:'Got it'},
+      zh:{t:'本工具通过 Google AdSense 展示广告以维持免费运营。Google 可能使用 Cookie 或设备标识来投放和衡量广告。您的语言偏好和最近一次计算结果仅存储在您自己的浏览器中。继续使用即表示您接受此安排，并已阅读我们的', terms:'服务条款', and:'与', priv:'广告与隐私', btn:'我知道了'},
+      'zh-TW':{t:'本工具透過 Google AdSense 展示廣告以維持免費營運。Google 可能使用 Cookie 或裝置識別來投放和衡量廣告。您的語言偏好和最近一次計算結果僅儲存在您自己的瀏覽器中。繼續使用即表示您接受此安排，並已閱讀我們的', terms:'服務條款', and:'與', priv:'廣告與隱私', btn:'我知道了'},
+      ja:{t:'本ツールは Google AdSense による広告で運営されています。広告配信・効果測定のため Google が Cookie や識別子を使用する場合があります。言語設定と直近の計算結果は端末ローカルにのみ保存されます。続行することで、本運営方式と当サイトの', terms:'利用規約', and:'と', priv:'広告とプライバシー', btn:'了解しました'},
+      es:{t:'TariffStack se mantiene con publicidad. Mostramos anuncios contextuales y personalizados a través de Google AdSense para mantener esta herramienta gratuita. Google puede usar cookies o identificadores para mostrar y medir anuncios. Tu preferencia de idioma y último cálculo se guardan solo en tu navegador. Al continuar, aceptas esto y nuestros', terms:'Términos del servicio', and:'y', priv:'Publicidad y privacidad', btn:'Entendido'},
+      de:{t:'TariffStack wird durch Werbung finanziert. Wir zeigen kontextbezogene und personalisierte Anzeigen über Google AdSense, um dieses Tool kostenlos zu halten. Google kann Cookies oder Identifikatoren verwenden, um Anzeigen auszuliefern und zu messen. Deine Spracheinstellung und letzte Berechnung werden nur in deinem Browser gespeichert. Mit der Nutzung akzeptierst du dies und unsere', terms:'Nutzungsbedingungen', and:'und', priv:'Werbung & Datenschutz', btn:'Verstanden'},
+      ko:{t:'본 도구는 Google AdSense 광고로 운영됩니다. 광고 게재·측정을 위해 Google이 쿠키나 식별자를 사용할 수 있습니다. 언어 설정과 마지막 계산 결과는 단말기에만 저장됩니다. 계속 사용하시면 본 운영 방식과 당사의', terms:'이용 약관', and:'및', priv:'광고 및 개인정보', btn:'확인'},
+      fr:{t:'TariffStack est financé par la publicité. Nous affichons des annonces contextuelles et personnalisées via Google AdSense pour maintenir cet outil gratuit. Google peut utiliser des cookies ou des identifiants pour diffuser et mesurer les annonces. Votre langue et dernier calcul sont stockés uniquement dans votre navigateur. En continuant, vous acceptez ceci et nos', terms:"Conditions d'utilisation", and:'et', priv:'Publicité et confidentialité', btn:'Compris'},
+      pt:{t:'TariffStack é mantido por publicidade. Exibimos anúncios contextuais e personalizados via Google AdSense para manter esta ferramenta gratuita. O Google pode usar cookies ou identificadores para exibir e medir anúncios. Sua preferência de idioma e último cálculo são armazenados apenas no seu navegador. Ao continuar, você aceita isto e nossos', terms:'Termos de Serviço', and:'e', priv:'Publicidade e Privacidade', btn:'Entendi'},
+      it:{t:'TariffStack è finanziato dalla pubblicità. Mostriamo annunci contestuali e personalizzati tramite Google AdSense per mantenere gratuito questo strumento. Google può usare cookie o identificatori per erogare e misurare gli annunci. La tua lingua e ultimo calcolo sono salvati solo nel tuo browser. Continuando, accetti questo e i nostri', terms:'Termini di servizio', and:'e', priv:'Pubblicità e privacy', btn:'Ho capito'}
+    };
+    function apply(){
+      var lang = localStorage.getItem('ts-lang') || 'en';
+      var d = L[lang] || L.en, el;
+      el = document.getElementById('ck-text'); if (el) el.textContent = d.t;
+      el = document.getElementById('ck-terms'); if (el) el.textContent = d.terms;
+      el = document.getElementById('ck-and'); if (el) el.textContent = d.and;
+      el = document.getElementById('ck-priv'); if (el) el.textContent = d.priv;
+      el = document.getElementById('ck-btn'); if (el) el.textContent = d.btn;
+    }
+    function show(){ var b = document.getElementById('cookie'); if (b && !localStorage.getItem(KEY)) b.classList.remove('hidden'); }
+    window.tsConsent = window.tsConsent || {};
+    window.tsConsent.accepted = function(){ return localStorage.getItem(KEY) === '1'; };
+    apply(); show();
+    var btn = document.getElementById('ck-btn');
+    if (btn) btn.addEventListener('click', function(){
+      localStorage.setItem(KEY, '1');
+      var b = document.getElementById('cookie'); if (b) b.classList.add('hidden');
+      try { window.dispatchEvent(new Event('ts-consent')); } catch(e){}
+    });
+    document.addEventListener('ts-langchange', apply);
+  })();
+</script>

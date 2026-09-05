@@ -1,6 +1,7 @@
 ---
 // Guides index — standalone page (per-page en + zh dict, mirrors about.astro).
 // Lists the original explainer articles. Add a new card per article.
+import CookieConsent from '../../components/CookieConsent.astro';
 const en = {
   title: 'Tariff Guides & Explainers — TariffStack',
   h1: 'Tariff Guides & Explainers',
@@ -362,6 +363,8 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
 
     <a class="back" href="/" data-i18n="back">{d.back}</a>
   </main>
+
+  <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>
     (function () {

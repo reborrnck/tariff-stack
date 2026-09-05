@@ -1,5 +1,6 @@
 ---
 // Reconciliation & protest. Original, factual explainer.
+import CookieConsent from '../../components/CookieConsent.astro';
 const en = {
   title: "Reconciliation & protest: fixing an entry after the fact — TariffStack",
   h1: "Reconciliation & post-entry protest",
@@ -207,6 +208,8 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
 
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
+
+  <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>
     (function () {

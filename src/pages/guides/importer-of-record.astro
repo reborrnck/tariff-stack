@@ -1,5 +1,6 @@
 ---
 // Importer of record. Original, factual explainer.
+import CookieConsent from '../../components/CookieConsent.astro';
 const en = {
   title: "Importer of record: duties, reasonable care & records — TariffStack",
   h1: "Importer of record (IOR)",
@@ -207,6 +208,8 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
 
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
+
+  <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>
     (function () {

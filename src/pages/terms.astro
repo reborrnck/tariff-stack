@@ -1,4 +1,5 @@
 ---
+import CookieConsent from '../components/CookieConsent.astro';
 const en = {
   title: 'Terms of Service & Disclaimer — TariffStack',
   h1: 'Terms of Service & Disclaimer',
@@ -227,5 +228,7 @@ zh.s13 = zh.s13.replace('{rev}', revNo).replace('{date}', revDt);
       } catch (e) {}
     })();
   </script>
+
+  <CookieConsent />
 </body>
 </html>

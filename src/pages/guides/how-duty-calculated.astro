@@ -1,6 +1,7 @@
 ---
 // How is import duty actually calculated — landed cost walkthrough.
 // Per-page en + zh inline dict (mirrors privacy.astro / hs-codes-explained.astro).
+import CookieConsent from '../../components/CookieConsent.astro';
 const en = {
   title: 'How is import duty actually calculated? A landed-cost walkthrough — TariffStack',
   h1: 'How is import duty actually calculated?',
@@ -188,6 +189,8 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
 
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
+
+  <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>
     (function () {
