@@ -105,6 +105,7 @@ const en: Dict = {
   goods_label_cn: 'Declared value (tariff assessed in CNY)',
   footer_tagline: 'Free import-duty & landed-cost calculator — U.S. + China',
   footer_guides: 'Tariff Guides',
+  guides_btn: 'Guides',
 };
 
 const zh: Dict = {
@@ -190,6 +191,7 @@ const zh: Dict = {
   goods_label_cn: '申报货值（关税以人民币计征）',
   footer_tagline: '免费进口关税与到岸成本计算器 — 美国 + 中国',
   footer_guides: '关税指南',
+  guides_btn: '关税指南',
 };
 
 // ja / es / de — fully translated (every visible string covered).

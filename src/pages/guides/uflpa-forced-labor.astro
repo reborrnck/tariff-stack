@@ -1,0 +1,254 @@
+---
+// UFLPA / forced-labor import controls — the +12.5% assessment.
+const en = {
+  title: 'UFLPA and forced-labor import controls — the 12.5% cost — TariffStack',
+  h1: 'UFLPA and forced-labor import controls',
+  intro: 'The Uyghur Forced Labor Prevention Act (UFLPA, 2021, effective June 2022) is the most consequential border import control most importers have not heard of. It applies a rebuttable presumption that any good mined, produced, or manufactured wholly or in part in Xinjiang — or by entities on the UFLPA Entity List — is the product of forced labor and is therefore inadmissible at U.S. ports.',
+  updated: 'Last updated',
+  back: '← All guides',
+  about: 'About',
+  toc: 'On this page',
+
+  s1: '1. What UFLPA does',
+  s1_p: 'UFLPA shifts the burden of proof. The default position is: a good traced to Xinjiang is detained. To admit the good into the U.S., the importer must affirmatively demonstrate — by clear and convincing evidence — that the good was not produced with forced labor. This is a high bar and applies to all U.S. importers, regardless of size.',
+
+  s2: '2. The +12.5% assessment option',
+  s2_p: 'Customs and Border Protection may, in lieu of seizure, assess an additional duty of 12.5% of the appraised value of the merchandise when:',
+  s2_l1: 'Forced labor was used only in PART of inputs.',
+  s2_l2: 'The non-forced-labor portion can be reliably separated and measured.',
+  s2_l3: 'CBP determines the assessment is appropriate instead of seizure.',
+  s2_p2: 'Practically: 12.5% is the floor for goods whose supply chain is ambiguous. Full seizure is the ceiling. Most importers invest in supply-chain mapping to avoid both outcomes.',
+
+  s3: '3. High-risk sectors',
+  s3_p: 'CBP\'s Strategy mentions priority sectors (this list is periodically refreshed):',
+  s3_l1: 'Cotton and cotton products (apparel, yarn, textiles).',
+  s3_l2: 'Tomatoes and downstream products (canned sauce, paste, seeds).',
+  s3_l3: 'Polysilicon (used in solar panels, semiconductors).',
+  s3_l4: 'Apparel, footwear and manufactured goods produced in whole or part by entities in Xinjiang.',
+  s3_l5: 'Electronics with raw materials or components linked to Xinjiang.',
+
+  s4: '4. The UFLPA Entity List',
+  s4_p: 'UFLPA directs the U.S. Government to maintain and update a list of entities (companies, quasi-government bodies, organizations) that operate in Xinjiang and that export goods produced wholly or in part in the Xinjiang Uyghur Autonomous Region. Importers whose supply chain touches any listed entity face detention. The list is maintained by the Forced Labor Enforcement Task Force (FLETF).',
+
+  s5: '5. Documentation importers should keep',
+  s5_p: 'To clear shipment, CBP generally wants an evidence package covering:',
+  s5_l1: 'Supply chain mapping from raw material to finished good (every facility, every owner).',
+  s5_l2: 'Supplier due diligence records, audits (independent or third-party), site visit reports.',
+  s5_l3: 'Traceability data (lot/serial production records, country-of-origin at every stage).',
+  s5_l4: 'Worker rights attestations and wage/recruitment records.',
+  s5_l5: 'Reasoned explanation of why inputs are not Xinjiang-sourced.',
+
+  s6: '6. What to do when detained',
+  s6_p: 'CBP issues a Detention Notice at the port. Importers can:',
+  s6_l1: 'Submit a Section 321(d) exemption request — but for UFLPA purposes, the exemption route is narrower than for traditional forced labor.',
+  s6_l2: 'Export the goods under CBP supervision (re-export).',
+  s6_l3: 'Submit a complete evidence package and request release; if approved, the goods enter.',
+  s6_l4: 'Be assessed the +12.5% with explicit CBP approval, if conditions allow.',
+  s6_p2: 'CBP publishes redacted CBP Determinations with anonymized evidentiary reasoning. Reviewing the recent list is a practical way to anticipate what evidence CBP accepts.',
+
+  s7: '7. Real example',
+  s7_p: 'A California apparel brand sources cotton T-shirts from Vietnam, but the cotton yarn used by its Vietnamese supplier is imported from a Xinjiang producer. The brand declares origin as Vietnam and files formal entry.',
+  s7_l1: 'CBP detains the shipment under UFLPA at the LAX seaport.',
+  s7_l2: 'The brand submits a complete evidence package, but cannot refute that Xinjiang cotton is in the yarn.',
+  s7_l3: 'Outcome A — full seizure. The T-shirts are re-exported or forfeited. Brand loses both product and duty.',
+  s7_l4: 'Outcome B — +12.5% assessment on the appraised value of the shipment, with the brand committing to source non-Xinjiang cotton yarn for future production.',
+  s7_p2: 'The cheapest outcome is "no UFLPA exposure at all": source tracing back to bales of cotton avoids Xinjiang-region producers. Most large retailers now require that as a contractual condition.',
+
+  caveat: 'TariffStack is not a customs broker or law firm. UFLPA compliance is fact-intensive and evolving. For any shipment that touches cotton, tomatoes, polysilicon, electronics, or textiles, work with a licensed customs broker and counsel before entry.',
+};
+
+const zh = {
+  title: 'UFLPA 与强迫劳动进口管制 — 12.5% 的代价 — TariffStack',
+  h1: 'UFLPA 与强迫劳动进口管制',
+  intro: '《维吾尔强迫劳动预防法》（UFLPA，2021 年立法、2022 年 6 月生效）是大多数进口商没听说过的、最具实质影响的边境管制。它设了一个"可反驳推定"：任何全部或部分在新疆（或由 UFLPA 实体清单上的实体）开采、生产或制造的货物，默认被认定为强迫劳动产物、不准入境。',
+  updated: '最后更新',
+  back: '← 全部指南',
+  about: '关于',
+  toc: '本页内容',
+
+  s1: '1. UFLPA 的实质',
+  s1_p: 'UFLPA 倒置了举证责任。默认立场是：一旦追溯到新疆，货物被扣。要让货物进境，进口商必须自行、出具"清楚且令人信服"的证据，证明并非强迫劳动产物。这是高标准，对所有进口商适用，无论规模。',
+
+  s2: '2. +12.5% 评估选项',
+  s2_p: 'CBP 可在以下条件下放弃扣押，改为对货物按其评估价值的 12.5% 加征额外关税：',
+  s2_l1: '强迫劳动仅涉及部分投入。',
+  s2_l2: '非强迫劳动部分能被可靠分离并量化。',
+  s2_l3: 'CBP 认定适用评估比扣押更合适。',
+  s2_p2: '实务上：12.5% 是供应链不清晰的货物的下限；扣押是上限。多数进口商投资做供应链映射以避开这两种结果。',
+
+  s3: '3. 高风险行业',
+  s3_p: 'CBP 战略文件中列示优先行业（清单定期更新）：',
+  s3_l1: '棉花及棉制品（服装、纱线、纺织品）。',
+  s3_l2: '番茄及下游产品（罐装酱、番茄酱、籽）。',
+  s3_l1: '多晶硅（用于光伏、半导体）。',
+  s3_l4: '在新疆全或部分由当地实体生产的服装、鞋类与制成品。',
+  s3_l5: '原材料或零部件与新疆关联的电子产品。',
+
+  s4: '4. UFLPA 实体清单',
+  s4_p: 'UFLPA 责成美国政府维护并更新一份实体清单——在新疆运营、生产或出口全或部分在新疆维吾尔自治区内生产的货物之公司、半政府机构和组织。任何供应链触及清单实体的进口商都会被扣。清单由强迫劳动执法工作组（FLETF）维护。',
+
+  s5: '5. 进口商应保留的文件',
+  s5_p: '要为货物清关，CBP 通常要求以下证据包：',
+  s5_l1: '从原料到成品的供应链映射（每家工厂、每个股东）。',
+  s5_l2: '供应商尽职调查记录、审计（独立或第三方）、现场走访报告。',
+  s5_l3: '可追溯数据（批次/序列生产记录，每阶段的原产地）。',
+  s5_l4: '工人权利声明与工资/招聘记录。',
+  s5_l5: '说明为什么投入品不是新疆来源的合理说明。',
+
+  s6: '6. 货物被扣怎么走',
+  s6_p: 'CBP 在口岸发出扣留通知（Detention Notice）。进口商可以：',
+  s6_l1: '提交 Section 321(d) 豁免申请——但 UFLPA 下的豁免路径比传统强迫劳动更窄。',
+  s6_l2: '在 CBP 监督下复出口（re-export）。',
+  s6_l3: '提交完整证据包申请放行；批准后货物放行。',
+  s6_l4: '经 CBP 明示评估 +12.5%（条件许可时）。',
+  s6_p2: 'CBP 公布匿名裁定的"扣留决定"决定书。查看近期清单是预判 CBP 接受何种证据的实用方法。',
+
+  s7: '7. 真实算例',
+  s7_p: '一家加州服装品牌从越南采购棉 T 恤，但越南供应商使用的棉纱是从新疆进口的。品牌申报原产地为越南并正式报关。',
+  s7_l1: 'CBP 在 LAX 海港依 UFLPA 扣押。',
+  s7_l2: '品牌提交完整证据包，但无法反驳纱线中含新疆棉。',
+  s7_l3: '结果 A——全额扣押。T 恤复出口或没收，品牌损失货物与关税。',
+  s7_l4: '结果 B——按该批评估价值 +12.5% 评估，品牌承诺未来采购非新疆棉纱。',
+  s7_p2: '最便宜结果是"根本不沾 UFLPA"——追踪到棉包产地、避免新疆地区生产商。多数大型零售商现在把这作为合同条件。',
+
+  caveat: 'TariffStack 不是报关行或律所。UFLPA 合规事实密集、规则持续演变。凡涉及棉、番茄、多晶硅、电子产品、纺织品的货物，入境前请与持牌报关行及律师合作。',
+};
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="The Uyghur Forced Labor Prevention Act: rebuttable presumption, the +12.5% assessment, high-risk sectors, documentation importers should keep, and a worked example." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    h3{margin:24px 0 8px;font-size:17px;font-weight:700;color:var(--ink);}
+    ul{padding-left:22px;}
+    li{margin:6px 0;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+      <li><a href="#s6" data-i18n="s6">{d.s6}</a></li>
+      <li><a href="#s7" data-i18n="s7">{d.s7}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+    <ul>
+      <li data-i18n="s2_l1">{d.s2_l1}</li>
+      <li data-i18n="s2_l2">{d.s2_l2}</li>
+      <li data-i18n="s2_l3">{d.s2_l3}</li>
+    </ul>
+    <p data-i18n="s2_p2">{d.s2_p2}</p>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+    <ul>
+      <li data-i18n="s3_l1">{d.s3_l1}</li>
+      <li data-i18n="s3_l2">{d.s3_l2}</li>
+      <li data-i18n="s3_l3">{d.s3_l3}</li>
+      <li data-i18n="s3_l4">{d.s3_l4}</li>
+      <li data-i18n="s3_l5">{d.s3_l5}</li>
+    </ul>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+    <ul>
+      <li data-i18n="s5_l1">{d.s5_l1}</li>
+      <li data-i18n="s5_l2">{d.s5_l2}</li>
+      <li data-i18n="s5_l3">{d.s5_l3}</li>
+      <li data-i18n="s5_l4">{d.s5_l4}</li>
+      <li data-i18n="s5_l5">{d.s5_l5}</li>
+    </ul>
+
+    <h2 id="s6" data-i18n="s6">{d.s6}</h2>
+    <p data-i18n="s6_p">{d.s6_p}</p>
+    <ul>
+      <li data-i18n="s6_l1">{d.s6_l1}</li>
+      <li data-i18n="s6_l2">{d.s6_l2}</li>
+      <li data-i18n="s6_l3">{d.s6_l3}</li>
+      <li data-i18n="s6_l4">{d.s6_l4}</li>
+    </ul>
+    <p data-i18n="s6_p2">{d.s6_p2}</p>
+
+    <h2 id="s7" data-i18n="s7">{d.s7}</h2>
+    <p data-i18n="s7_p">{d.s7_p}</p>
+    <ul>
+      <li data-i18n="s7_l1">{d.s7_l1}</li>
+      <li data-i18n="s7_l2">{d.s7_l2}</li>
+      <li data-i18n="s7_l3">{d.s7_l3}</li>
+      <li data-i18n="s7_l4">{d.s7_l4}</li>
+    </ul>
+    <p data-i18n="s7_p2">{d.s7_p2}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        if (lang !== 'zh') return;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (zh[k] != null) nodes[i].textContent = zh[k];
+        }
+        document.documentElement.lang = 'zh';
+        document.title = 'UFLPA 与强迫劳动进口管制 — 12.5% 的代价 — TariffStack';
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

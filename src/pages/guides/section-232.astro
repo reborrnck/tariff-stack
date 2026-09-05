@@ -1,0 +1,226 @@
+---
+// Section 232 tariffs: steel, aluminum, copper, autos, lumber, pharma, drones.
+const en = {
+  title: 'Section 232 tariffs: steel, aluminum, copper, autos & what is next — TariffStack',
+  h1: 'Section 232 tariffs: steel, aluminum, copper, autos',
+  intro: 'Section 232 of the Trade Expansion Act of 1962 lets the President restrict imports that "threaten to impair national security." The headline numbers get changed repeatedly through Presidential proclamations. This guide tracks the live schedule and what it means for the imports TariffStack actually sees.',
+  updated: 'Last updated',
+  back: '← All guides',
+  about: 'About',
+  toc: 'On this page',
+
+  s1: '1. How a Section 232 tariff gets put in place',
+  s1_p: 'The process is fixed by statute: the Secretary of Commerce investigates whether imports of an article threaten to impair national security. If yes, the President may "adjust" imports — including by tariff. The result is codified in Chapter 99 of the HTSUS (9903 series) on top of the column-1 MFN duty. Unlike Section 301, Section 232 applies to ALL countries by default. Country exclusions are granted only by separate proclamation — and historically most are withdrawn during trade-deal renegotiations.',
+
+  s2: '2. Steel, aluminum and copper — 50%',
+  s2_p: 'After several rounds of expansion through 2020–2025, the U.S. now applies a 50% Section 232 additional duty on steel (HTS chapter 72), aluminum (chapter 76) and copper (chapter 74), with the 9903.80 series of HTSUS notes carrying the legal mechanics. Coverage includes specific derivative articles (e.g. steel nails, aluminum wire, certain pipe-and-tube).',
+  s2_l1: 'Derivative steel articles: covered under expanded proclamations (e.g. steel nails, wire, mesh).',
+  s2_l2: 'Derivative aluminum: covered (extrusions, castings, forgings, wire).',
+  s2_l3: 'Copper: added in 2025 proclamation covering unwrought copper, rods, bars, tubes and selected derivatives.',
+  s2_l4: 'Cuba, North Korea, Iran, Syria and (typically) Russia/Belarus are excluded from rate availability — duties are higher or entry is denied.',
+
+  s3: '3. Automobiles and parts — 25%',
+  s3_p: 'A 25% Section 232 duty applies to motor vehicles classified in HTSUS 8701, 8702, 8703, 8704, 8705 and a defined set of parts under 8708 (engines, transmissions, castings, forgings). The auto stack is relevant even for non-auto imports, because some common industrial goods (rubber tires in 4011, certain electrical parts) can also be pulled in where the underlying article is a designated auto part.',
+  s3_l1: 'A vehicle assembled outside North America carrying a 25% Section 232 + 2.5% MFN = 27.5% headline — before Section 301 / IEEPA.',
+  s3_l2: 'EVs and hybrids are covered under the same regime; batteries are NOT (separately under a different investigation).',
+
+  s4: '4. Lumber, wood and pharmaceuticals — new layers in 2025–2026',
+  s4_l1: 'Lumber & wood products (HS chapter 44): 10% Section 232 in effect since late 2025, covering softwood lumber and derivative articles.',
+  s4_l2: 'Pharmaceuticals (HS chapters 29, 30): 100% scheduled to take effect 2026-09-29 — this is the headline "100% pharma tariff" you may have read about. TariffStack pre-activates this layer on any HS in chapter 29/30 from the published effective date.',
+  s4_l3: 'Drones (HS 8806): 100% for unmanned aircraft weighing more than 25 kg, effective 2026-09-03.',
+  s4_l4: 'Polysilicon (HS 2804.61): scheduled 100% from 2026-12-04.',
+  s4_l5: 'Semiconductors: copper- and legacy-chip tariffs under related proclamations; rate still being adjusted by the Commerce Department.',
+
+  s5: '5. Cumulative stacking',
+  s5_p: 'Section 232 sits ON TOP of MFN and any other layer (Section 301, AD/CVD, IEEPA, UFLPA). It does not replace them. A Chinese-made steel article may carry:',
+  s5_l1: 'MFN duty from HTSUS column 1 (often 0% for raw materials).',
+  s5_l2: 'Section 232 additional: 50%.',
+  s5_l3: 'Section 301 (if List 4A covers it): 25%.',
+  s5_l4: 'IEEPA fentanyl emergency (if applicable): 20%.',
+  s5_l5: 'AD/CVD order (if on the schedule): can be huge (e.g. >100% on certain Chinese steel).',
+  s5_p2: 'A Chinese-origin carbon steel pipe under HTS 7306.30 can therefore land at effective rates well over 100%. The TariffStack calculator includes these layers whenever an HTS code is recognized.',
+
+  s6: '6. Where to verify',
+  s6_l1: 'USTR + Commerce Department proclamations on Commerce.gov (search "Section 232").',
+  s6_l2: 'The HTSUS chapter 99 in the current revision (https://hts.usitc.gov).',
+  s6_l3: 'CBP CROSS for any ruling on whether a specific article falls under or out of a derivative list.',
+
+  caveat: 'This article reflects proclamations in force as of late 2025 and scheduled 2026 actions. TariffStack is not a customs broker. Final classification and applicable Section 232 coverage must be confirmed with CBP or a licensed customs broker.',
+};
+
+const zh = {
+  title: 'Section 232 关税：钢、铝、铜、汽车及后续 — TariffStack',
+  h1: 'Section 232 关税：钢、铝、铜、汽车',
+  intro: '1962 年《贸易扩张法》第 232 条允许总统以"国家安全"为由限制进口。标题税率被多次总统公告上调。本指南追踪当前真实执行的税率表，以及对 TariffStack 实际覆盖的进口商品意味着什么。',
+  updated: '最后更新',
+  back: '← 全部指南',
+  about: '关于',
+  toc: '本页内容',
+
+  s1: '1. 232 关税如何落地',
+  s1_p: '程序由法律固定：商务部长调查某类商品进口是否"损害国家安全"。如果是，总统可以"调整"进口——包括加征关税。结果编入 HTSUS 第 99 章（9903 系列），叠加在第 1 列 MFN 之上。与 Section 301 不同，Section 232 默认对所有国家适用。国家豁免仅由单独的总统公告授予——历史上多数在经济谈判后被撤回。',
+
+  s2: '2. 钢、铝、铜 — 50%',
+  s2_p: '经过 2020–2025 数轮扩张，美国现在对钢（HTS 第 72 章）、铝（第 76 章）、铜（第 74 章）征 50% Section 232 附加关税，HTSUS 9903.80 系列注释承担法律细则。覆盖范围包括特定衍生品（钢钉、铝线、某些管材）。',
+  s2_l1: '钢衍生品：扩张后的公告涵盖（如钢钉、钢丝、钢丝网）。',
+  s2_l2: '铝衍生品：涵盖（挤压件、铸件、锻件、铝线）。',
+  s2_l3: '铜：2025 年公告新增，覆盖未锻造铜、棒材、型材、管材及部分衍生品。',
+  s2_l4: '古巴、朝鲜、伊朗、叙利亚及通常俄罗斯/白俄罗斯不可享受税率——要么更高，要么禁止入境。',
+
+  s3: '3. 汽车及零部件 — 25%',
+  s3_p: 'HTSUS 8701、8702、8703、8704、8705 章以及 8708 章规定的零部件（发动机、变速箱、铸件、锻件）征 25% Section 232 关税。这层并非只影响汽车——因为有些常见工业品（4011 章橡胶轮胎、某些电气零件）只要符合"指定汽车零件"定义也被纳入。',
+  s3_l1: '北美外组装的整车：25% Section 232 + 2.5% MFN = 标题 27.5%——还不在 Section 301 / IEEPA 之内。',
+  s3_l2: '电动车与混动车适用同一规则；电池目前不在内（另有单独调查）。',
+
+  s4: '4. 木材、药品 — 2025–2026 年的新增层级',
+  s4_l1: '木材与木制品（HS 第 44 章）：2025 年下半年起 10% Section 232，覆盖软木锯材及衍生品。',
+  s4_l2: '药品（HS 第 29、30 章）：100% 计划于 2026-09-29 生效——这就是你可能读过的"100% 药品关税"标题。TariffStack 在公告日期后对所有 29/30 章 HS 自动激活。',
+  s4_l3: '无人机（HS 8806）：25 kg 以上无人飞行器 100%，2026-09-03 起生效。',
+  s4_l4: '多晶硅（HS 2804.61）：100%，2026-12-04 起。',
+  s4_l5: '半导体：与铜和传统芯片相关的关税，由商务部协调中。',
+
+  s5: '5. 多层叠加',
+  s5_p: 'Section 232 在 MFN 及其他层（Section 301、AD/CVD、IEEPA、UFLPA）之上叠加，不会替代它们。一件中国制造的钢制品可能承担：',
+  s5_l1: 'HTSUS 第 1 列 MFN（原材料通常 0%）。',
+  s5_l2: 'Section 232 附加：50%。',
+  s5_l3: 'Section 301（如 List 4A 涵盖）：25%。',
+  s5_l4: 'IEEPA 芬太尼（如适用）：20%。',
+  s5_l5: 'AD/CVD 命令（如在时间表上）：可能极高（部分中国钢材 >100%）。',
+  s5_p2: '中国制造的 7306.30 碳钢管有效税率很容易到 100%+。TariffStack 在识别出 HTS 编码时自动叠加这些层。',
+
+  s6: '6. 在哪里查证',
+  s6_l1: 'USTR + 商务部公告（商务部网站搜索 "Section 232"）。',
+  s6_l2: 'HTSUS 当期第 99 章（https://hts.usitc.gov）。',
+  s6_l3: 'CBP CROSS：查询某具体商品是否落入或跳出衍生品清单。',
+
+  caveat: '本指南反映截至 2025 年末颁布的公告及 2026 年预定生效事项。TariffStack 不是报关行。最终归类与 Section 232 适用与否，请以 CBP 或持牌报关行为准。',
+};
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="Section 232 tariffs and the live schedule: steel/aluminum/copper at 50%, autos at 25%, lumber 10%, pharma 100%, drones 100%, polysilicon 100%." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    h3{margin:24px 0 8px;font-size:17px;font-weight:700;color:var(--ink);}
+    ul{padding-left:22px;}
+    li{margin:6px 0;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+      <li><a href="#s6" data-i18n="s6">{d.s6}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+    <ul>
+      <li data-i18n="s2_l1">{d.s2_l1}</li>
+      <li data-i18n="s2_l2">{d.s2_l2}</li>
+      <li data-i18n="s2_l3">{d.s2_l3}</li>
+      <li data-i18n="s2_l4">{d.s2_l4}</li>
+    </ul>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+    <ul>
+      <li data-i18n="s3_l1">{d.s3_l1}</li>
+      <li data-i18n="s3_l2">{d.s3_l2}</li>
+    </ul>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <ul>
+      <li data-i18n="s4_l1">{d.s4_l1}</li>
+      <li data-i18n="s4_l2">{d.s4_l2}</li>
+      <li data-i18n="s4_l3">{d.s4_l3}</li>
+      <li data-i18n="s4_l4">{d.s4_l4}</li>
+      <li data-i18n="s4_l5">{d.s4_l5}</li>
+    </ul>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+    <ul>
+      <li data-i18n="s5_l1">{d.s5_l1}</li>
+      <li data-i18n="s5_l2">{d.s5_l2}</li>
+      <li data-i18n="s5_l3">{d.s5_l3}</li>
+      <li data-i18n="s5_l4">{d.s5_l4}</li>
+      <li data-i18n="s5_l5">{d.s5_l5}</li>
+    </ul>
+    <p data-i18n="s5_p2">{d.s5_p2}</p>
+
+    <h2 id="s6" data-i18n="s6">{d.s6}</h2>
+    <ul>
+      <li data-i18n="s6_l1">{d.s6_l1}</li>
+      <li data-i18n="s6_l2">{d.s6_l2}</li>
+      <li data-i18n="s6_l3">{d.s6_l3}</li>
+    </ul>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        if (lang !== 'zh') return;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (zh[k] != null) nodes[i].textContent = zh[k];
+        }
+        document.documentElement.lang = 'zh';
+        document.title = 'Section 232 关税：钢、铝、铜、汽车及后续 — TariffStack';
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+---
+// The $800 de minimis exemption — Section 321 of the Tariff Act of 1930.
+const en = {
+  title: 'The $800 de minimis exemption — what it really means — TariffStack',
+  h1: 'The $800 de minimis exemption',
+  intro: '"De minimis" lets low-value shipments enter the U.S. duty-free and with a paperless entry. It is widely discussed in 2025 because the rules are changing. This guide separates who actually uses de minimis from people who think they do — and what is likely to change for cross-border e-commerce.',
+  updated: 'Last updated',
+  back: '← All guides',
+  about: 'About',
+  toc: 'On this page',
+
+  s1: '1. What it actually is',
+  s1_p: 'Section 321 of the Tariff Act of 1930 (codified at 19 U.S.C. §1321) authorizes CBP to admit shipments "of reasonable size and weight" without formal entry, provided the merchandise is valued at $800 or less PER PERSON PER DAY. No duty. No formal entry. Paperless. There is no commercial exclusion: a company can use it — the limit is per consignee per day.',
+  s1_l1: '$800 cap is per individual consignee, per day, per shipper.',
+  s1_l2: 'Goods must comply with all other admissibility rules: no prohibited items, no quota-class goods (textiles historically had a separate cap), and full Section 301 / antidumping applies where the program permits.',
+  s1_l3: 'Estimated to handle hundreds of millions of parcels per year — dominated by direct-to-consumer e-commerce platforms.',
+
+  s2: '2. Who actually uses it',
+  s2_p: 'De minimis is the operating mechanism behind most cross-border e-commerce from Asia to the U.S. — historically Shein, Temu, AliExpress, Amazon direct-from-warehouse shipments from overseas, and a long tail of Asian consumer brands. The economic model assumes:',
+  s2_l1: 'No formal entry = no broker cost.',
+  s2_l2: 'No duty = price advantage of 10–30% over U.S. inventory of identical goods.',
+  s2_l3: 'A small cross-border fulfillment fee is absorbed by the seller.',
+  s2_p2: 'The U.S. importer-of-record on a B2B shipment — i.e. a U.S. company importing pallets for its own warehouse — does NOT normally use de minimis. Their duty is paid on the formal entry.',
+
+  s3: '3. What it does NOT cover',
+  s3_l1: 'Good subject to quota (historically textiles had a separate cap; tariffs are being restored for many of these lines).',
+  s3_l2: 'Goods violating partner-agency rules (FDA, USDA, FCC, CPSC).',
+  s3_l3: 'Goods violating UFLPA — forced-labor rebuttable presumption requires formal entry.',
+  s3_l4: 'Goods from OFAC-sanctioned destinations (Cuba, Iran, North Korea, Syria) — different mechanism entirely.',
+  s3_l5: 'Goods normally subject to antidumping / countervailing duty orders — when those apply, de minimis routing is unavailable.',
+
+  s4: '4. What changed in 2025',
+  s4_p: 'On May 2, 2025, the White House issued a proclamation ending de minimis eligibility for goods of Chinese origin (directly or indirectly) that are subject to Section 301 tariffs or the IEEPA fentanyl emergency. That closed the major loophole used by Chinese e-commerce in the U.S. market.',
+  s4_l1: 'U.S.-bound goods of Chinese origin now require formal entry — duty applies through the normal Section 301 / IEEPA stack.',
+  s4_l2: 'Hong Kong and Macau origin goods remain separate (separate tariff treatment from China).',
+  s4_l3: 'De minimis remains open for other origins (e.g. Mexico, EU, UK, Korea under FTA, Canada) at this writing.',
+
+  s5: '5. What is likely to change next',
+  s5_p: 'Multiple legislative proposals in the 119th Congress would either lower the $800 threshold (commonly to $200 or $50) or end de minimis altogether for all origins. The bipartisan "Import Security and Fair Competition Act" is one example. Operators are advised to model future scenarios without assuming the $800 ceiling is permanent.',
+  s5_l1: 'Watch Federal Register and CBP CSMS messages for any announcements.',
+  s5_l2: 'Reasonable timeline: a phased reduction of the threshold during 2026–2027 is plausible, even without full repeal.',
+  s5_l3: 'For direct B2B importers, de minimis is largely irrelevant — your shipment sizes exceed it.',
+
+  s6: '6. Real example',
+  s6_p: 'A Los Angeles boutique sells $30 dresses sourced from a Turkish supplier. A direct consumer order ships from Istanbul to a single U.S. customer:',
+  s6_l1: 'Order value: $28.50.',
+  s6_l2: 'Below the $800 cap; origin Turkey (no Section 301 / IEEPA).',
+  s6_l3: 'Admissible under de minimis — no formal entry, no duty, no Section 321 clearance fee beyond the standard small-parcel handling charge the carrier collects.',
+  s6_p2: 'If the same boutique imported a 5,000-unit container for the same dresses, it would file a formal entry: pay U.S. customs value, 16.5% MFN, MPF, HMF — about 17–18% effective cost. De minimis is fundamentally a B2C mechanism, not a B2B shortcut.',
+
+  caveat: 'TariffStack is not a customs broker or law firm. Eligibility for de minimis, Section 301 / IEEPA exclusion logic, and classification must be verified with CBP and licensed counsel before shipment. The current rule can change without notice.',
+};
+
+const zh = {
+  title: '800 美元 de minimis 免税门槛 — 它到底是什么 — TariffStack',
+  h1: '800 美元 de minimis 免税门槛',
+  intro: '"De minimis" 让低价值包裹免关税、无纸化入境美国。它在 2025 年被频繁讨论，因为规则正在变化。本指南把"真正在使用它的人"与"以为自己会用它的人"区分开，并说明跨境电商的可能走向。',
+  updated: '最后更新',
+  back: '← 全部指南',
+  about: '关于',
+  toc: '本页内容',
+
+  s1: '1. 它到底是什么',
+  s1_p: '1930 年关税法第 321 条（编纂于 19 U.S.C. §1321）授权 CBP 在每个收件人每日单票货值不超过 800 美元、且"体积合理"的前提下，免正式报关放行。无关税、无正式报关单、无纸化。没有商业排除——公司可用，限制是按每日每位收件人。',
+  s1_l1: '800 美元上限按"收件人 × 日 × 发件人"计。',
+  s1_l2: '必须符合其他一切准入规则：无违禁品、无配额类商品（纺织品历史上另有上限），项目允许时仍须遵守 Section 301 / 反倾销。',
+  s3: '',
+  s1_l3: '据估每年处理数亿包裹——以面向消费者的跨境电商平台为主。',
+
+  s2: '2. 谁真的在用它',
+  s2_p: 'De minimis 是大多数亚洲→美国跨境电商背后的运行机制——历史上 Shein、Temu、AliExpress、亚马逊海外仓直发，以及长尾亚洲消费品牌。其商业模式假设：',
+  s2_l1: '无正式报关 = 无报关行成本。',
+  s2_l2: '无关税 = 比同类美国库存便宜 10–30%。',
+  s2_l3: '一笔小跨境履约费被卖家吸收。',
+  s2_p2: 'B2B 货物的美国进口商收货人（即自行进口整托盘入库的美国公司）通常不使用 de minimis，他们正常缴纳正式报关关税。',
+
+  s3: '3. 它不覆盖什么',
+  s3_l1: '配额类商品（历史上纺织品有单独上限；许多品类的关税正在被恢复）。',
+  s3_l2: '违反其他机构规则的商品（FDA、USDA、FCC、CPSC）。',
+  s3_l3: '违反 UFLPA 的商品——强迫劳动的可反驳推定要求正式报关。',
+  s3_l4: 'OFAC 制裁目的地的商品（古巴、伊朗、朝鲜、叙利亚）——是完全不同的机制。',
+  s3_l5: '通常需要缴纳反倾销 / 反补贴税的商品——适用时 de minimis 通道不可用。',
+
+  s4: '4. 2025 年的变化',
+  s4_p: '2025 年 5 月 2 日，白宫发布公告，结束对中国原产地（直接或间接）受 Section 301 或 IEEPA 芬太尼应急关税约束商品的 de minimis 资格。这关闭了中国电商在美国市场使用的主要豁免通道。',
+  s4_l1: '运往美国的中国原产地商品现在必须正式报关——关税按正常 Section 301 / IEEPA 叠加征收。',
+  s4_l2: '香港、澳门原产地商品仍与中国关税区分离。',
+  s4_l3: '其他原产地（墨西哥、欧盟、英国、韩国按 FTA、加拿大等）的 de minimis 在写作时仍开放。',
+
+  s5: '5. 下一步可能的变化',
+  s5_p: '第 119 届国会有多项立法提案：要么下调 800 美元门槛（常见说法 200 或 50 美元），要么对所有原产地一律取消。跨党派《进口安全与公平竞争法案》就是其一。运营方应建模未来场景，不要假设 800 美元长期不变。',
+  s5_l1: '关注联邦公报和 CBP CSMS 消息。',
+  s5_l2: '合理时间表：2026–2027 年期间阶段性降低门槛是可能的，即便不全面取消。',
+  s5_l3: '对直接 B2B 进口商，de minimis 与你基本无关——你的货量远超上限。',
+
+  s6: '6. 真实算例',
+  s6_p: '洛杉矶一家精品店销售产自土耳其的 30 美元连衣裙。一笔消费者订单从伊斯坦布尔直发给美国单一消费者：',
+  s6_l1: '订单金额：28.50 美元。',
+  s6_l2: '低于 800 美元上限；产地土耳其（无 Section 301 / IEEPA）。',
+  s6_l3: '适用 de minimis——无正式报关、无关税、除了承运人收取的标准小包处理费外无 321 条款清关费。',
+  s6_p2: '若同一家精品店进口一个 5,000 件整柜，则需正式报关：按美国海关价值、16.5% MFN、MPF、HMF——约 17–18% 的有效成本。De minimis 本质上是一种 B2C 机制，不是 B2B 的捷径。',
+
+  caveat: 'TariffStack 不是报关行或律所。De minimis 资格、Section 301 / IEEPA 排除逻辑、归类都需在装运前用 CBP 与持牌顾问核实。当前规则可能随时变化。',
+};
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="What the $800 de minimis exemption really is, who uses it, who doesn\'t, and what the 2025 changes to Chinese-origin parcels mean for cross-border e-commerce." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4ched:--;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    h3{margin:24px 0 8px;font-size:17px;font-weight:700;color:var(--ink);}
+    ul{padding-left:22px;}
+    li{margin:6px 0;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+      <li><a href="#s6" data-i18n="s6">{d.s6}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+    <ul>
+      <li data-i18n="s1_l1">{d.s1_l1}</li>
+      <li data-i18n="s1_l2">{d.s1_l2}</li>
+      <li data-i18n="s1_l3">{d.s1_l3}</li>
+    </ul>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+    <ul>
+      <li data-i18n="s2_l1">{d.s2_l1}</li>
+      <li data-i18n="s2_l2">{d.s2_l2}</li>
+      <li data-i18n="s2_l3">{d.s2_l3}</li>
+    </ul>
+    <p data-i18n="s2_p2">{d.s2_p2}</p>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <ul>
+      <li data-i18n="s3_l1">{d.s3_l1}</li>
+      <li data-i18n="s3_l2">{d.s3_l2}</li>
+      <li data-i18n="s3_l3">{d.s3_l3}</li>
+      <li data-i18n="s3_l4">{d.s3_l4}</li>
+      <li data-i18n="s3_l5">{d.s3_l5}</li>
+    </ul>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+    <ul>
+      <li data-i18n="s4_l1">{d.s4_l1}</li>
+      <li data-i18n="s4_l2">{d.s4_l2}</li>
+      <li data-i18n="s4_l3">{d.s4_l3}</li>
+    </ul>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+    <ul>
+      <li data-i18n="s5_l1">{d.s5_l1}</li>
+      <li data-i18n="s5_l2">{d.s5_l2}</li>
+      <li data-i18n="s5_l3">{d.s5_l3}</li>
+    </ul>
+
+    <h2 id="s6" data-i18n="s6">{d.s6}</h2>
+    <p data-i18n="s6_p">{d.s6_p}</p>
+    <ul>
+      <li data-i18n="s6_l1">{d.s6_l1}</li>
+      <li data-i18n="s6_l2">{d.s6_l2}</li>
+      <li data-i18n="s6_l3">{d.s6_l3}</li>
+    </ul>
+    <p data-i18n="s6_p2">{d.s6_p2}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        if (lang !== 'zh') return;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (zh[k] != null) nodes[i].textContent = zh[k];
+        }
+        document.documentElement.lang = 'zh';
+        document.title = '800 美元 de minimis 免税门槛 — 它到底是什么 — TariffStack';
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

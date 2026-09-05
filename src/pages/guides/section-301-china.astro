@@ -1,0 +1,235 @@
+---
+// Section 301 tariffs on Chinese goods — what they cover, who pays, when they apply.
+const en = {
+  title: 'Section 301 tariffs on Chinese goods — a practical guide — TariffStack',
+  h1: 'Section 301 tariffs on Chinese goods',
+  intro: 'Most "extra" U.S. duties on Chinese-origin products come from Section 301 of the Trade Act of 1974 — and the headline rate is rarely your final rate. This guide walks through the four original lists, the successor IEEPA fentanyl layer, and how to predict the total duty on a real HS code.',
+  updated: 'Last updated',
+  back: '← All guides',
+  about: 'About',
+  toc: 'On this page',
+
+  s1: '1. Where these tariffs come from',
+  s1_p: 'In August 2017 the Office of the U.S. Trade Representative (USTR) opened a Section 301 investigation into China\'s acts, policies and practices related to technology transfer and intellectual property. The resulting finding (March 2018) authorized the President to impose tariffs. Four "Lists" were published in 2018–2019: List 1 (818 tariff lines at 25%), List 2 (279 lines at 25%), List 3 (5,745 lines at 10%, later raised), and List 4A (3,243 consumer goods at 7.5%, later raised to 25%). Most consumer-goods imports from China today sit under List 4A.',
+
+  s2: '2. The current combined picture',
+  s2_p1: 'As of 2026, the vast majority of Chinese-origin consumer goods are subject to BOTH:',
+  s2_l1: 'A baseline Section 301 duty of 7.5% or 25% (depending on List). Many List 3 entries stepped up to 25% in 2024.',
+  s2_l2: 'An additional IEEPA fentanyl-emergency duty of 20%, in effect since early 2025.',
+  s2_p2: 'The headline Section 301 rate therefore stacks: 25% + 20% = 45% on most List 4A goods, before MFN. On some List 3 entries, 7.5% + 20% = 27.5%. These layers are independent of — and added to — the HTSUS column 1 MFN duty.',
+  s2_p3: 'USTR also maintains product-specific exclusions, which expire unless extended. Always re-check the HTSUS chapter 99 (9903 series) notes for the current quarter.',
+
+  s3: '3. What is and is not covered',
+  s3_p: 'Section 301 applies at the HTSUS code level for goods of Chinese origin (per CBP\'s substantial transformation rules). Notably:',
+  s3_l1: 'It does NOT apply to goods of Hong Kong or Macau origin (separate from China for tariff purposes since 2020).',
+  s3_l2: 'It does NOT apply to goods qualifying for preferential treatment under a U.S. FTA (e.g. Chinese textile inputs manufactured and substantially transformed in Vietnam do not carry 301).',
+  s3_l3: 'It DOES apply cumulatively when a Chinese input is merely "minor processing" abroad — origin rules are the controlling test, not country-of-shipment.',
+  s3_l4: 'Section 301 is collected at the border in addition to MPF, HMF and any applicable AD/CVD orders.',
+
+  s4: '4. Worked example',
+  s4_p: 'CBP entry summary for 1,000 cotton T-shirts, HS 6109.10, $10,000 declared value, shipped from Shenzhen:',
+  s4_l1: 'MFN (HTS 6109.10.00): 16.5% = $1,650.00.',
+  s4_l2: 'Section 301 (List 4A): 25.0% = $2,500.00.',
+  s4_l3: 'IEEPA fentanyl emergency: 20.0% = $2,000.00.',
+  s4_l4: 'MPF (0.3464%, $10K value): $34.64.',
+  s4_l5: 'HMF (0.125%, ocean): $12.50.',
+  s4_l6: 'Total U.S. federal tariff + fees: $6,197.14 — i.e. an effective rate of 61.97% on the declared value.',
+  s4_p2: 'Compare to the same goods declared as Vietnamese origin with a qualifying transformation: MFN 16.5% + MPF + HMF = $1,697.14 (effective 16.97%). That is the practical weight of origin rules — and why a broker will ask about country of origin before anything else.',
+
+  s5: '5. How to read 9903 series in the HTSUS',
+  s5_p: 'Specific Section 301 exclusions, retaliation counters and modifications are codified in Chapter 99 of the HTSUS — the 9903.xx.xxxx codes. To look these up:',
+  s5_l1: 'On the USITC HTSUS search (https://hts.usitc.gov), enter the 9903 code or the underlying 8/10-digit statistical breakout.',
+  s5_l2: 'Each 9903 entry has an "Effective" column and an "Expires" column. USTR extends or terminates these periodically.',
+  s5_l3: 'CBP\'s CROSS rulings database (rulings.cbp.gov) is the authority for whether a specific imported article qualifies for an exclusion.',
+
+  s6: '6. Common pitfalls',
+  s6_l1: 'Trusting supplier-shipped certificates of origin without verifying transformation. Origin is a legal conclusion, not a label.',
+  s6_l2: 'Forgetting AD/CVD (anti-dumping / countervailing duty) orders — these layer ON TOP OF Section 301 for goods named in those orders (steel, certain solar cells, etc.).',
+  s6_l3: 'Assuming de minimis (Section 321) covers Chinese parcels under $800. After 2025 the de minimis pathway is largely closed for goods of Chinese origin subject to Section 301 / IEEPA.',
+  s6_l4: 'Filing with an old HTS revision — use the current USITC revision every quarter.',
+
+  caveat: 'This article is for general education. TariffStack is not a customs broker or law firm. Confirm classification, origin, and any product-specific Section 301 / IEEPA modifications with CBP CROSS or a licensed customs broker before filing.',
+};
+
+const zh = {
+  title: 'Section 301 条款对中国商品关税 — 实用指南 — TariffStack',
+  h1: '美国 Section 301 对中国商品的关税',
+  intro: '大多数对中国原产地产品征收的"额外"美国关税都来自 1974 年贸易法第 301 条——而标题里的税率很少是你的最终税率。本指南带你走过原来的四份清单、继任的 IEEPA 芬太尼应急关税，以及如何预测真实 HS 编码上的总关税。',
+  updated: '最后更新',
+  back: '← 全部指南',
+  about: '关于',
+  toc: '本页内容',
+
+  s1: '1. 这些关税从哪里来',
+  s1_p: '2017 年 8 月，美国贸易代表办公室（USTR）就中国在技术转让与知识产权方面的"行为、政策与做法"启动 301 调查。2018 年 3 月的调查结果授权总统加征关税。2018–2019 年发布了四份"清单"：List 1（818 项，25%）、List 2（279 项，25%）、List 3（5,745 项，原 10% 后上调）、List 4A（3,243 项消费品，7.5% 后上调至 25%）。今天绝大多数中国消费品进口落入 List 4A。',
+
+  s2: '2. 现在的叠加全景',
+  s2_p1: '截至 2026 年，绝大多数中国原产地消费品同时适用以下两层：',
+  s2_l1: '基础 Section 301 税率 7.5% 或 25%（视清单而定）。许多 List 3 项目在 2024 年上调到 25%。',
+  s2_l2: '自 2025 年初生效的 IEEPA 芬太尼应急关税 20%。',
+  s2_p2: '因此 Section 301 的标题税率会叠加：List 4A 商品 = 25% + 20% = 45%（不计 MFN）。部分 List 3 商品 = 7.5% + 20% = 27.5%。它们独立于 HTSUS 第 1 列 MFN，并在其上加征。',
+  s2_p3: 'USTR 维护针对产品的具体豁免，除非延期否则到期失效。每次报关都要重新核查 HTSUS 第 99 章（9903 系列）本季度注释。',
+
+  s3: '3. 适用与不适用',
+  s3_p: 'Section 301 按 HTSUS 编码适用，针对中国原产地商品（依据 CBP 的"实质性改变"判定）。需要注意的是：',
+  s3_l1: '不适用于香港或澳门原产地商品（自 2020 年起与中国关税区分离）。',
+  s3_l2: '不适用于符合美国 FTA 优惠待遇的商品（例如中国纺织原料在越南"实质性加工"后出口，不带 301）。',
+  s3_l3: '当中国零部件在境外仅做了"微小加工"时仍适用——产地规则才是控制性测试，不是装运国。',
+  s3_l4: 'Section 301 在边境另行征收，与 MPF、HMF 以及任何适用的反倾销/反补贴令并存。',
+
+  s4: '4. 真实算例',
+  s4_p: 'CBP 入境汇总单：1,000 件棉质 T 恤，HS 6109.10，申报货值 10,000 美元，从深圳启运：',
+  s4_l1: 'MFN（HTS 6109.10.00）：16.5% = 1,650.00 美元。',
+  s4_l2: 'Section 301（List 4A）：25.0% = 2,500.00 美元。',
+  s4_l3: 'IEEPA 芬太尼应急：20.0% = 2,000.00 美元。',
+  s4_l4: 'MPF（0.3464%，1 万美元货值）：34.64 美元。',
+  s4_l5: 'HMF（0.125%，海运）：12.50 美元。',
+  s4_l6: '美国联邦关税 + 杂费合计：6,197.14 美元——相当于申报货值上的有效税率 61.97%。',
+  s4_p2: '同一批货若申报为越南原产地且符合"实质性加工"判定：MFN 16.5% + MPF + HMF = 1,697.14 美元（有效税率 16.97%）。这就是产地规则的现实分量——也是报关行首先要问的事。',
+
+  s5: '5. 如何读 HTSUS 9903 系列',
+  s5_p: '具体的 Section 301 豁免、反报复、修订都编在 HTSUS 第 99 章——9903.xx.xxxx 编码。查询方式：',
+  s5_l1: '在 USITC HTSUS（https://hts.usitc.gov）输入 9903 编码或下面的 8/10 位统计细分编码。',
+  s5_l2: '每个 9903 项有"生效"列与"到期"列。USTR 定期延期或终止。',
+  s5_l3: 'CBP 的 CROSS 裁定库（rulings.cbp.gov）是判定某进口商品是否符合豁免的权威渠道。',
+
+  s6: '6. 常见踩坑',
+  s6_l1: '不验证"实质性改变"，就相信供应商出示的原产地证。原产地是法律结论，不是标签。',
+  s6_l2: '忘了还有 AD/CVD（反倾销 / 反补贴税）令——这些特定商品（钢材、某些光伏电池等）在 Section 301 上再加一层。',
+  s6_l3: '以为 de minimis（Section 321）可以走通 800 美元以下中国包裹。2025 年起，de minimis 通道对中国原产、属于 Section 301 / IEEPA 范畴的商品基本已关闭。',
+  s6_l4: '用过期版本的 HTS 申报——每个季度用 USITC 当季现行版本。',
+
+  caveat: '本指南仅供一般教育用途。TariffStack 不是报关行或律所。在正式申报前，请务必以 CBP CROSS 裁定或持牌报关行为准，核实归类、原产地与任何 Section 301 / IEEPA 特殊修改。',
+};
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="Section 301 tariffs on Chinese goods: the four original lists, the 2025 IEEPA fentanyl layer, exclusions, and a worked example to 61.97% effective rate." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    h3{margin:24px 0 8px;font-size:17px;font-weight:700;color:var(--ink);}
+    ul{padding-left:22px;}
+    li{margin:6px 0;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+      <li><a href="#s6" data-i18n="s6">{d.s6}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p1">{d.s2_p1}</p>
+    <ul>
+      <li data-i18n="s2_l1">{d.s2_l1}</li>
+      <li data-i18n="s2_l2">{d.s2_l2}</li>
+    </ul>
+    <p data-i18n="s2_p2">{d.s2_p2}</p>
+    <p data-i18n="s2_p3">{d.s2_p3}</p>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+    <ul>
+      <li data-i18n="s3_l1">{d.s3_l1}</li>
+      <li data-i18n="s3_l2">{d.s3_l2}</li>
+      <li data-i18n="s3_l3">{d.s3_l3}</li>
+      <li data-i18n="s3_l4">{d.s3_l4}</li>
+    </ul>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+    <ul>
+      <li data-i18n="s4_l1">{d.s4_l1}</li>
+      <li data-i18n="s4_l2">{d.s4_l2}</li>
+      <li data-i18n="s4_l3">{d.s4_l3}</li>
+      <li data-i18n="s4_l4">{d.s4_l4}</li>
+      <li data-i18n="s4_l5">{d.s4_l5}</li>
+      <li data-i18n="s4_l6">{d.s4_l6}</li>
+    </ul>
+    <p data-i18n="s4_p2">{d.s4_p2}</p>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+    <ul>
+      <li data-i18n="s5_l1">{d.s5_l1}</li>
+      <li data-i18n="s5_l2">{d.s5_l2}</li>
+      <li data-i18n="s5_l3">{d.s5_l3}</li>
+    </ul>
+
+    <h2 id="s6" data-i18n="s6">{d.s6}</h2>
+    <ul>
+      <li data-i18n="s6_l1">{d.s6_l1}</li>
+      <li data-i18n="s6_l2">{d.s6_l2}</li>
+      <li data-i18n="s6_l3">{d.s6_l3}</li>
+      <li data-i18n="s6_l4">{d.s6_l4}</li>
+    </ul>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        if (lang !== 'zh') return;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (zh[k] != null) nodes[i].textContent = zh[k];
+        }
+        document.documentElement.lang = 'zh';
+        document.title = '美国 Section 301 对中国商品的关税 — 实用指南 — TariffStack';
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

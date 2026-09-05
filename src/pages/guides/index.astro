@@ -9,12 +9,35 @@ const en = {
   intro: 'Plain-language guides to how import duties, HS codes and trade remedies actually work — written from the same official schedules that power the TariffStack calculator. Every guide is original, factual, and free to read.',
   about_link: 'About',
 
-  g1_kicker: 'GUIDE',
-  g1_title: 'What is an HS / HTS code (and why it decides your duty)?',
-  g1_desc: 'The 6–10 digit number behind every rate. How it is built, how the U.S. and China number theirs differently, where to find yours, and why getting it wrong costs you.',
-  g1_read: 'Read the guide →',
+  g1_kicker: 'FUNDAMENTALS',
+  g1_title: 'How is import duty actually calculated?',
+  g1_desc: 'The landed-cost walkthrough: U.S. customs value, MPF/HMF, China CIF base, VAT. A worked example showing why a 16.5% headline rate compounds to a 17.5%+ landed rate in the U.S. and ~22% effective in China.',
 
-  more_soon: 'More guides are published as we expand the library. Each one traces its claims to the official schedules.',
+  g2_kicker: 'FUNDAMENTALS',
+  g2_title: 'What is an HS / HTS code (and why it decides your duty)?',
+  g2_desc: 'The 6–10 digit number behind every rate. How it is built, how the U.S. and China number theirs differently, where to find yours, and why getting it wrong costs you.',
+
+  g3_kicker: 'TRADE REMEDY',
+  g3_title: 'Section 301 tariffs on Chinese goods',
+  g3_desc: 'The four original lists (List 1–4A), the 2025 IEEPA fentanyl 20% layer, exclusions in HTSUS chapter 99, and a worked example showing 16.5% MFN → 61.97% effective for a $10K T-shirt entry.',
+
+  g4_kicker: 'TRADE REMEDY',
+  g4_title: 'Section 232: steel, aluminum, copper, autos',
+  g4_desc: 'The national-security-based tariffs: steel/aluminum/copper 50%, autos & parts 25%, lumber 10%, pharma 100%, drones 100%, polysilicon 100%. How they stack with Section 301.',
+
+  g5_kicker: 'ENTRY STRATEGY',
+  g5_title: 'The $800 de minimis exemption (Section 321)',
+  g5_desc: 'What de minimis actually is, who uses it, who doesn\'t — and why the May 2025 closure to Chinese-origin parcels is the most meaningful change to cross-border e-commerce in a decade.',
+
+  g6_kicker: 'ENTRY STRATEGY',
+  g6_title: 'USMCA and FTAs: when you actually pay 0%',
+  g6_desc: 'USMCA and the broader U.S. FTA network. Product-specific rules of origin, the certificate regime, and the four ways importers lose preference claims and owe back duties.',
+
+  g7_kicker: 'COMPLIANCE',
+  g7_title: 'UFLPA: the 12.5% forced-labor assessment',
+  g7_desc: 'Uyghur Forced Labor Prevention Act: rebuttable presumption, the +12.5% assessment option, UFLPA Entity List, and the supply-chain evidence importers must keep to clear CBP detention.',
+
+  more_soon: 'We add new guides as policy changes. Every claim traces back to the official schedule, regulation, or ruling it came from.',
 };
 
 const zh = {
@@ -25,14 +48,36 @@ const zh = {
   intro: '用通俗语言讲清进口关税、HS 编码与贸易救济措施到底如何运作——素材与驱动 TariffStack 计算器的官方税则同源。每篇指南均为原创、真实、免费阅读。',
   about_link: '关于',
 
-  g1_kicker: '指南',
-  g1_title: '什么是 HS / HTS 编码（以及它为何决定你的关税）？',
-  g1_desc: '每个税率背后那串 6–10 位数字。它如何构成、美国与中国的编号方式有何不同、去哪里查你的编码，以及填错它会让你付出什么代价。',
-  g1_read: '查看指南 →',
+  g1_kicker: '基础',
+  g1_title: '进口关税到底怎么算？',
+  g1_desc: '到岸成本全拆解：美国海关价值、MPF/HMF、中国 CIF 基础、增值税。用真实算例说明 16.5% 标题税率在美国如何复合成 17.5%+ 到岸成本，在中国约 22%。',
 
-  more_soon: '更多指南将随文库扩充陆续发布。每一篇的说法都可追溯到官方税则。',
+  g2_kicker: '基础',
+  g2_title: '什么是 HS / HTS 编码（以及它为何决定你的关税）？',
+  g2_desc: '每个税率背后那串 6–10 位数字。它如何构成、美国与中国的编号方式有何不同、去哪里查你的编码，以及填错它会让你付出什么代价。',
+
+  g3_kicker: '贸易救济',
+  g3_title: '美国 Section 301 对中国商品的关税',
+  g3_desc: '原始四份清单（List 1–4A）、2025 年新增的 IEEPA 芬太尼 20% 层、HTSUS 第 99 章豁免条款，以及一个真实算例展示 16.5% MFN 如何叠加至 61.97% 有效税率（一万美元 T 恤入境）。',
+
+  g4_kicker: '贸易救济',
+  g4_title: 'Section 232：钢、铝、铜、汽车',
+  g4_desc: '基于"国家安全"的关税：钢/铝/铜 50%、汽车及零部件 25%、木材 10%、药品 100%、无人机 100%、多晶硅 100%。以及它们如何与 Section 301 叠加。',
+
+  g5_kicker: '入境策略',
+  g5_title: '800 美元 de minimis 免税门槛（Section 321）',
+  g5_desc: 'De minimis 真正是什么，谁在用它，谁不是——以及为什么 2025 年 5 月对中国原产包裹关闭它，是十年来跨境电商最具实质意义的政策变化。',
+
+  g6_kicker: '入境策略',
+  g6_title: 'USMCA 与自贸协定：什么时候真的 0%',
+  g6_desc: 'USMCA 与更广的美国 FTA 网络。产品特定原产规则（PSR）、证书制度，以及进口商失去优惠资格、被追缴关税的四种最常见方式。',
+
+  g7_kicker: '合规',
+  g7_title: 'UFLPA：12.5% 强迫劳动评估',
+  g7_desc: '《维吾尔强迫劳动预防法》：可反驳推定、+12.5% 评估选项、UFLPA 实体清单，以及进口商要在 CBP 扣留后清关必须保留的供应链证据。',
+
+  more_soon: '我们随政策变化增添新指南。每一条断言都可追溯至官方税则、法规或裁定。',
 };
-
 const d = en;
 import overlay from '../../data/policy_overlay.json';
 const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
@@ -43,7 +88,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{d.title}</title>
-  <meta name="description" content="Original, factual guides to import duties, HS/HTS codes and trade remedies — written from the official U.S. and China tariff schedules that power the TariffStack calculator." />
+  <meta name="description" content="Original, factual guides to import duties, HS/HTS codes, Section 301, Section 232, de minimis, USMCA / FTAs, and UFLPA — written from the official U.S. and China tariff schedules that power the TariffStack calculator." />
   <meta name="robots" content="index,follow" />
   <style is:global>
     :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
@@ -87,11 +132,47 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
     <div class="lead" data-i18n="intro">{d.intro}</div>
 
     <div class="grid">
-      <a class="g-card" href="/guides/hs-codes-explained">
+      <a class="g-card" href="/guides/how-duty-calculated">
         <span class="kicker" data-i18n="g1_kicker">{d.g1_kicker}</span>
         <span class="g-title" data-i18n="g1_title">{d.g1_title}</span>
         <span class="g-desc" data-i18n="g1_desc">{d.g1_desc}</span>
-        <span class="g-read" data-i18n="g1_read">{d.g1_read}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/hs-codes-explained">
+        <span class="kicker" data-i18n="g2_kicker">{d.g2_kicker}</span>
+        <span class="g-title" data-i18n="g2_title">{d.g2_title}</span>
+        <span class="g-desc" data-i18n="g2_desc">{d.g2_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/section-301-china">
+        <span class="kicker" data-i18n="g3_kicker">{d.g3_kicker}</span>
+        <span class="g-title" data-i18n="g3_title">{d.g3_title}</span>
+        <span class="g-desc" data-i18n="g3_desc">{d.g3_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/section-232">
+        <span class="kicker" data-i18n="g4_kicker">{d.g4_kicker}</span>
+        <span class="g-title" data-i18n="g4_title">{d.g4_title}</span>
+        <span class="g-desc" data-i18n="g4_desc">{d.g4_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/de-minimis-800">
+        <span class="kicker" data-i18n="g5_kicker">{d.g5_kicker}</span>
+        <span class="g-title" data-i18n="g5_title">{d.g5_title}</span>
+        <span class="g-desc" data-i18n="g5_desc">{d.g5_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/usmca-and-fta">
+        <span class="kicker" data-i18n="g6_kicker">{d.g6_kicker}</span>
+        <span class="g-title" data-i18n="g6_title">{d.g6_title}</span>
+        <span class="g-desc" data-i18n="g6_desc">{d.g6_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/uflpa-forced-labor">
+        <span class="kicker" data-i18n="g7_kicker">{d.g7_kicker}</span>
+        <span class="g-title" data-i18n="g7_title">{d.g7_title}</span>
+        <span class="g-desc" data-i18n="g7_desc">{d.g7_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
       </a>
     </div>
 

@@ -1,0 +1,209 @@
+---
+// How is import duty actually calculated — landed cost walkthrough.
+// Per-page en + zh inline dict (mirrors privacy.astro / hs-codes-explained.astro).
+const en = {
+  title: 'How is import duty actually calculated? A landed-cost walkthrough — TariffStack',
+  h1: 'How is import duty actually calculated?',
+  intro: 'Most importers know duty + VAT exist. Far fewer can clearly explain how each side stacks on top of a declared value, or why the headline "32% tariff" almost never equals "32% on top of your invoice." This guide walks through what really happens at U.S. CBP and China customs.',
+  updated: 'Last updated',
+  back: '← All guides',
+  about: 'About',
+  toc: 'On this page',
+
+  s1: '1. The basic formula',
+  s1_p: 'In every customs regime, the official tariff line produces a rate (e.g. 16.5%) and a tax base (the "customs value"). Duty = base × rate. Everything else — VAT, MPF/HMF, anti-dumping, Section 301 — is a separate line stacked on top. The mistake importers make is to add all the percentages together and treat the sum as a single multiplier. It never is.',
+
+  s2: '2. U.S. customs value',
+  s2_p1: 'Under U.S. law (19 CFR §152), customs value is almost always the transaction value — what you actually paid the seller for the goods (typically FOB / ex-works, not CIF). International freight and insurance are usually not part of the dutiable base. Add "assist, proceeds, and additions" if applicable (e.g. tool dies supplied free). Royalties paid as a condition of sale are added.',
+  s2_p2: 'The tariff is then computed on that base. U.S. duties are assessed in U.S. dollars. Ad valorem rates (e.g. 16.5%) are decimal-fraction: 16.5% of $10,000 = $1,650. Specific duties (e.g. $0.50/kg) use the unit set out in the HTS column 2.',
+
+  s3: '3. U.S. fees on top of duty',
+  s3_h1: 'Merchandise Processing Fee (MPF)',
+  s3_p1: 'A flat ad valorem fee on most formal entries: 0.3464% of the value of the merchandise, with a minimum of $31.67 per entry and a maximum of $614.35 per entry (formal entry cap, FY2026 — CBP adjusts annually). MPF is NOT a tariff — it funds CBP operations.',
+  s3_h2: 'Harbor Maintenance Fee (HMF)',
+  s3_p2: '0.125% of value, charged ONLY when the merchandise arrives by ocean vessel (not air or truck from Canada/Mexico). It funds harbor dredging. Even though it is technically a "fee," it adds to total landed cost.',
+
+  s4: '4. China customs value',
+  s4_p1: 'China (Customs of the PRC) uses a CIF basis — i.e. goods value + international freight + insurance, all converted to CNY at the Customs-published exchange rate for the entry week. It is almost always a slightly higher dutiable base than the U.S. equivalent.',
+  s4_h1: 'MFN duty',
+  s4_p2: 'From the 8-digit HS code in the 2026 Customs Import and Export Tariff. For most consumer imports this is the rate that shows up on the headline "32% tariff" press release.',
+  s4_h2: 'VAT (增值税)',
+  s4_p3: '13% for most goods (food, books, etc. 9% on some; 6% on services). Computed on (customs value + duty). For a $1,000 item with 25% duty → $1,250 × 13% = $162.50 VAT.',
+  s4_h3: 'Consumption tax (消费税)',
+  s4_p4: 'Only on a narrow list of goods: cigarettes, liquor, cosmetics, precious metals, luxury cars, gasoline. For most B2B imports it does not apply.',
+
+  s5: '5. Worked example',
+  s5_t1: 'Goods',
+  s5_d1: '1,000 cotton T-shirts, HS 6109.10, $10,000 declared value (FOB), ocean shipment.',
+  s5_t2: 'U.S. calculation',
+  s5_d2: 'Base = $10,000. Duty: 16.5% → $1,650.00 MPF: 0.3464% of $10,000 = $34.64 (above the $31.67 minimum, well under the $614.35 cap). HMF: 0.125% = $12.50. Total CBP-related = $1,650.00 + $34.64 + $12.50 = $1,697.14. State sales tax is a separate layer added by the importer at resale.',
+  s5_t3: 'China calculation',
+  s5_d3: 'Base = $10,000 × Customs FX (≈ 7.20 CNY/USD in 2026) + ocean freight + insurance ≈ ¥80,000 all-in. Duty: 14% → ¥11,200. VAT: 13% × (¥80,000 + ¥11,200) = ¥11,856. Total ≈ ¥23,056 (≈ $3,200). The China figure is higher because VAT compounds on duty and because CIF base is larger than FOB.',
+
+  s6: '6. Why your headline number is almost always wrong',
+  s6_p: 'If a tariff hits at 25% and the news headline says "importers pay 25%", the importer actually pays: 25% on the dutiable base + 0.3464% MPF + 0.125% HMF (if ocean) + state sales tax on the imported value + any Section 301/Section 232/IEEPA addition + broker/handling. A "32% tariff" can become 40%+ landed cost. The TariffStack calculator implements the full stack — try it to see the whole picture.',
+
+  caveat: 'This article is for general education. TariffStack is not a customs broker or law firm. Confirm final classification, value, and applicable duties with the destination country\'s official customs authority or a licensed customs broker before filing.',
+};
+
+const zh = {
+  title: '进口关税到底怎么算？到岸成本全拆解 — TariffStack',
+  h1: '进口关税到底怎么算？',
+  intro: '多数进口商知道"关税 + 增值税"的存在，但很少有人能讲清：每一项税是如何在申报货值之上层层叠加的，以及为什么新闻标题里的"32%关税"几乎从来不是"在发票金额上加 32%"。这篇指南把美国 CBP 与中国海关的真实计算过程拆给你看。',
+  updated: '最后更新',
+  back: '← 全部指南',
+  about: '关于',
+  toc: '本页内容',
+
+  s1: '1. 基础公式',
+  s1_p: '在任何海关体系里，税则条目都给出一个税率（如 16.5%）和一个计税基础（"海关价值"）。关税 = 基础 × 税率。其余的——增值税、MPF/HMF、反倾销税、Section 301——都是另外一行，叠在关税之上。进口商常犯的错，是把所有百分比加起来当成一个总乘数用。永远不是这么算的。',
+
+  s2: '2. 美国的海关价值',
+  s2_p1: '按美国法律（19 CFR §152），海关价值几乎总是成交价——你实际付给卖方的金额（通常 FOB / 出厂价，不含 CIF）。国际运费和保险一般不算入计税基础。可酌情加上"协助、收益与附加值"（如免费提供的模具）。作为销售条件支付的特许权使用费要并入。',
+  s2_p2: '关税就以这个基础计算。美国关税以美元计征。从价税率（如 16.5%）都是小数：10,000 美元的 16.5% = 1,650 美元。从量税（如每公斤 0.50 美元）用 HTS 第 2 列给出的单位。',
+
+  s3: '3. 美国加在关税上的杂费',
+  s3_h1: '货物处理费（MPF）',
+  s3_p1: '对大多数正式报关单据收取的统一从价费率：货物价值的 0.3464%，每票最低 31.67 美元，最高 614.35 美元（正式报关封顶，财年 2026——CBP 每年调整）。MPF 不是关税——它资助 CBP 自身运营。',
+  s3_h2: '港口维护费（HMF）',
+  s3_p2: '货物价值的 0.125%，仅对海运到达的货物收取（航空或加墨陆运不收）。它用于港口疏浚。技术上算"费"，但计入总到岸成本。',
+
+  s4: '4. 中国的海关价值',
+  s4_p1: '中国（中华人民共和国海关）采用 CIF 基础——即货物价值 + 国际运费 + 保险，全部按海关发布的本周汇率折算为人民币。通常计税基础比美国 FOB 略大。',
+  s4_h1: '最惠国关税',
+  s4_p2: '用 2026 年海关进出口税则的 8 位 HS 编码查出来的税率。多数消费品的税率就是新闻里"32%关税"用的那一行。',
+  s4_h2: '增值税',
+  s4_p3: '大部分货物 13%（食品、图书等 9%；服务 6%）。计算基础 = 海关价值 + 关税。1,000 美元商品、25% 关税 → 1,250 美元 × 13% = 162.50 美元。',
+  s4_h3: '消费税',
+  s4_p4: '只在极窄的清单上：烟、酒、化妆品、贵金属、豪车、汽油。多数 B2B 进口不涉及。',
+
+  s5: '5. 真实算例',
+  s5_t1: '货物',
+  s5_d1: '1,000 件棉质 T 恤，HS 6109.10，申报货值 10,000 美元（FOB），海运。',
+  s5_t2: '美国测算',
+  s5_d2: '基础 = 10,000 美元。关税 16.5% → 1,650.00 美元。MPF：10,000 × 0.3464% = 34.64 美元（高于 31.67 美元下限，远低于 614.35 美元上限）。HMF：0.125% = 12.50 美元。CBP 相关合计 = 1,697.14 美元。州销售税是另一层，在转售时由进口商代收。',
+  s5_t3: '中国测算',
+  s5_d3: '基础 ≈ 10,000 × 海关汇率（2026 年约 7.20）+ 海运费 + 保险 ≈ ¥80,000（CIF）。关税 14% → ¥11,200。增值税：13% × (¥80,000 + ¥11,200) = ¥11,856。合计 ≈ ¥23,056（约 3,200 美元）。中国数字更高，因为增值税在关税之上复合计算，且 CIF 基础大于 FOB。',
+
+  s6: '6. 为什么标题里的数字几乎总是错的',
+  s6_p: '如果一个关税是 25%，新闻标题说"进口商付 25%"，进口商实际付的是：25% × 计税基础 + 0.3464% MPF + 0.125% HMF（如果是海运）+ 进口环节代征的州销售税 + 任何 Section 301 / Section 232 / IEEPA 附加 + 报关行 / 仓储杂费。"32% 关税"实际可能到岸成本是 40%+。TariffStack 计算器实现了完整的叠加——去试试就能看到全貌。',
+
+  caveat: '本指南仅供一般教育用途。TariffStack 不是报关行或律所。在正式申报前，请务必以目的地海关官方公告或持牌报关行为准。',
+};
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="How import duty, MPF, HMF, VAT, and consumption tax actually stack on top of a declared customs value — with a worked U.S. vs China example." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .ex-table{border:1px solid var(--line2);border-radius:12px;overflow:hidden;margin:16px 0 26px;background:var(--card);}
+    .ex-table .ex-row{display:flex;border-top:1px solid var(--line2);font-size:15px;}
+    .ex-table .ex-row:first-child{border-top:0;}
+    .ex-table .ex-key{flex:0 0 130px;padding:12px 16px;background:var(--accent-soft);color:var(--ink);font-weight:700;border-right:1px solid var(--line2);}
+    .ex-table .ex-val{flex:1 1 auto;padding:12px 16px;color:var(--content);}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}.ex-table .ex-key{flex-basis:90px;font-size:13.5px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+      <li><a href="#s6" data-i18n="s6">{d.s6}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p1">{d.s2_p1}</p>
+    <p data-i18n="s2_p2">{d.s2_p2}</p>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <h3 data-i18n="s3_h1">{d.s3_h1}</h3>
+    <p data-i18n="s3_p1">{d.s3_p1}</p>
+    <h3 data-i18n="s3_h2">{d.s3_h2}</h3>
+    <p data-i18n="s3_p2">{d.s3_p2}</p>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p1">{d.s4_p1}</p>
+    <h3 data-i18n="s4_h1">{d.s4_h1}</h3>
+    <p data-i18n="s4_p2">{d.s4_p2}</p>
+    <h3 data-i18n="s4_h2">{d.s4_h2}</h3>
+    <p data-i18n="s4_p3">{d.s4_p3}</p>
+    <h3 data-i18n="s4_h3">{d.s4_h3}</h3>
+    <p data-i18n="s4_p4">{d.s4_p4}</p>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <div class="ex-table">
+      <div class="ex-row"><div class="ex-key" data-i18n="s5_t1">{d.s5_t1}</div><div class="ex-val" data-i18n="s5_d1">{d.s5_d1}</div></div>
+      <div class="ex-row"><div class="ex-key" data-i18n="s5_t2">{d.s5_t2}</div><div class="ex-val" data-i18n="s5_d2">{d.s5_d2}</div></div>
+      <div class="ex-row"><div class="ex-key" data-i18n="s5_t3">{d.s5_t3}</div><div class="ex-val" data-i18n="s5_d3">{d.s5_d3}</div></div>
+    </div>
+
+    <h2 id="s6" data-i18n="s6">{d.s6}</h2>
+    <p data-i18n="s6_p">{d.s6_p}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        if (lang !== 'zh') return;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (zh[k] != null) nodes[i].textContent = zh[k];
+        }
+        document.documentElement.lang = 'zh';
+        document.title = '进口关税到底怎么算？到岸成本全拆解 — TariffStack';
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

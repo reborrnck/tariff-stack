@@ -1,0 +1,241 @@
+---
+// USMCA and FTAs — when you actually pay 0% on a U.S.-bound shipment.
+const en = {
+  title: 'USMCA and FTAs: when you actually pay 0% — TariffStack',
+  h1: 'USMCA and FTAs: when you actually pay 0%',
+  intro: 'Most importers overpay for years because they assume no FTA applies to them. The inverse is also common: they assume the FTA rate is automatic. It isn\'t. Preferential tariff treatment requires origin proof — and meeting the rule of origin is a fact-intensive test, not a paperwork formality.',
+  updated: 'Last updated',
+  back: '← All guides',
+  about: 'About',
+  toc: 'On this page',
+
+  s1: '1. The core principle',
+  s1_p: 'Every U.S. FTA gives qualifying goods a preferential column 1 rate — often 0%. The catch is "qualifying." You do not get the preferential rate by producing a piece of paper. You get it by demonstrating the good satisfies the rules of origin in the agreement\'s annex (called the Product-Specific Rules of Origin, or PSR).',
+
+  s2: '2. USMCA (Canada + Mexico) — the most-used FTA',
+  s2_p: 'The United States-Mexico-Canada Agreement replaced NAFTA in 2020. Under USMCA, roughly three quarters of tariff lines enter the U.S. duty-free from Canada or Mexico when the good "qualifies." The four most common ways to qualify:',
+  s2_l1: 'A1 — wholly obtained or produced entirely in the USMCA region.',
+  s2_l2: 'A2 — produced entirely in the region from inputs that are themselves originating (no non-originating inputs).',
+  s2_l3: 'A3 — produced entirely from non-originating materials that undergo the applicable tariff shift / RVC test in the PSR.',
+  s2_l4: 'A4 — produced with non-originating inputs that fail the tariff shift, BUT meet the regional value content (RVC) threshold instead.',
+  s2_p2: 'Automotive, textiles, apparel, agriculture and chemicals each have additional PSR requirements. Autos specifically use a 75% RVC threshold + specific labor value content (LVC) rules on critical components.',
+
+  s3: '3. The certificate of origin (or lack thereof)',
+  s3_p: 'Since 2021, CBP no longer requires a paper USMCA Certification of Origin to be in the importer\'s possession at the time of entry. The importer must:',
+  s3_l1: 'Have the certification in their records (10-year retention).',
+  s3_l2: 'Provide it on demand from CBP.',
+  s3_l3: 'Maintain sufficient records to back it up.',
+  s3_p2: 'Self-certification is permitted — only an exporter, producer or importer can sign. The certification contains nine required data elements (covered in 19 CFR §182).',
+
+  s4: '4. Other U.S. FTAs in force',
+  s4_p: 'As of 2026, the U.S. has FTAs with roughly 20 countries (the network varies as new deals sign and old ones evolve). Tariff preferences are 0% on the great majority of tariff lines where the PSR is met.',
+  s4_l1: 'Australia (2005), Bahrain (2006), Chile (2004), Colombia (2012), DR-CAFTA: Costa Rica, Dominican Republic, El Salvador, Guatemala, Honduras, Nicaragua (2006).',
+  s4_l2: 'Israel (1985 — FTA legacy), Jordan (2010), Korea (2012 — KORUS), Morocco (2006), Oman (2009), Panama (2012), Peru (2009), Singapore (2004).',
+  s4_l3: 'Newer deals: the USMCA successor framework to CPTPP engagements; UK negotiations concluded 2025.',
+  s4_l4: 'Each agreement has its own PSR, certificate format, and transshipment rules. Never assume an FTA "in force" means 0% applies to your article without checking the PSR.',
+  s4_p2: 'In addition, the U.S. participates in the Generalized System of Preferences (GSP) for many developing countries — though lapses and renewals occur. GSP is not an FTA and does not require certification.',
+
+  s5: '5. Common pitfalls',
+  s5_l1: 'Simple assembly does NOT confer origin. Slitting, painting, mixing, bottling — non-qualifying unless listed in the PSR for that tariff line.',
+  s5_l2: 'Country-of-shipment ≠ country-of-origin. Goods assembled in Mexico with Chinese inputs may be Chinese-origin for tariff purposes.',
+  s5_l3: 'Substantial transformation tests (USMCA Annex 4-B) are different from the older NAFTA rules. Old habits die hard — re-check classifications and PSR per line.',
+  s5_l4: 'Transshipment through a third country can disqualify a claim unless the rule is satisfied.',
+  s5_l5: 'Importer is LIABLE for the full duty retroactively if an entry is later determined not to qualify. CBP can assess back duties + interest + penalty.',
+
+  s6: '6. Worked example',
+  s6_p: 'U.S. importer of automotive wiring harnesses (HTSUS 8544.42) sourcing from a Mexican supplier.',
+  s6_l1: 'A "Made in Mexico" label is not enough.',
+  s6_l2: 'The wiring harness PSR under USMCA requires a tariff shift (HS heading change) from non-originating inputs OR a 70% RVC threshold.',
+  s6_l3: 'If the wire is imported from China and merely cut/stripped in Mexico, no tariff shift (HS 8544 to 8544 is no change) and RVC may fail.',
+  s6_l4: 'If the supplier can\'t substantiate origin, the entry is at MFN (2.7% for 8544.42.90) + Section 301 + IEEPA if any. Total could exceed 25%.',
+  s6_p2: 'Best practice: ask the supplier for the specific tariff shift / RVC calculation supporting each PSR classification BEFORE signing the first PO.',
+
+  caveat: 'TariffStack is not a customs broker or law firm. Preferential rate eligibility requires substantive analysis under the applicable FTA\'s rules of origin and proper certification. Confirm with CBP CROSS or a licensed customs broker before claiming any FTA rate.',
+};
+
+const zh = {
+  title: 'USMCA 与自贸协定：什么时候真的能 0% 关税 — TariffStack',
+  h1: 'USMCA 与自贸协定：什么时候真的 0%',
+  intro: '大多数进口商多年来多付关税，因为以为没有 FTA 适用；也有的反着来，以为 FTA 税率自动生效。其实不是——优惠关税需要原产地证明，而符合原产规则是事实密集型的判定，不是填一张纸。',
+  updated: '最后更新',
+  back: '← 全部指南',
+  about: '关于',
+  toc: '本页内容',
+
+  s1: '1. 核心原理',
+  s1_p: '每份美国 FTA 都给符合条件的商品一个优惠第 1 列税率——通常是 0%。但"符合条件"是关键词。你不能凭一张纸就拿优惠税率，必须证明该商品符合协定附件中的原产规则（产品特定原产规则 PSR）。',
+
+  s2: '2. USMCA（加 + 墨）— 用得最多的 FTA',
+  s2_p: '美墨加协议 2020 年取代 NAFTA。在 USMCA 下，约四分之三的税则编码从加、墨进入美国可享零关税——前提是"符合资格"。四种主要"符合资格"方式：',
+  s2_l1: 'A1 — 在 USMCA 区域内完全取得或生产。',
+  s2_l2: 'A2 — 完全在区域内生产，原料本身已原产（无非原产投入）。',
+  s2_l3: 'A3 — 完全用非原产材料生产，但满足 PSR 中的税则转换或区域价值含量（RVC）测试。',
+  s2_l4: 'A4 — 用非原产投入但转换未达成，但 RVC 已达阈值。',
+  s2_p2: '汽车、纺织品、服装、农化品各自有附加 PSR。汽车专用 75% RVC 阈值 + 关键零部件 LVC（劳动价值含量）。',
+
+  s3: '3. 原产地证书（或它的缺位）',
+  s3_p: '2021 年起，CBP 不再要求入境时手头持有 USMCA 原产地证书纸质件。进口商必须：',
+  s3_l1: '把证书留在记录里（10 年保留期）。',
+  s3_l2: '应 CBP 要求时提供。',
+  s3_l3: '保留足够支持记录。',
+  s3_p2: '允许自我认证——只能由出口商、生产商或进口商签署。证书包含九项必备数据（见 19 CFR §182）。',
+
+  s4: '4. 现行的其他美国 FTA',
+  s4_p: '截至 2026 年，美国与约 20 个国家签有 FTA（新签签约、协议演变使列表浮动）。大多数 PSR 达标的税则编码享 0% 优惠。',
+  s4_l1: '澳大利亚（2005）、巴林（2006）、智利（2004）、哥伦比亚（2012）、DR-CAFTA：哥斯达黎加、多米尼加、萨尔瓦多、危地马拉、洪都拉斯、尼加拉瓜（2006）。',
+  s4_l2: '以色列（1985——FTA 旧制）、约旦（2010）、韩国（2012——KORUS）、摩洛哥（2006）、阿曼（2009）、巴拿马（2012）、秘鲁（2009）、新加坡（2004）。',
+  s4_l3: '新协议：USMCA 后继框架、CPTPP 接洽；2025 年完成与英国谈判。',
+  s4_l4: '每份协议有独立的 PSR、证书格式与转运规则。不查 PSR 就不能假设"已生效 FTA = 0%"适用你的商品。',
+  s4_p2: '另外美国参与许多发展中国家的普惠制（GSP）——但有失效与续期。GSP 不是 FTA，不要求认证。',
+
+  s5: '5. 常见踩坑',
+  s5_l1: '简单组装不授予原产地。剪切、喷漆、混合、装瓶——除非 PSR 明列，否则不构成实质性改变。',
+  s5_l2: '装运国 ≠ 原产国。在墨西哥组装但用中国零部件的货，在关税上可能仍为"中国原产"。',
+  s5_l3: 'USMCA 附件 4-B 的"实质性改变"测试与旧 NAFTA 不同。老习惯难改——每条都要重新核实归类与 PSR。',
+  s5_l4: '通过第三国转运，除非达成规定，否则可致优惠失败。',
+  s5_l5: '如最终认定不符合，进口商对全部关税追溯承担连带责任。CBP 可加征补缴关税 + 利息 + 罚款。',
+
+  s6: '6. 真实算例',
+  s6_p: '从墨西哥供应商采购汽车线束（HTSUS 8544.42）入境美国。',
+  s6_l1: '"墨西哥制造"标签不够。',
+  s6_l2: 'USMCA 下线束 PSR 要么要求税则转换（HS 章改变），要么 70% RVC 阈值。',
+  s6_l3: '若电线进口自中国，仅在墨西哥剪切/剥皮——无 HS 8544 → 8544 的转换，RVC 可能不达标。',
+  s6_l4: '供应商如不能证明原产地，则按 MFN（8544.42.90 约 2.7%）+ Section 301 + IEEPA（如有）。合计可能超过 25%。',
+  s6_p2: '最佳实践：在第一份 PO 签订前向供应商索要每个 PSR 编码的税则转换 / RVC 计算支撑。',
+
+  caveat: 'TariffStack 不是报关行或律所。优惠税率资格需要按适用 FTA 的原产规则做事实分析，并具备合格证书。请在主张任何 FTA 税率前以 CBP CROSS 或持牌报关行为准。',
+};
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="USMCA + U.S. FTAs: when 0% rate applies, what counts as origin, and the common ways importers lose a preference claim and owe back-duties." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    h3{margin:24px 0 8px;font-size:17px;font-weight:700;color:var(--ink);}
+    ul{padding-left:22px;}
+    li{margin:6px 0;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+      <li><a href="#s6" data-i18n="s6">{d.s6}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+    <ul>
+      <li data-i18n="s2_l1">{d.s2_l1}</li>
+      <li data-i18n="s2_l2">{d.s2_l2}</li>
+      <li data-i18n="s2_l3">{d.s2_l3}</li>
+      <li data-i18n="s2_l4">{d.s2_l4}</li>
+    </ul>
+    <p data-i18n="s2_p2">{d.s2_p2}</p>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+    <ul>
+      <li data-i18n="s3_l1">{d.s3_l1}</li>
+      <li data-i18n="s3_l2">{d.s3_l2}</li>
+      <li data-i18n="s3_l3">{d.s3_l3}</li>
+    </ul>
+    <p data-i18n="s3_p2">{d.s3_p2}</p>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+    <ul>
+      <li data-i18n="s4_l1">{d.s4_l1}</li>
+      <li data-i18n="s4_l2">{d.s4_l2}</li>
+      <li data-i18n="s4_l3">{d.s4_l3}</li>
+      <li data-i18n="s4_l4">{d.s4_l4}</li>
+    </ul>
+    <p data-i18n="s4_p2">{d.s4_p2}</p>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <ul>
+      <li data-i18n="s5_l1">{d.s5_l1}</li>
+      <li data-i18n="s5_l2">{d.s5_l2}</li>
+      <li data-i18n="s5_l3">{d.s5_l3}</li>
+      <li data-i18n="s5_l4">{d.s5_l4}</li>
+      <li data-i18n="s5_l5">{d.s5_l5}</li>
+    </ul>
+
+    <h2 id="s6" data-i18n="s6">{d.s6}</h2>
+    <p data-i18n="s6_p">{d.s6_p}</p>
+    <ul>
+      <li data-i18n="s6_l1">{d.s6_l1}</li>
+      <li data-i18n="s6_l2">{d.s6_l2}</li>
+      <li data-i18n="s6_l3">{d.s6_l3}</li>
+      <li data-i18n="s6_l4">{d.s6_l4}</li>
+    </ul>
+    <p data-i18n="s6_p2">{d.s6_p2}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        if (lang !== 'zh') return;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (zh[k] != null) nodes[i].textContent = zh[k];
+        }
+        document.documentElement.lang = 'zh';
+        document.title = 'USMCA 与自贸协定：什么时候真的 0% — TariffStack';
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>
