@@ -251,19 +251,20 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
     <a class="back" href="/" data-i18n="back">{d.back}</a>
   </main>
 
-  <script is:inline define:vars={{ zh }}>
+  <script is:inline define:vars={{ zh, en }}>
     (function () {
       try {
         (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
         var lang = localStorage.getItem('ts-lang') || 'en';
-        if (lang !== 'zh') return;
+        var isZh = (lang === 'zh' || lang === 'zh-TW');
+        var dict = isZh ? zh : en;
         var nodes = document.querySelectorAll('[data-i18n]');
         for (var i = 0; i < nodes.length; i++) {
           var k = nodes[i].getAttribute('data-i18n');
-          if (zh[k] != null) nodes[i].textContent = zh[k];
+          if (dict[k] != null) nodes[i].textContent = dict[k];
         }
-        document.documentElement.lang = 'zh';
-        document.title = '关税科普与指南 — TariffStack';
+        document.documentElement.lang = lang;
+        if (isZh) document.title = zh['title'];
       } catch (e) {}
     })();
   </script>
