@@ -14,11 +14,11 @@ GUIDES = Path(r"D:\projects\tariff-platform\src\pages\guides")
 def render(slug: str, en: dict, zh: dict) -> str:
     n_sections = max(int(k.split('_')[0][1:]) for k in en.keys() if k.startswith('s') and len(k) > 2 and k[1].isdigit() and k.endswith('_h'))
     toc_items = "".join(
-        f'        <li><a href="#s{i}" data-i18n="s{i}_h">{{{{d.s{i}_h}}}}</a></li>\n'
+        f'        <li><a href="#s{i}" data-i18n="s{i}_h">{{d.s{i}_h}}</a></li>\n'
         for i in range(1, n_sections + 1)
     )
     body_blocks = "".join(
-        f'    <h2 id="s{i}" data-i18n="s{i}_h">{{{{d.s{i}_h}}}}</h2><p data-i18n="s{i}">{{{{d.s{i}}}}}</p>\n'
+        f'    <h2 id="s{i}" data-i18n="s{i}_h">{{d.s{i}_h}}</h2><p data-i18n="s{i}">{{d.s{i}}}</p>\n'
         for i in range(1, n_sections + 1)
     )
     en_items = "".join(f"  {k}: {repr(v)},\n" for k, v in en.items())
