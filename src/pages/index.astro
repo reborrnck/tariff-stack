@@ -160,7 +160,8 @@ const clkLondon     = fmtClk('Europe/London');
     /* Header-tools = Dark + Guides 按钮。**放在 .hd-inner 网格之外**，绝对定位到 header 右上角——
        绝不放回 .brand 列内（用户 2026-09-05 钉死铁律：放在 .brand 列内会被中间 2fr 时钟列挤压，
        单个 flex-shrink:0 救不了根因）。独立于 grid → 永远不被挤。 */
-    .header-tools{position:absolute;top:24px;right:56px;display:flex;gap:8px;z-index:5;}
+    .header-tools{position:absolute;top:8px;right:56px;display:flex;gap:8px;z-index:6;}
+    .lang-block .tag2{padding-right:220px;}  /* 给 .header-tools 绝对定位的按钮让出横向空间，否则 Light/Guides 会盖住 tag2 行文字（2026-09-05 钉死） */
     /* WIDE: ≥1280 — 3-column with EXPLICIT 1:2:1 proportions (用户确认这版三列比例正确).
        Brand/Right 用 minmax(min,1fr) 上限固定为 1fr，Middle 用 2fr 拿双倍空间。
        中间列 2fr 在 1280 视口下约 550px，足够放下 3×2 时钟（3×185px）不挤、无空白。 */
@@ -172,7 +173,8 @@ const clkLondon     = fmtClk('Europe/London');
       .hd-inner{padding:22px 36px;gap:20px;
         grid-template-columns:minmax(220px,1fr) minmax(0,1.5fr) minmax(260px,1fr);}
       .clock-bar{gap:8px;}
-      .header-tools{top:22px;right:36px;}
+      .header-tools{top:8px;right:36px;}
+      .lang-block .tag2{padding-right:200px;}
       .clock-card{padding:8px 10px;}
       .clock-card .clk-city{font-size:11px;letter-spacing:.04em;}
       .clock-card .clk-time{font-size:16px;}
@@ -191,15 +193,17 @@ const clkLondon     = fmtClk('Europe/London');
       .hd-inner{grid-template-columns:minmax(0,min-content) minmax(0,1fr);
         gap:18px;padding:18px 24px;}
       .clock-bar{display:none;}
-      .header-tools{top:18px;right:24px;}
+      .header-tools{top:6px;right:24px;}
+      .lang-block .tag2{padding-right:180px;}
     }
 
     /* TABLET: ≤900 — single column; clocks come back as a 3-col grid
        underneath brand/lang-block. */
     @media (max-width:900px){
       .hd-inner{padding:16px 20px;grid-template-columns:1fr;gap:14px;}
-      .header-tools{top:14px;right:20px;gap:6px;}
+      .header-tools{top:6px;right:20px;gap:6px;}
       .header-tools .theme-toggle{padding:6px 10px;font-size:13px;}
+      .lang-block .tag2{padding-right:0;font-size:14px;line-height:1.35;}
       /* mobile: 3×2 grid 紧凑排版，不强制 6 列（屏幕不够） */
       .clock-bar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:100%;justify-self:stretch;gap:10px;}
       .clock-card .clk-city{font-size:11.5px;}
