@@ -1,36 +1,35 @@
 ---
-// Guides index — standalone page (per-page en + zh dict, mirrors about.astro).
-// Lists the original explainer articles. Add a new card per article.
+// Guides index — paginated list page. Per-page en + zh dict (mirrors about.astro).
 import CookieConsent from '../../components/CookieConsent.astro';
 import SeoHead from '../../components/SeoHead.astro';
 import overlay from '../../data/policy_overlay.json';
 import type { GetStaticPaths } from 'astro';
 
-// Ordered article table. Pagination is generated via getStaticPaths (paginate is a callback arg, not an import).
-const ARTICLES = [
-  { n: 1, slug: 'how-duty-calculated' },
-  { n: 2, slug: 'hs-codes-explained' },
-  { n: 3, slug: 'section-301-china' },
-  { n: 4, slug: 'section-232' },
-  { n: 5, slug: 'de-minimis-800' },
-  { n: 6, slug: 'usmca-and-fta' },
-  { n: 7, slug: 'uflpa-forced-labor' },
-  { n: 8, slug: 'antidumping-and-countervailing-duties' },
-  { n: 9, slug: 'china-retaliatory-tariffs' },
-  { n: 10, slug: 'lookup-hs-codes-walkthrough' },
-  { n: 11, slug: 'country-of-origin-marking' },
-  { n: 12, slug: 'customs-broker-and-entry-types' },
-  { n: 13, slug: 'customs-valuation-basics' },
-  { n: 14, slug: 'binding-rulings-cross' },
-  { n: 15, slug: 'duty-drawback' },
-  { n: 16, slug: 'foreign-trade-zones' },
-  { n: 17, slug: 'incoterms-2020' },
-  { n: 18, slug: 'cbp-fees-mpf-hmf' },
-  { n: 19, slug: 'reconciliation-and-protest' },
-  { n: 20, slug: 'importer-of-record' },
-];
-
+// ARTICLES lives inside getStaticPaths so the call cannot fail with a
+// "not defined" ReferenceError due to Astro's module-evaluation order.
 export const getStaticPaths = (({ paginate }) => {
+  const ARTICLES = [
+    { n: 1, slug: 'how-duty-calculated' },
+    { n: 2, slug: 'hs-codes-explained' },
+    { n: 3, slug: 'section-301-china' },
+    { n: 4, slug: 'section-232' },
+    { n: 5, slug: 'de-minimis-800' },
+    { n: 6, slug: 'usmca-and-fta' },
+    { n: 7, slug: 'uflpa-forced-labor' },
+    { n: 8, slug: 'antidumping-and-countervailing-duties' },
+    { n: 9, slug: 'china-retaliatory-tariffs' },
+    { n: 10, slug: 'lookup-hs-codes-walkthrough' },
+    { n: 11, slug: 'country-of-origin-marking' },
+    { n: 12, slug: 'customs-broker-and-entry-types' },
+    { n: 13, slug: 'customs-valuation-basics' },
+    { n: 14, slug: 'binding-rulings-cross' },
+    { n: 15, slug: 'duty-drawback' },
+    { n: 16, slug: 'foreign-trade-zones' },
+    { n: 17, slug: 'incoterms-2020' },
+    { n: 18, slug: 'cbp-fees-mpf-hmf' },
+    { n: 19, slug: 'reconciliation-and-protest' },
+    { n: 20, slug: 'importer-of-record' },
+  ];
   return paginate(ARTICLES, { pageSize: 8 });
 }) satisfies GetStaticPaths;
 
@@ -45,79 +44,60 @@ const en = {
   g1_kicker: 'FUNDAMENTALS',
   g1_title: 'How is import duty actually calculated?',
   g1_desc: 'The landed-cost walkthrough: U.S. customs value, MPF/HMF, China CIF base, VAT. A worked example showing why a 16.5% headline rate compounds to a 17.5%+ landed rate in the U.S. and ~22% effective in China.',
-
   g2_kicker: 'FUNDAMENTALS',
   g2_title: 'What is an HS / HTS code (and why it decides your duty)?',
   g2_desc: 'The 6–10 digit number behind every rate. How it is built, how the U.S. and China number theirs differently, where to find yours, and why getting it wrong costs you.',
-
   g3_kicker: 'TRADE REMEDY',
   g3_title: 'Section 301 tariffs on Chinese goods',
   g3_desc: 'The four original lists (List 1–4A), the 2025 IEEPA fentanyl 20% layer, exclusions in HTSUS chapter 99, and a worked example showing 16.5% MFN → 61.97% effective for a $10K T-shirt entry.',
-
   g4_kicker: 'TRADE REMEDY',
   g4_title: 'Section 232: steel, aluminum, copper, autos',
   g4_desc: 'The national-security-based tariffs: steel/aluminum/copper 50%, autos & parts 25%, lumber 10%, pharma 100%, drones 100%, polysilicon 100%. How they stack with Section 301.',
-
   g5_kicker: 'ENTRY STRATEGY',
   g5_title: 'The $800 de minimis exemption (Section 321)',
   g5_desc: 'What de minimis actually is, who uses it, who doesn\'t — and why the May 2025 closure to Chinese-origin parcels is the most meaningful change to cross-border e-commerce in a decade.',
-
   g6_kicker: 'ENTRY STRATEGY',
   g6_title: 'USMCA and FTAs: when you actually pay 0%',
   g6_desc: 'USMCA and the broader U.S. FTA network. Product-specific rules of origin, the certificate regime, and the four ways importers lose preference claims and owe back duties.',
-
   g7_kicker: 'COMPLIANCE',
   g7_title: 'UFLPA: the 12.5% forced-labor assessment',
   g7_desc: 'Uyghur Forced Labor Prevention Act: rebuttable presumption, the +12.5% assessment option, UFLPA Entity List, and the supply-chain evidence importers must keep to clear CBP detention.',
-
   g8_kicker: 'TRADE REMEDY',
   g8_title: 'Anti-dumping & countervailing duties (AD/CVD)',
   g8_desc: 'The case-by-case surcharges that can run into the hundreds of percent. How ITA and USITC arrive at a rate, the A-570-126 example (Chinese aluminum extrusions above 100%), and how AD/CVD stacks with 301 and 232.',
-
   g9_kicker: 'FUNDAMENTALS',
   g9_title: 'China’s retaliatory tariffs on U.S. goods',
   g9_desc: 'The 2018 tariff commission announcement rounds, the 2025 fentanyl-aligned surcharges, and a worked example: a U.S. pickup truck pays 15% MFN + 10% + 10% + 13% VAT — 35% before VAT, not the headline 15%.',
-
   g10_kicker: 'FUNDAMENTALS',
   g10_title: 'How to look up an HS code (the right way)',
   g10_desc: 'A five-step verification routine: pick the destination, search USITC HTS or the 2026 China Tariff, read the chapter notes, cross-reference a CBP CROSS ruling, document the rationale.',
-
   g11_kicker: 'COMPLIANCE',
   g11_title: 'Country-of-origin marking (19 CFR Part 134)',
   g11_desc: 'How U.S. Customs decides whether your goods must be marked, what the mark must say, where it must appear, and how the 10% marking duty is assessed when you get it wrong.',
-
   g12_kicker: 'ENTRY STRATEGY',
   g12_title: 'Customs brokers and U.S. entry types',
   g12_desc: 'What a licensed broker actually does, how to pick one, and the difference between Type 01, 06, 51, 81, 82 and 86 entries — plus the importer-of-record bond and recordkeeping discipline.',
-
   g13_kicker: 'FUNDAMENTALS',
   g13_title: 'How U.S. customs value is calculated',
   g13_desc: 'Why the duty base is not your invoice price: the transaction-value method, the five mandatory additions (packing, assists, royalties, proceeds), and why valuation errors underpay duty and MPF.',
-
   g14_kicker: 'COMPLIANCE',
   g14_title: 'Binding rulings (CROSS & HQ)',
   g14_desc: 'Ask CBP for a written classification ruling before you import. How to search the public CROSS database and request your own — and why it removes classification risk.',
-
   g15_kicker: 'ENTRY STRATEGY',
   g15_title: 'Duty drawback: recover up to 99%',
   g15_desc: 'If you import, pay duty, then export or destroy, you may refund up to 99% of the duties. The three main drawback types, the five-year window, and the records CBP requires.',
-
   g16_kicker: 'ENTRY STRATEGY',
   g16_title: 'Foreign-Trade Zones & bonded warehouses',
   g16_desc: 'Land goods in the U.S. without paying duty at the border. How FTZs and bonded warehouses defer or avoid duty, the inverted-tariff advantage, and how each meets Section 301 / 232.',
-
   g17_kicker: 'FUNDAMENTALS',
   g17_title: 'Incoterms 2020: who pays duty & freight',
   g17_desc: 'The 11 Incoterms 2020 rules and what each means for landed cost — why CIF/CFR exclude duty, and how DDP differs from DAP on who clears customs.',
-
   g18_kicker: 'FEES',
   g18_title: 'MPF, HMF & other CBP fees',
   g18_desc: 'Duty is only part of what CBP collects. How the Merchandise Processing Fee (0.3464%) and Harbor Maintenance Fee (0.125%) are computed, and why they compound with duty.',
-
   g19_kicker: 'COMPLIANCE',
   g19_title: 'Reconciliation & post-entry protest',
   g19_desc: 'Entered the wrong value, class or origin? Reconciliation (19 CFR Part 174) and the 180-day protest (19 U.S.C. §1514) let you fix it after liquidation — if you act in time.',
-
   g20_kicker: 'COMPLIANCE',
   g20_title: 'Importer of record (IOR) duties & records',
   g20_desc: 'The IOR is legally on the hook for the entry. The reasonable-care standard, the customs bond, the power of attorney, and the five-year recordkeeping rule (19 CFR Part 163).',
@@ -139,79 +119,60 @@ const zh = {
   g1_kicker: '基础',
   g1_title: '进口关税到底怎么算？',
   g1_desc: '到岸成本全拆解：美国海关价值、MPF/HMF、中国 CIF 基础、增值税。用真实算例说明 16.5% 标题税率在美国如何复合成 17.5%+ 到岸成本，在中国约 22%。',
-
   g2_kicker: '基础',
   g2_title: '什么是 HS / HTS 编码（以及它为何决定你的关税）？',
   g2_desc: '每个税率背后那串 6–10 位数字。它如何构成、美国与中国的编号方式有何不同、去哪里查你的编码，以及填错它会让你付出什么代价。',
-
   g3_kicker: '贸易救济',
   g3_title: '美国 Section 301 对中国商品的关税',
   g3_desc: '原始四份清单（List 1–4A）、2025 年新增的 IEEPA 芬太尼 20% 层、HTSUS 第 99 章豁免条款，以及一个真实算例展示 16.5% MFN 如何叠加至 61.97% 有效税率（一万美元 T 恤入境）。',
-
   g4_kicker: '贸易救济',
   g4_title: 'Section 232：钢、铝、铜、汽车',
   g4_desc: '基于"国家安全"的关税：钢/铝/铜 50%、汽车及零部件 25%、木材 10%、药品 100%、无人机 100%、多晶硅 100%。以及它们如何与 Section 301 叠加。',
-
   g5_kicker: '入境策略',
   g5_title: '800 美元 de minimis 免税门槛（Section 321）',
   g5_desc: 'De minimis 真正是什么，谁在用它，谁不是——以及为什么 2025 年 5 月对中国原产包裹关闭它，是十年来跨境电商最具实质意义的政策变化。',
-
   g6_kicker: '入境策略',
   g6_title: 'USMCA 与自贸协定：什么时候真的 0%',
   g6_desc: 'USMCA 与更广的美国 FTA 网络。产品特定原产规则（PSR）、证书制度，以及进口商失去优惠资格、被追缴关税的四种最常见方式。',
-
   g7_kicker: '合规',
   g7_title: 'UFLPA：12.5% 强迫劳动评估',
   g7_desc: '《维吾尔强迫劳动预防法》：可反驳推定、+12.5% 评估选项、UFLPA 实体清单，以及进口商要在 CBP 扣留后清关必须保留的供应链证据。',
-
   g8_kicker: '贸易救济',
   g8_title: '反倾销与反补贴税（AD/CVD）',
   g8_desc: '可累计到百分之几百的按案件判定附加税。ITA 与 USITC 如何定税率、A-570-126 案例（中国铝挤压超 100%），以及 AD/CVD 如何与 301、232 叠加。',
-
   g9_kicker: '基础',
   g9_title: '中国对美加征关税',
   g9_desc: '2018 年税委会公告三轮、2025 年新增的芬太尼对齐附加税，以及真实算例：一辆美国皮卡车承担 15% MFN + 10% + 10% + 13% 增值税——税前 35%，远超新闻里说的 15%。',
-
   g10_kicker: '基础',
   g10_title: '如何正确查询 HS 编码',
   g10_desc: '五分钟核对流程：选定目的国、用 USITC HTS 或中国 2026 税则检索、先读章注、对照一份 CBP CROSS 裁定、写下归类理由。',
-
   g11_kicker: '合规',
   g11_title: '原产地标记规则（19 CFR Part 134）',
   g11_desc: '美国海关如何决定你的货要不要标记、标记怎么写、出现在哪里，以及填错时如何被课以 10% 标记税。',
-
   g12_kicker: '入境策略',
   g12_title: '报关行与美国入境类型',
   g12_desc: '持牌报关行到底做什么、如何选择，以及 Type 01、06、51、81、82、86 入境的差别——加入境记录进口商担保与记录保存义务。',
-
   g13_kicker: '基础',
   g13_title: '美国海关价值如何计算',
   g13_desc: '为何税基不是你的发票价：成交价格法、五项强制加计（包装、协助、特许权使用费、收益），以及为何估价错误会少缴关税与 MPF。',
-
   g14_kicker: '合规',
   g14_title: '约束性裁定（CROSS 与 HQ）',
   g14_desc: '进口前向 CBP 申请书面归类裁定。如何检索公开的 CROSS 数据库并申请你自己的裁定——以及它为何消除归类风险。',
-
   g15_kicker: '入境策略',
   g15_title: '关税退税：最高拿回 99%',
   g15_desc: '若你进口、缴税后出口或销毁，可退还高达 99% 的税款。三种主要退税类型、五年窗口，以及 CBP 要求的记录。',
-
   g16_kicker: '入境策略',
   g16_title: '外贸区与保税仓',
   g16_desc: '在美国落地货物而无需在边境缴税。FTZ 与保税仓如何递延或避免关税、倒置关税优势，以及各自如何应对 Section 301 / 232。',
-
   g17_kicker: '基础',
   g17_title: 'Incoterms 2020：谁付关税与运费',
   g17_desc: '11 个 Incoterms 2020 规则及其对到岸成本的含义——为何 CIF/CFR 不含关税，以及 DDP 与 DAP 在谁清关上的区别。',
-
   g18_kicker: '费用',
   g18_title: 'MPF、HMF 与 CBP 其他费用',
   g18_desc: '关税只是 CBP 征收的一部分。商品处理费（0.3464%）与港口维护费（0.125%）如何计算，以及为何它们与关税复合。',
-
   g19_kicker: '合规',
   g19_title: '后续申报与抗议',
   g19_desc: '申报错了价值、归类或原产地？后续申报（19 CFR Part 174）与 180 天抗议（19 U.S.C. §1514）让你在清税后更正——前提是及时行动。',
-
   g20_kicker: '合规',
   g20_title: '进口记录进口商（IOR）的责任与记录',
   g20_desc: 'IOR 对报关负有法律责任。合理注意标准、海关保证金、授权书，以及五年记录保存规则（19 CFR Part 163）。',
@@ -221,6 +182,7 @@ const zh = {
   pg_next: '更早指南 →',
   pg_page: '第',
 };
+
 const d = en;
 const page = Astro.props.page;
 const list = (page && page.data) || [];
