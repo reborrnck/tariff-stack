@@ -14,9 +14,10 @@ name: Daily Tariff Data Refresh
 #   （曾两次误判：先以为 *.pages.dev 是 Pages 项目，再以为"账号只有 Pages 权限所以是 Pages"。
 #    实际账号 Token 权限下拉无 Workers 选项是因为从未启用 Worker 权限项，而项目本身确为 Worker。）
 #
-# 鉴权（My Profile → API Keys → Global API Key，绕开 API Token 权限下拉无 Workers 选项的死结）：
-#   CLOUDFLARE_API_KEY    Cloudflare 全局 API Key（账户全权限，CI 用足够；泄露可滚）
-#   CLOUDFLARE_EMAIL      Cloudflare 登录邮箱
+# 鉴权（最终态，以 Run #5 成功部署为准）：scoped API Token，权限 = Account.Workers Scripts:Edit
+#   CLOUDFLARE_API_TOKEN  Cloudflare API Token（权限 Workers Scripts:Edit；在 Cloudflare 权限下拉里手输
+#                        "Worker" 搜出 "Workers Scripts" 选项，旧 UI 叫 "Cloudflare Workers" 已改名）。
+#   （曾尝试 Global API Key / Pages:Edit 均不适用：本项目是 Worker 不是 Pages，且账号默认隐藏全局 Key。）
 on:
   schedule:
     # 19:00 UTC = 次日 03:00 北京时间 (UTC+8)
