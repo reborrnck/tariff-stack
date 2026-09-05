@@ -1,0 +1,159 @@
+---
+// ACE Secure Data Portal — what importers can do in CBP's trade system.
+// Per-page en + zh inline dict (mirrors how-duty-calculated.astro).
+import CookieConsent from '../../components/CookieConsent.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import ArticleJsonLd from '../../components/ArticleJsonLd.astro';
+const en = {
+  title: 'The ACE portal: what importers can do in CBP trade system — TariffStack',
+  h1: 'The ACE portal: what importers can do in CBP\'s trade system',
+  intro: 'ACE (Automated Commercial Environment) is CBP\'s modern trade-processing system — the replacement for the legacy ACS. Importers, brokers, and freight forwarders use it to file entries, view statements, and schedule duty payments. This guide covers what ACE is and what an importer can actually do inside the Secure Data Portal.',
+  updated: 'Last updated',
+  back: '← All guides',
+  about: 'About',
+  toc: 'On this page',
+
+  s1: '1. What ACE is',
+  s1_p: 'ACE is the web-based system CBP uses to handle commercial trade. It processes imports, exports, and the related fees, and it replaced the old Automated Commercial System (ACS). Most entry activity flows through ACE via the Automated Broker Interface (ABI), but CBP also runs the ACE Secure Data Portal — a browser front end where trade users can look at their own data and perform self-service tasks without an ABI software integration.',
+
+  s2: '2. Getting a portal account',
+  s2_p: 'To use the portal you request an ACE trade account. A company designates an authorized user (often the IOR or a compliance lead), who completes the CBP account-request process and is matched with a CBP client representative. Larger filers connect through ABI; smaller importers typically use the portal directly. Account setup is not instant — plan for CBP processing time and have your importer number and entity details ready.',
+
+  s3: '3. What you can do in the portal',
+  s3_p: 'Inside the Secure Data Portal an importer can: view entry summaries and their liquidation status, open and pay periodic statements (the monthly duty statement), check the status of protests and claims, query ACE for entry and line-level detail, and download copies of filed documents. The "Reports" and "Statements" tabs are where most importers spend time — statements consolidate many entries into one monthly bill you can schedule and pay online.',
+
+  s4: '4. Why it matters for you',
+  s4_p: 'Even if your broker files everything, the portal gives you independent visibility. You can confirm a duty was paid, catch a classification you disagree with before liquidation closes, pull your own 7501 copies for the five-year record, and track drawback or reconciliation. Relying solely on your broker\'s email PDFs leaves you blind to timing and exceptions.',
+
+  s5: '5. Limits and next steps',
+  s5_p: 'The portal is a viewing and self-service layer, not a substitute for an entry filer. If you file high volume, an ABI connection (through a broker or a software vendor) is faster and supports electronic invoices and remote location filing. For most small and mid-size importers, the Secure Data Portal plus a good broker covers the essentials. Ask your broker for read-only portal access if you do not want to own the filing relationship.',
+
+  caveat: 'This article is for general education. TariffStack is not a customs broker or law firm. CBP account and ACE processes change; confirm current requirements and timing with CBP or a licensed broker before relying on the portal.',
+};
+
+const zh = {
+  title: 'ACE 门户：进口商能在 CBP 贸易系统中做什么 — TariffStack',
+  h1: 'ACE 门户：进口商能在 CBP 贸易系统中做什么',
+  intro: 'ACE（Automated Commercial Environment）是 CBP 的现代贸易处理系统——取代旧 ACS。进口商、报关行、货代用它提交报关、查看账单、排程缴税。本文说明 ACE 是什么，以及进口商在 Secure Data Portal 里实际能做什么。',
+  updated: '最后更新',
+  back: '← 全部指南',
+  about: '关于',
+  toc: '本页内容',
+
+  s1: '1. ACE 是什么',
+  s1_p: 'ACE 是 CBP 用于处理商业贸易的网页系统。它处理进出口及相关费用，取代了旧的 Automated Commercial System（ACS）。多数报关活动经自动报关接口（ABI）流入 ACE；CBP 还运营 ACE Secure Data Portal——一个浏览器前端，贸易用户可查看自有数据、执行自助任务，无需 ABI 软件集成。',
+
+  s2: '2. 如何开通门户账户',
+  s2_p: '使用门户需申请 ACE 贸易账户。公司指定授权用户（通常是 IOR 或合规负责人），完成 CBP 开户流程，并由 CBP 客户代表对接。大批量申报者通过 ABI 接入；小型进口商通常直接用门户。开户非即时——预留 CBP 处理时间，并备好进口商编号与实体信息。',
+
+  s3: '3. 门户里能做什么',
+  s3_p: '在 Secure Data Portal 中，进口商可：查看报关摘要及清税状态、开立并支付周期账单（月度关税账单）、查看抗议与索赔状态、在 ACE 中查询报关与行级明细、下载已提交文件副本。"Reports"与"Statements"标签页是多数进口商最常用的——账单将多票报关合并为一笔月度账单，可在线排程支付。',
+
+  s4: '4. 为什么与你有关',
+  s4_p: '即便报关行代办一切，门户也给你独立可见性。你可确认关税已缴、在清税前发现不同意的归类、提取自有 7501 副本备五年存档、跟踪退税或后续申报。只依赖报关行的邮件 PDF，会让你对时效与异常视而不见。',
+
+  s5: '5. 局限与下一步',
+  s5_p: '门户是查看与自助层，不能替代报关申报方。若大批量申报，ABI 连接（经报关行或软件商）更快，并支持电子发票与远程地点申报。对多数中小进口商，Secure Data Portal 加一个好报关行已足够。若不想自己持有申报关系，可让报关行给你只读门户权限。',
+
+  caveat: '本指南仅供一般教育用途。TariffStack 不是报关行或律所。CBP 账户与 ACE 流程会变动；在依赖门户前，请向 CBP 或持牌报关行确认当前要求与时效。',
+};
+const d = en;
+import SeoHead from '../../components/SeoHead.astro';
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="What the ACE Secure Data Portal is, how to get an account, what importers can view and do (statements, entry summaries, protests), and why independent visibility matters." />
+  <meta name="robots" content="index,follow" />
+  <SeoHead />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <SiteHeader />
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <ArticleJsonLd slug="ace-portal" title={d.title} description={d.intro} dateModified={pageUpdated} />
+  <CookieConsent />
+
+  <script is:inline define:vars={{ zh, en }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        var isZh = (lang === 'zh' || lang === 'zh-TW');
+        var dict = isZh ? zh : en;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (dict[k] != null) nodes[i].textContent = dict[k];
+        }
+        document.documentElement.lang = lang;
+        if (isZh) document.title = zh['title'];
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

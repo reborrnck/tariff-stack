@@ -1,0 +1,174 @@
+---
+// CBP Form 7501 — Entry Summary, how to read it.
+// Per-page en + zh inline dict (mirrors how-duty-calculated.astro).
+import CookieConsent from '../../components/CookieConsent.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import ArticleJsonLd from '../../components/ArticleJsonLd.astro';
+const en = {
+  title: 'How to read CBP Form 7501 (Entry Summary) — TariffStack',
+  h1: 'How to read CBP Form 7501 (Entry Summary)',
+  intro: 'CBP Form 7501 is the document that formally declares imported merchandise to U.S. Customs and shows the duty you owe. Brokers file it electronically through ACE. This guide walks through what it is, when it is due, and the key fields every importer should be able to read on their own entry summary.',
+  updated: 'Last updated',
+  back: '← All guides',
+  about: 'About',
+  toc: 'On this page',
+
+  s1: '1. What Form 7501 is',
+  s1_p: 'The Entry Summary (CBP Form 7501) is the legal declaration of an import transaction. It records the importer, the HTS classification, the declared value, the duty rate applied, and the total duty, taxes, and fees owed. It is the document CBP uses to assess and eventually liquidate the entry. In modern practice it is filed electronically via the Automated Broker Interface (ABI) into ACE — you rarely see a paper form, but the data blocks carry the same field numbers.',
+
+  s2: '2. When it is filed',
+  s2_p: 'The entry (release) and the entry summary are usually filed together. When filed separately, the Entry Summary must be filed within 10 working days after the date of entry. CBP then liquidates the entry — formally computing the final duty — generally within 314 days, or later if the entry is in a suspense status (for example, pending a tariff classification ruling). Liquidation fixes the duty unless you protest or CBP reliquifies.',
+
+  s3: '3. The fields that decide your duty',
+  s3_p: 'A handful of blocks drive the money. Block 8 states the bond type; block 9 the entry date; block 10 the port of entry; block 17 the HTS number; block 23 the rate of duty; blocks 24-26 the entered value and charges; and blocks 28-33 the computed duty, IRS tax, and HMF/MPF. Block 34 is the total estimated duty and taxes. If you disagree with any of these, the path is reconciliation or a post-entry protest, not a phone call to the port.',
+
+  s4: '4. A worked read-through',
+  s4_p: 'The table shows a simplified single-line entry so you can see how the blocks connect: the HTS in block 17 carries the rate in block 23, which is applied to the value in block 26, and the result lands in block 28 (duty) and block 34 (total).',
+
+  s5: '5. Why you should keep a copy',
+  s5_p: 'CBP requires importers to keep entry documentation for five years (19 CFR Part 163). Your 7501 is the proof of what you declared and paid — essential for audits, drawback claims, reconciliation, and any protest. Many brokers charge to re-issue old summaries, so download and archive your 7501 (and the invoice, packing list, and classification rationale) at the time of entry.',
+
+  caveat: 'This article is for general education. TariffStack is not a customs broker or law firm. Confirm field meanings, filing deadlines, and liquidation rules with a licensed customs broker or CBP before relying on a 7501.',
+};
+
+const zh = {
+  title: '如何读懂 CBP Form 7501（报关摘要）— TariffStack',
+  h1: '如何读懂 CBP Form 7501（报关摘要）',
+  intro: 'CBP Form 7501 是向美国海关正式申报进口商品、并显示应付关税的文件。报关行通过 ACE 电子提交。本文说明它是什么、何时提交，以及每个进口商都应能自行读懂的关键栏位。',
+  updated: '最后更新',
+  back: '← 全部指南',
+  about: '关于',
+  toc: '本页内容',
+
+  s1: '1. Form 7501 是什么',
+  s1_p: '报关摘要（CBP Form 7501）是进口交易的法律申报文件。它记录进口商、HTS 归类、申报货值、适用税率，以及应付关税、税费合计。它是 CBP 估税并最终清税（liquidation）的依据。现代做法是通过自动报关接口（ABI）电子提交进 ACE——你很少见到纸质表单，但数据栏位编号一致。',
+
+  s2: '2. 何时提交',
+  s2_p: '报关（放货）与报关摘要通常一并提交。若分开提交，报关摘要须在进口日期后 10 个工作日内提交。CBP 随后清税——正式算出最终关税，通常在 314 天内，或若处于挂起状态（如等待归类裁定）则更晚。清税确定关税，除非你提出抗议或 CBP 重清。',
+
+  s3: '3. 决定关税的关键栏位',
+  s3_p: '少数栏位决定金额。第 8 栏为担保类型；第 9 栏为进口日期；第 10 栏为进口口岸；第 17 栏为 HTS 编码；第 23 栏为关税率；第 24-26 栏为申报货值与费用；第 28-33 栏为算出的关税、IRS 税、HMF/MPF。第 34 栏为预估关税与税费合计。若对任何一项有异议，途径是后续申报或抗议，而非致电口岸。',
+
+  s4: '4. 逐栏读表示例',
+  s4_p: '下表简化展示单栏报关，便于你看清栏位如何串联：第 17 栏 HTS 携带第 23 栏税率，作用于第 26 栏货值，结果落入第 28 栏（关税）与第 34 栏（合计）。',
+
+  s5: '5. 为什么要留存副本',
+  s5_p: 'CBP 要求进口商保留报关文件五年（19 CFR Part 163）。你的 7501 是申报与缴税的证明——对审计、退税、后续申报、抗议都至关重要。许多报关行重开旧摘要要收费，所以报关当时就下载并归档 7501（连同发票、装箱单、归类理由）。',
+
+  caveat: '本指南仅供一般教育用途。TariffStack 不是报关行或律所。在依赖 7501 前，请向持牌报关行或 CBP 确认栏位含义、申报期限与清税规则。',
+};
+const d = en;
+import SeoHead from '../../components/SeoHead.astro';
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="What CBP Form 7501 (Entry Summary) is, the 10-working-day filing deadline, the key blocks that set your duty, and why to keep a copy for five years." />
+  <meta name="robots" content="index,follow" />
+  <SeoHead />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .ex-table{border:1px solid var(--line2);border-radius:12px;overflow:hidden;margin:16px 0 26px;background:var(--card);}
+    .ex-table .ex-row{display:flex;border-top:1px solid var(--line2);font-size:15px;}
+    .ex-table .ex-row:first-child{border-top:0;}
+    .ex-table .ex-row.head{background:var(--accent-soft);font-weight:800;color:var(--ink);}
+    .ex-table .ex-key{flex:0 0 150px;padding:12px 16px;background:var(--accent-soft);color:var(--ink);font-weight:700;border-right:1px solid var(--line2);}
+    .ex-table .ex-val{flex:1 1 auto;padding:12px 16px;color:var(--content);}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}.ex-table .ex-key{flex-basis:96px;font-size:13.5px;}}
+  </style>
+</head>
+<body>
+  <SiteHeader />
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+
+    <div class="ex-table">
+      <div class="ex-row head"><div class="ex-key">Block</div><div class="ex-val">What it carries</div></div>
+      <div class="ex-row"><div class="ex-key">17</div><div class="ex-val">HTS classification number</div></div>
+      <div class="ex-row"><div class="ex-key">23</div><div class="ex-val">Rate of duty applied</div></div>
+      <div class="ex-row"><div class="ex-key">26</div><div class="ex-val">Entered value (dutiable base)</div></div>
+      <div class="ex-row"><div class="ex-key">28</div><div class="ex-val">Computed duty for the line</div></div>
+      <div class="ex-row"><div class="ex-key">34</div><div class="ex-val">Total estimated duty & taxes</div></div>
+    </div>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <ArticleJsonLd slug="cbp-form-7501" title={d.title} description={d.intro} dateModified={pageUpdated} />
+  <CookieConsent />
+
+  <script is:inline define:vars={{ zh, en }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        var isZh = (lang === 'zh' || lang === 'zh-TW');
+        var dict = isZh ? zh : en;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (dict[k] != null) nodes[i].textContent = dict[k];
+        }
+        document.documentElement.lang = lang;
+        if (isZh) document.title = zh['title'];
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

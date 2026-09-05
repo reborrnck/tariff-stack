@@ -2,6 +2,8 @@
 // Guide: What is an HS / HTS code — standalone page (per-page en + zh dict).
 // Original, factual explainer. References only verifiable facts about the Harmonized System.
 import CookieConsent from '../../components/CookieConsent.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import ArticleJsonLd from '../../components/ArticleJsonLd.astro';
 const en = {
   title: 'What is an HS / HTS code? — TariffStack Guide',
   h1: 'What is an HS / HTS code (and why it decides your duty)?',
@@ -121,7 +123,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   </style>
 </head>
 <body>
-  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">What is an HS / HTS code?</span></div><a href="/about" class="site-r" data-i18n="about_link">{d.about_link}</a></div></header>
+  <SiteHeader />
   <main class="wrap">
     <h1 data-i18n="h1">{d.h1}</h1>
     <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
@@ -153,6 +155,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
 
+  <ArticleJsonLd slug="hs-codes-explained" title={d.title} description={d.intro} dateModified={pageUpdated} />
   <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>

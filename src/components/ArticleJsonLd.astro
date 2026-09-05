@@ -1,0 +1,27 @@
+---
+// Article / BlogPosting structured data for guide detail pages.
+// Emits schema.org Article JSON-LD so Google and AI engines read the real title + description
+// directly. Mirrors the JSON-LD emission pattern used in SeoHead.astro (set:html on a
+// type="application/ld+json" script — Astro leaves these inline, unbundled).
+const { slug, title, description, dateModified } = Astro.props;
+const site = (Astro.site?.toString() || 'https://tariffstack.bbroot.com').replace(/\/$/, '');
+const url = `${site}/guides/${slug}`;
+const json = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description: description,
+  inLanguage: 'en',
+  datePublished: '2026-01-01',
+  dateModified: dateModified || '2026-09-04',
+  author: { '@type': 'Organization', name: 'TariffStack', url: site },
+  publisher: {
+    '@type': 'Organization',
+    name: 'TariffStack',
+    url: site,
+    logo: { '@type': 'ImageObject', url: `${site}/favicon.svg` },
+  },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+};
+---
+<script type="application/ld+json" set:html={JSON.stringify(json)} />

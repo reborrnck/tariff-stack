@@ -1,6 +1,7 @@
 ---
 import SeoHead from '../components/SeoHead.astro';
 import CookieConsent from '../components/CookieConsent.astro';
+import SiteHeader from '../components/SiteHeader.astro';
 const en = {
   title: 'Terms of Service & Disclaimer — TariffStack',
   h1: 'Terms of Service & Disclaimer',
@@ -169,7 +170,7 @@ zh.s13 = zh.s13.replace('{rev}', revNo).replace('{date}', revDt);
   </style>
 </head>
 <body>
-  <header class="site"><div class="site-inner"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">Terms of Service & Disclaimer</span></div></header>
+  <SiteHeader />
   <main class="wrap">
     <h1 data-i18n="h1">{d.h1}</h1>
     <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>

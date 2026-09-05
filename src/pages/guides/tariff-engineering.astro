@@ -1,0 +1,159 @@
+---
+// Tariff engineering — legal product design to lower duty.
+// Per-page en + zh inline dict (mirrors how-duty-calculated.astro).
+import CookieConsent from '../../components/CookieConsent.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import ArticleJsonLd from '../../components/ArticleJsonLd.astro';
+const en = {
+  title: 'Tariff engineering: lowering duty by design (legally) — TariffStack',
+  h1: 'Tariff engineering: lowering duty by design (legally)',
+  intro: 'Tariff engineering is the practice of modifying a product\'s design or materials so it classifies under a lower-duty provision — without mislabeling or lying. Done for genuine commercial reasons it is legal; done purely to dodge duty it becomes fraud. This guide explains the line, the famous case law, and the risk.',
+  updated: 'Last updated',
+  back: '← All guides',
+  about: 'About',
+  toc: 'On this page',
+
+  s1: '1. The principle',
+  s1_p: 'Duty is set by where a product lands in the HTS, and the HTS is organized by what a product is, not by what it is called on the box. Two physically similar goods can carry very different rates. Tariff engineering exploits that: you change the product itself — its function, components, or configuration — so the correct classification shifts to a lower rate. The key is that the change must be real and commercially motivated, and the classification must still be the honest one for the modified article.',
+
+  s2: '2. The bright line: avoidance vs evasion',
+  s2_p: 'Tariff avoidance (legal) means you redesign the product and declare it under the provision that genuinely fits the new design. Tariff evasion (illegal) means you keep the same product but file it under a false, lower-rate heading, or you misdescribe its character to trick the classifier. The latter is a violation of 19 U.S.C. § 1592 and can bring penalties, forfeiture, and even criminal exposure. The difference is the product and the truth, not the savings.',
+
+  s3: '3. The floodlight case',
+  s3_p: 'The classic example is Cooper Industries v. United States. Portable halogen floodlights had been entered as "searchlights" (a higher-duty provision). CBP classified them on their marketed use. The Court of International Trade looked at the actual design — a built-in handle, a rechargeable battery, a swivel head, and portability — and held they were "portable electric lamps," a lower-duty provision. The design features, not the sales pitch, controlled. The importer won because the redesign and the classification were both genuine.',
+
+  s4: '4. Common engineering moves',
+  s4_p: 'Engineers routinely adjust: whether a garment ships "unfitted" vs "fitted"; whether an electronic device ships with or without a function-defining component; whether parts are "articles" or "parts of" an assembly; and whether a food or chemical meets a specific compositional threshold that changes its heading. Each move only works if the resulting classification is the correct one for what physically crosses the border.',
+
+  s5: '5. How to do it safely',
+  s5_p: 'Document the commercial reason for every design change (cost, function, safety, market). Get a binding classification ruling (CROSS / HQ) before you commit, especially for high-volume or high-duty products. Never rely on a broker to "find a lower code" for the existing product — that is their job to classify honestly, not to shop for a rate. If in doubt, a written ruling removes the risk.',
+
+  caveat: 'This article is for general education. TariffStack is not a customs broker or law firm. Misclassification to lower duty is a serious violation. Obtain a binding ruling and advice from a licensed customs broker or trade attorney before engineering a product for duty.',
+};
+
+const zh = {
+  title: '关税工程：通过设计合法降低关税 — TariffStack',
+  h1: '关税工程：通过设计合法降低关税',
+  intro: '关税工程是指修改产品的设计或材料，使其归入较低税率的税目——而非贴错标签或说谎。出于真实商业目的属于合法；纯粹为逃税则构成欺诈。本文说明边界、经典判例与风险。',
+  updated: '最后更新',
+  back: '← 全部指南',
+  about: '关于',
+  toc: '本页内容',
+
+  s1: '1. 基本原则',
+  s1_p: '关税由产品在 HTS 中的位置决定，而 HTS 按产品"是什么"组织，而非包装上叫什么。两件物理相似的商品可能税率迥异。关税工程正是利用这点：你改变产品本身——功能、部件或构型——使正确归类落到较低税率。关键是改动必须真实且有商业动机，且归类仍须是对改动后商品的诚实归类。',
+
+  s2: '2. 边界：避税 vs 逃税',
+  s2_p: '关税避税（合法）指你重新设计产品，并按真实契合新设计的税目申报。关税逃税（非法）指你保留同一产品，却申报到虚假的较低税率税目，或谎报其性质以骗过归类员。后者违反 19 U.S.C. § 1592，可招致罚款、没收乃至刑事责任。区别在于产品与真相，而非省下了多少。',
+
+  s3: '3. 探照灯判例',
+  s3_p: '经典案例是 Cooper Industries v. United States。便携式卤素探照灯此前按"探照灯"（较高税率）归类。CBP 按其市场用途归类。国际贸易法院看的是实际设计——内置手柄、可充电电池、旋转灯头、便携性——判定其为"便携电灯"，较低税率税目。决定因素在设计特征，而非销售话术。进口商胜诉，因为重新设计与归类都是真实的。',
+
+  s4: '4. 常见的工程手段',
+  s4_p: '工程师常调整：服装是"未定型"还是"定型"；电子设备是否带定义功能的部件；部件是"制品"还是"组件的一部分"；食品或化学品是否满足改变税目的特定成分阈值。每一种只有在跨境实物的归类确实正确时才有效。',
+
+  s5: '5. 如何安全地做',
+  s5_p: '记录每次设计变更的商业理由（成本、功能、安全、市场）。在大批量或高税率产品上，先取得约束性归类裁定（CROSS / HQ）。绝不要依赖报关行给现有产品"找一个更低编码"——他们的职责是诚实归类，而非比价。有疑问就先拿书面裁定消除风险。',
+
+  caveat: '本指南仅供一般教育用途。TariffStack 不是报关行或律所。为降税而错误归类是严重违规。在为降税设计产品前，请取得约束性裁定并咨询持牌报关行或贸易律师。',
+};
+const d = en;
+import SeoHead from '../../components/SeoHead.astro';
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="Tariff engineering — legally lowering duty by changing product design vs illegal misclassification. The Cooper Industries floodlight case, common moves, and how to do it safely." />
+  <meta name="robots" content="index,follow" />
+  <SeoHead />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <SiteHeader />
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <ArticleJsonLd slug="tariff-engineering" title={d.title} description={d.intro} dateModified={pageUpdated} />
+  <CookieConsent />
+
+  <script is:inline define:vars={{ zh, en }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        var isZh = (lang === 'zh' || lang === 'zh-TW');
+        var dict = isZh ? zh : en;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (dict[k] != null) nodes[i].textContent = dict[k];
+        }
+        document.documentElement.lang = lang;
+        if (isZh) document.title = zh['title'];
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

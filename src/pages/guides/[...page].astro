@@ -1,6 +1,7 @@
 ---
 // Guides index — paginated list page. Per-page en + zh dict (mirrors about.astro).
 import CookieConsent from '../../components/CookieConsent.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
 import SeoHead from '../../components/SeoHead.astro';
 import overlay from '../../data/policy_overlay.json';
 import type { GetStaticPaths } from 'astro';
@@ -29,6 +30,11 @@ export const getStaticPaths = (({ paginate }) => {
     { n: 18, slug: 'cbp-fees-mpf-hmf' },
     { n: 19, slug: 'reconciliation-and-protest' },
     { n: 20, slug: 'importer-of-record' },
+    { n: 21, slug: 'customs-bonds' },
+    { n: 22, slug: 'cbp-form-7501' },
+    { n: 23, slug: 'tariff-engineering' },
+    { n: 24, slug: 'ace-portal' },
+    { n: 25, slug: 'gri-classification-rules' },
   ];
   return paginate(ARTICLES, { pageSize: 8 });
 }) satisfies GetStaticPaths;
@@ -101,6 +107,22 @@ const en = {
   g20_kicker: 'COMPLIANCE',
   g20_title: 'Importer of record (IOR) duties & records',
   g20_desc: 'The IOR is legally on the hook for the entry. The reasonable-care standard, the customs bond, the power of attorney, and the five-year recordkeeping rule (19 CFR Part 163).',
+
+  g21_kicker: 'COMPLIANCE',
+  g21_title: 'Customs bonds: what every importer of record must post',
+  g21_desc: 'The surety contract behind every formal entry. Who must post a bond, continuous vs single-transaction, and how CBP sets the 10% / 110% amount.',
+  g22_kicker: 'ENTRY STRATEGY',
+  g22_title: 'How to read CBP Form 7501 (Entry Summary)',
+  g22_desc: 'The document that declares your import and shows the duty. The 10-working-day deadline, the key blocks that set your duty, and why to keep a copy for five years.',
+  g23_kicker: 'STRATEGY',
+  g23_title: 'Tariff engineering: lowering duty by design (legally)',
+  g23_desc: 'Changing a product so it classifies lower — legal when genuine, fraud when it is a false code. The Cooper Industries floodlight case and the bright line.',
+  g24_kicker: 'PLATFORM',
+  g24_title: 'The ACE portal: what importers can do in CBP\'s trade system',
+  g24_desc: 'ACE replaced the legacy ACS. How to get a Secure Data Portal account, what you can view and do (statements, entry summaries, protests), and why visibility matters.',
+  g25_kicker: 'FUNDAMENTALS',
+  g25_title: 'The 6 General Rules of Interpretation (GRI) for HS codes',
+  g25_desc: 'The six rules that decide every HS/HTS classification: headings, incomplete goods, essential character, and a worked Rule 3(b) toy example.',
 
   more_soon: 'We add new guides as policy changes. Every claim traces back to the official schedule, regulation, or ruling it came from.',
   pg_prev: '← Newer guides',
@@ -177,6 +199,22 @@ const zh = {
   g20_title: '进口记录进口商（IOR）的责任与记录',
   g20_desc: 'IOR 对报关负有法律责任。合理注意标准、海关保证金、授权书，以及五年记录保存规则（19 CFR Part 163）。',
 
+  g21_kicker: '合规',
+  g21_title: '海关保证金：每个进口记录进口商都必须提交的担保',
+  g21_desc: '每票正式报关背后的担保合同。谁必须提交、连续担保与单票担保，以及 CBP 如何确定 10% / 110% 金额。',
+  g22_kicker: '入境策略',
+  g22_title: '如何读懂 CBP Form 7501（报关摘要）',
+  g22_desc: '申报进口并展示关税的文件。10 个工作日期限、决定关税的关键栏位，以及为何留存五年副本。',
+  g23_kicker: '策略',
+  g23_title: '关税工程：通过设计合法降低关税',
+  g23_desc: '改动产品使其归入较低税率——真实即合法，虚假编码即欺诈。Cooper Industries 探照灯判例与边界。',
+  g24_kicker: '平台',
+  g24_title: 'ACE 门户：进口商能在 CBP 贸易系统中做什么',
+  g24_desc: 'ACE 取代旧 ACS。如何开通 Secure Data Portal 账户、能查看与做什么（账单、报关摘要、抗议），以及可见性为何重要。',
+  g25_kicker: '基础',
+  g25_title: 'HS 编码归类的六条总规则（GRI）',
+  g25_desc: '决定每个 HS/HTS 归类的六条规则：税目、未制成品、基本特征，以及 Rule 3(b) 玩具实例。',
+
   more_soon: '我们随政策变化增添新指南。每一条断言都可追溯至官方税则、法规或裁定。',
   pg_prev: '← 较新指南',
   pg_next: '更早指南 →',
@@ -245,7 +283,7 @@ const pageUpdated = String((overlay && (overlay.last_checked || overlay.as_of)) 
   </style>
 </head>
 <body>
-  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">Tariff Guides & Explainers</span></div><a href="/about" class="site-r" data-i18n="about_link">{d.about_link}</a></div></header>
+  <SiteHeader />
   <main class="wrap">
     <h1 data-i18n="h1">{d.h1}</h1>
     <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>

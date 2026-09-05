@@ -9,6 +9,7 @@ import { destLabel } from '../lib/destinations.ts';
 import { ORIGINS, destOptionsFor, US_EMBARGOED } from '../lib/origins.ts';
 import { t, originLabel, productName, PRODUCTS } from '../lib/i18n.ts';
 import newsFeed from '../data/news_feed.json';
+import CookieConsent from '../components/CookieConsent.astro';
 
 const rates = sample.rates;
 const fixed = sample.fixed;
@@ -433,21 +434,6 @@ const clkLondon     = fmtClk('Europe/London');
     @media (prefers-reduced-motion: reduce){.news-track{animation:none;}}
     @media (max-width:900px){.news-ticker{max-width:100%;}}
 
-    /* ---------- cookie banner (sticky-bottom, dismissible, localStorage-tracked) ---------- */
-    .cookie{position:fixed;left:14px;right:14px;bottom:14px;z-index:50;
-      background:var(--card);border:1px solid var(--line2);border-left:4px solid var(--accent);
-      border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-      box-shadow:0 12px 36px rgba(15,23,42,.12);font-size:14px;color:var(--content);line-height:1.55;
-      max-width:1200px;margin:0 auto;}
-    .cookie .c-text{flex:1 1 auto;min-width:240px;}
-    .cookie .c-text a{color:var(--accent);font-weight:700;}
-    .cookie .c-btn{flex:0 0 auto;background:var(--accent);color:#fff;border:0;border-radius:9px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;}
-    .cookie .c-btn:hover{filter:brightness(1.06);}
-    .cookie.hidden{display:none;}
-    @media (max-width:900px){.site-footer{padding:22px 20px 28px;flex-direction:column;gap:14px;}.site-footer .ft-right{flex-direction:column;gap:14px;}}
-    @media (max-width:600px){.cookie{left:8px;right:8px;bottom:8px;padding:12px 14px;gap:10px;font-size:13.5px;}
-      .cookie .c-btn{padding:9px 14px;font-size:13.5px;}}
-
     .empty{color:var(--mut);font-style:italic;font-size:15px;}
     .pending-panel{margin-top:12px;padding:14px 16px;background:#fff7ed;border:1px solid #fed7aa;border-radius:11px;}
     .pending-panel .pending{font-size:14.5px;color:#9a3412;line-height:1.6;margin:0;}
@@ -712,16 +698,7 @@ const clkLondon     = fmtClk('Europe/London');
     </div>
   </footer>
 
-  <!-- ===== cookie / consent banner (sticks to bottom, dismissible, recorded in localStorage) ===== -->
-  <div class="cookie hidden" id="cookie">
-    <div class="c-text">
-      <span data-i18n="cookie_banner">TariffStack is supported by advertising. We display contextual and personalized ads via Google AdSense to keep this tool free. Google may set cookies or use identifiers to deliver and measure ads. Your language and last calculation are stored only in your own browser. By continuing, you accept this and our</span>
-      <a href="/terms" data-i18n="cookie_terms_link">Terms of Service</a>
-      <span data-i18n="cookie_and">and</span>
-      <a href="/privacy" data-i18n="cookie_privacy_link">Advertising & Privacy</a>.
-    </div>
-    <button class="c-btn" id="cookie-btn" data-i18n="cookie_btn">Got it</button>
-  </div>
+  <CookieConsent />
 
   <script>
     import sample from '../data/tariff_sample.json';
@@ -1033,19 +1010,6 @@ const clkLondon     = fmtClk('Europe/London');
         if (dEl) dEl.textContent = dFmt.format(now);
       });
       setTimeout(tickClocks, 1000);
-    })();
-
-    // ---- cookie consent banner (first-visit only, localStorage-tracked) ----
-    (function () {
-      const KEY = 'ts-cookie-accepted';
-      const banner = document.getElementById('cookie');
-      const btn = document.getElementById('cookie-btn');
-      if (!banner || !btn) return;
-      if (!localStorage.getItem(KEY)) banner.classList.remove('hidden');
-      btn.addEventListener('click', () => {
-        localStorage.setItem(KEY, '1');
-        banner.classList.add('hidden');
-      });
     })();
   </script>
 </body>

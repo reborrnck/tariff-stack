@@ -1,0 +1,122 @@
+---
+// Unified site header for content pages (the home/calculator page keeps its own header).
+// Self-contained: owns its CSS, its i18n labels, its language selector and its dark-mode
+// toggle, reusing the same ts-lang / ts-theme localStorage keys as the rest of the site.
+// Does NOT depend on the host page's i18n dictionary (uses data-sh attributes + an internal
+// dict), mirroring the CookieConsent component pattern.
+const LANGS = [
+  ['en', 'EN'],
+  ['zh', '中文'],
+  ['zh-TW', '繁中'],
+  ['ja', '日本語'],
+  ['es', 'Español'],
+  ['de', 'Deutsch'],
+  ['ko', '한국어'],
+  ['fr', 'Français'],
+  ['pt', 'Português'],
+  ['it', 'Italiano'],
+];
+const L = {
+  en:     { guides: 'Guides', about: 'About',      lang_label: 'Language',        theme_label: 'Toggle dark mode' },
+  zh:     { guides: '指南',   about: '关于',      lang_label: '语言',            theme_label: '切换深色模式' },
+  'zh-TW':{ guides: '指南',   about: '關於',      lang_label: '語言',            theme_label: '切換深色模式' },
+  ja:     { guides: 'ガイド', about: '概要',      lang_label: '言語',            theme_label: 'ダークモード切替' },
+  es:     { guides: 'Guías',  about: 'Acerca de',  lang_label: 'Idioma',          theme_label: 'Alternar modo oscuro' },
+  de:     { guides: 'Leitfäden', about: 'Über uns', lang_label: 'Sprache',       theme_label: 'Dunkelmodus umschalten' },
+  ko:     { guides: '가이드', about: '소개',       lang_label: '언어',            theme_label: '다크 모드 전환' },
+  fr:     { guides: 'Guides', about: 'À propos',   lang_label: 'Langue',          theme_label: 'Basculer le mode sombre' },
+  pt:     { guides: 'Guias',  about: 'Sobre',      lang_label: 'Idioma',          theme_label: 'Alternar modo escuro' },
+  it:     { guides: 'Guide',  about: 'Informazioni', lang_label: 'Lingua',       theme_label: 'Attiva/disattiva tema scuro' },
+};
+---
+<header class="ts-site" id="ts-site-header">
+  <div class="ts-inner">
+    <div class="ts-l">
+      <a href="/" class="ts-brand">TariffStack</a>
+      <nav class="ts-nav" aria-label="Primary">
+        <a href="/guides" class="ts-link" data-sh="guides">{L.en.guides}</a>
+        <a href="/about" class="ts-link" data-sh="about">{L.en.about}</a>
+      </nav>
+    </div>
+    <div class="ts-r">
+      <label class="ts-lang-wrap">
+        <span class="sr-only" data-sh="lang_label">{L.en.lang_label}</span>
+        <select id="ts-lang" class="ts-lang" aria-label="Language">
+          {LANGS.map(([v, t]) => <option value={v}>{t}</option>)}
+        </select>
+      </label>
+      <button id="ts-theme" class="ts-theme" type="button" aria-label="Toggle dark mode">◐</button>
+    </div>
+  </div>
+</header>
+<style>
+  .ts-site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+  .ts-inner{max-width:920px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+  .ts-l{display:flex;align-items:center;min-width:0;flex:1 1 auto;gap:18px;flex-wrap:wrap;}
+  .ts-brand{color:var(--ink);text-decoration:none;font-weight:800;font-size:19px;letter-spacing:-.02em;white-space:nowrap;}
+  .ts-nav{display:flex;align-items:center;gap:18px;}
+  .ts-link{color:var(--accent);text-decoration:none;font-weight:700;font-size:15px;white-space:nowrap;}
+  .ts-link:hover{text-decoration:underline;}
+  .ts-r{display:flex;align-items:center;gap:10px;}
+  .ts-lang{font:600 13px/1 inherit;color:var(--content);background:var(--bg);border:1px solid var(--line2);border-radius:8px;padding:6px 8px;cursor:pointer;}
+  .ts-lang:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .ts-theme{background:var(--bg);border:1px solid var(--line2);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:16px;line-height:1;color:var(--content);display:inline-flex;align-items:center;justify-content:center;}
+  .ts-theme:hover{border-color:var(--accent);}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
+  @media (max-width:600px){.ts-inner{padding:12px 16px;gap:10px;}.ts-l{gap:12px;}.ts-nav{gap:12px;}.ts-brand{font-size:17px;}}
+</style>
+<script is:inline>
+  (function () {
+    var LANGS = ['en','zh','zh-TW','ja','es','de','ko','fr','pt','it'];
+    var L = {
+      en:{guides:'Guides',about:'About',lang_label:'Language',theme_label:'Toggle dark mode'},
+      zh:{guides:'指南',about:'关于',lang_label:'语言',theme_label:'切换深色模式'},
+      'zh-TW':{guides:'指南',about:'關於',lang_label:'語言',theme_label:'切換深色模式'},
+      ja:{guides:'ガイド',about:'概要',lang_label:'言語',theme_label:'ダークモード切替'},
+      es:{guides:'Guías',about:'Acerca de',lang_label:'Idioma',theme_label:'Alternar modo oscuro'},
+      de:{guides:'Leitfäden',about:'Über uns',lang_label:'Sprache',theme_label:'Dunkelmodus umschalten'},
+      ko:{guides:'가이드',about:'소개',lang_label:'언어',theme_label:'다크 모드 전환'},
+      fr:{guides:'Guides',about:'À propos',lang_label:'Langue',theme_label:'Basculer le mode sombre'},
+      pt:{guides:'Guias',about:'Sobre',lang_label:'Idioma',theme_label:'Alternar modo escuro'},
+      it:{guides:'Guide',about:'Informazioni',lang_label:'Lingua',theme_label:'Attiva/disattiva tema scuro'}
+    };
+    function apply(){
+      try {
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        var d = L[lang] || L.en;
+        var nodes = document.querySelectorAll('[data-sh]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-sh');
+          if (d[k] != null) nodes[i].textContent = d[k];
+        }
+        var sel = document.getElementById('ts-lang');
+        if (sel) sel.value = (LANGS.indexOf(lang) >= 0 ? lang : 'en');
+        var tb = document.getElementById('ts-theme');
+        if (tb) tb.setAttribute('aria-label', d.theme_label);
+      } catch (e) {}
+    }
+    function applyTheme(){
+      try {
+        var s = localStorage.getItem('ts-theme') || 'light';
+        if (s === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+        else document.documentElement.removeAttribute('data-theme');
+      } catch (e) {}
+    }
+    apply(); applyTheme();
+    var sel = document.getElementById('ts-lang');
+    if (sel) sel.addEventListener('change', function () {
+      try { localStorage.setItem('ts-lang', sel.value); } catch (e) {}
+      location.reload();
+    });
+    var btn = document.getElementById('ts-theme');
+    if (btn) btn.addEventListener('click', function () {
+      var cur = localStorage.getItem('ts-theme') || 'light';
+      var next = (cur === 'dark') ? 'light' : 'dark';
+      try { localStorage.setItem('ts-theme', next); } catch (e) {}
+      if (next === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      else document.documentElement.removeAttribute('data-theme');
+      try { window.dispatchEvent(new Event('ts-themechange')); } catch (e) {}
+    });
+    document.addEventListener('ts-langchange', apply);
+  })();
+</script>

@@ -1,6 +1,8 @@
 ---
 // Incoterms 2020. Original, factual explainer.
 import CookieConsent from '../../components/CookieConsent.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import ArticleJsonLd from '../../components/ArticleJsonLd.astro';
 const en = {
   title: "Incoterms 2020: who pays the duty and freight — TariffStack",
   h1: "Incoterms 2020",
@@ -143,7 +145,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   </style>
 </head>
 <body>
-  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <SiteHeader />
   <main class="wrap">
     <h1 data-i18n="h1">{d.h1}</h1>
     <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
@@ -211,6 +213,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
 
+  <ArticleJsonLd slug="incoterms-2020" title={d.title} description={d.intro} dateModified={pageUpdated} />
   <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>

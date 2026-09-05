@@ -3,6 +3,7 @@
 // en + zh fully translated; other languages fall back to en (per i18n convention).
 import SeoHead from '../components/SeoHead.astro';
 import CookieConsent from '../components/CookieConsent.astro';
+import SiteHeader from '../components/SiteHeader.astro';
 const en = {
   title: 'Advertising & Privacy — TariffStack',
   h1: 'Advertising & Privacy',
@@ -151,7 +152,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   </style>
 </head>
 <body>
-  <header class="site"><div class="site-inner"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">Advertising & Privacy</span></div></header>
+  <SiteHeader />
   <main class="wrap">
     <h1 data-i18n="h1">{d.h1}</h1>
     <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>

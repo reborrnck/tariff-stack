@@ -1,0 +1,159 @@
+---
+// GRI — the six General Rules of Interpretation for HS classification.
+// Per-page en + zh inline dict (mirrors how-duty-calculated.astro).
+import CookieConsent from '../../components/CookieConsent.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import ArticleJsonLd from '../../components/ArticleJsonLd.astro';
+const en = {
+  title: 'The 6 General Rules of Interpretation (GRI) for HS codes — TariffStack',
+  h1: 'The 6 General Rules of Interpretation (GRI) for HS codes',
+  intro: 'Every HS / HTS classification is reached by applying the six General Rules of Interpretation (GRI). They decide which heading a product falls under and how competing descriptions are resolved. This guide walks the six rules in order and shows a worked example of Rule 3(b) in action.',
+  updated: 'Last updated',
+  back: '← All guides',
+  about: 'About',
+  toc: 'On this page',
+
+  s1: '1. Rule 1 — headings and notes win',
+  s1_p: 'Classification always starts with the headings and the section or chapter notes. The wording of a heading, and any binding legal note, governs. A product is classified according to its objective characteristics as described in the heading — not by its name, use, or how the importer markets it. If the heading and notes are clear, you stop at Rule 1.',
+
+  s2: '2. Rule 2 — incomplete goods and mixtures',
+  s2_p: 'Rule 2(a) treats unassembled or unfinished goods as if they were the complete article (a knocked-down bicycle is "a bicycle"). Rule 2(b) says mixtures and composite goods made of different materials are classified as if they consisted of the material or component that gives them their essential character. These two extensions cover most "almost-finished" and "multi-material" cases.',
+
+  s3: '3. Rule 3 — when two headings fit',
+  s3_p: 'When a product could fall under two or more headings, Rule 3 resolves it: 3(a) the most specific heading beats a general one; 3(b) for composite goods of different materials, the heading covering the component that gives "essential character" wins (this is also where retail sets are decided); 3(c) if still tied, the heading that comes last in numerical order wins. Rule 3 is the most-litigated rule because "essential character" is a judgment call.',
+
+  s4: '4. Rules 4, 5, and 6',
+  s4_p: 'Rule 4 sends goods not covered by Rules 1-3 to the heading that describes them most closely. Rule 5 covers containers and packaging (5(a) cases of similar character for the article; 5(b) packing materials and containers for transport). Rule 6 applies the same logic to subheadings within a heading — the rules are reapplied one level down to pick the right 8- or 10-digit subheading.',
+
+  s5: '5. Worked example: a talking toy',
+  s5_p: 'Take a plush bear with a sound chip that plays a lullaby. Is it a "toy" or "sound-recording apparatus"? Rule 1 sends you to the headings; Rule 3(b) asks which component gives essential character. The bear\'s commercial identity, value, and consumer purpose are a toy — the chip is an incidental feature. So it classifies as a toy (HS 9503), not as a recorder. The same reasoning drives thousands of borderline cases.',
+
+  caveat: 'This article is for general education. TariffStack is not a customs broker or law firm. GRI application is fact-specific; for a binding answer on your product, request a CROSS / HQ ruling from CBP.',
+};
+
+const zh = {
+  title: 'HS 编码归类的六条总规则（GRI）— TariffStack',
+  h1: 'HS 编码归类的六条总规则（GRI）',
+  intro: '每一个 HS / HTS 归类都是通过套用六条总规则（General Rules of Interpretation，GRI）得出的。它们决定产品归入哪个税目，以及如何化解相互竞争的描述。本文按顺序讲六条规则，并用 Rule 3(b) 的实例演示。',
+  updated: '最后更新',
+  back: '← 全部指南',
+  about: '关于',
+  toc: '本页内容',
+
+  s1: '1. 规则 1——税目与注释优先',
+  s1_p: '归类永远从税目及章注/类注开始。税目的措辞与任何具法律效力的注释优先。产品按其税目描述的客观特征归类——而非按名称、用途或进口商如何营销。若税目与注释清楚，则止于规则 1。',
+
+  s2: '2. 规则 2——未制成品与混合物',
+  s2_p: '规则 2(a) 将未组装或未完工货物视同完整制品（散件自行车仍算"自行车"）。规则 2(b) 规定由不同材料构成的混合物与组合物，按赋予其基本特征的材料或部件归类。这两条覆盖了多数"近乎完工"与"多材料"情形。',
+
+  s3: '3. 规则 3——两税目都适用时',
+  s3_p: '当产品可归入两个或更多税目时，规则 3 解决：3(a) 最具体税目优于一般税目；3(b) 对由不同材料构成的组合物，覆盖赋予"基本特征"部件的税目优先（零售成套货品也在此决定）；3(c) 仍难分高下时，数字顺序在后的税目优先。规则 3 诉讼最多，因为"基本特征"是判断问题。',
+
+  s4: '4. 规则 4、5、6',
+  s4_p: '规则 4 将规则 1-3 未覆盖的货物归入描述最相近的税目。规则 5 管容器与包装（5(a) 与货品同类特征的容器；5(b) 运输用包装材料与容器）。规则 6 将同样逻辑用于税目下的子目——在下一层级重套规则，确定正确的 8 或 10 位子目。',
+
+  s5: '5. 实例：会发声的玩具',
+  s5_p: '以带发声芯片、播放摇篮曲的毛绒熊为例。它是"玩具"还是"录音装置"？规则 1 指向税目；规则 3(b) 问哪个部件赋予基本特征。熊的商业身份、价值、消费用途都是玩具——芯片只是附带功能。故归入玩具（HS 9503），而非录音机。同样的推理驱动成千上万边界案例。',
+
+  caveat: '本指南仅供一般教育用途。TariffStack 不是报关行或律所。GRI 适用因事实而异；如需对你产品的约束性答案，请向 CBP 申请 CROSS / HQ 裁定。',
+};
+const d = en;
+import SeoHead from '../../components/SeoHead.astro';
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="The six General Rules of Interpretation (GRI) that drive every HS/HTS classification: headings, incomplete goods, essential character, and a worked Rule 3(b) toy example." />
+  <meta name="robots" content="index,follow" />
+  <SeoHead />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <SiteHeader />
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <ArticleJsonLd slug="gri-classification-rules" title={d.title} description={d.intro} dateModified={pageUpdated} />
+  <CookieConsent />
+
+  <script is:inline define:vars={{ zh, en }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        var isZh = (lang === 'zh' || lang === 'zh-TW');
+        var dict = isZh ? zh : en;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (dict[k] != null) nodes[i].textContent = dict[k];
+        }
+        document.documentElement.lang = lang;
+        if (isZh) document.title = zh['title'];
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

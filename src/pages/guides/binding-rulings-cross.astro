@@ -1,6 +1,8 @@
 ---
 // Binding rulings — CROSS & HQ. Original, factual explainer.
 import CookieConsent from '../../components/CookieConsent.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import ArticleJsonLd from '../../components/ArticleJsonLd.astro';
 const en = {
   title: "Binding rulings: how to get certainty on classification — TariffStack",
   h1: "Binding rulings (CROSS & HQ)",
@@ -143,7 +145,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   </style>
 </head>
 <body>
-  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <SiteHeader />
   <main class="wrap">
     <h1 data-i18n="h1">{d.h1}</h1>
     <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
@@ -211,6 +213,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
     <a class="back" href="/guides" data-i18n="back">{d.back}</a>
   </main>
 
+  <ArticleJsonLd slug="binding-rulings-cross" title={d.title} description={d.intro} dateModified={pageUpdated} />
   <CookieConsent />
 
   <script is:inline define:vars={{ zh, en }}>

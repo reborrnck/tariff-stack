@@ -1,0 +1,171 @@
+---
+// Customs bonds — what every importer of record must post.
+// Per-page en + zh inline dict (mirrors how-duty-calculated.astro).
+import CookieConsent from '../../components/CookieConsent.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import ArticleJsonLd from '../../components/ArticleJsonLd.astro';
+const en = {
+  title: 'Customs bonds: what every importer of record must post — TariffStack',
+  h1: 'Customs bonds: what every importer of record must post',
+  intro: 'A customs bond is the financial guarantee that sits behind nearly every formal U.S. import entry. If you are the importer of record, CBP will not release your goods without one. This guide explains what the bond is, who needs it, the two bond types, and how the amount is calculated.',
+  updated: 'Last updated',
+  back: '← All guides',
+  about: 'About',
+  toc: 'On this page',
+
+  s1: '1. What a customs bond actually is',
+  s1_p: 'A customs bond is a contract of surety between three parties: the principal (you, the importer), the surety (a Treasury-licensed bonding company), and the obligee (U.S. Customs and Border Protection). It guarantees that you will pay all duties, taxes, and fees owed on an import — and comply with all CBP laws and regulations. If you fail to pay, the surety pays CBP and then comes after you for reimbursement. For most imports the bond is filed on CBP Form 301 (Activity Code 1, "Basic Importation and Entry Bond").',
+
+  s2: '2. Who is legally required to post one',
+  s2_p: 'Any formal entry requires a bond. A formal entry is one whose entered value exceeds $2,500, or any entry subject to a Partner Government Agency requirement (FDA, FCC, CPSC, etc.) regardless of value. Informal entries — typically $2,500 or less and not agency-regulated — generally do not require a bond. The importer of record (IOR) is the party legally responsible for the entry and is the one who must have the bond on file. A customs broker cannot substitute their own bond for yours; they post on your behalf using a bond where you are the principal.',
+
+  s3: '3. Continuous vs single-transaction bonds',
+  s3_p: 'There are two kinds. A continuous bond covers all your entries for 12 months and is the right choice if you import more than a few times a year. A single-transaction (single-entry) bond covers exactly one entry and is used for one-off or infrequent imports. Continuous bonds are cheaper per entry and are also required for the Importer Security Filing (ISF, the "10+2" filing) on ocean shipments. A single-transaction bond cannot satisfy the ISF requirement.',
+
+  s4: '4. How CBP sets the bond amount',
+  s4_p: 'A continuous bond is set at 10% of the estimated duties, taxes, and fees you paid in the previous 12 months, with a statutory minimum of $100. A single-transaction bond is set at 110% of the estimated duties, taxes, and fees for that one entry. The table below shows the practical difference.',
+
+  s5: '5. Claims, forfeiture, and what the bond protects',
+  s5_p: 'If you underpay duties or violate a CBP regulation, CBP can make a claim against the bond. In serious cases — gross negligence or fraud — CBP can declare the bond forfeited and demand a new one before releasing further cargo. The bond protects the government\'s revenue; it does not protect you. Brokers routinely pull a copy of your bond (CBP Form 301) before filing, so keep the activity code and amount current as your import volume grows.',
+
+  caveat: 'This article is for general education. TariffStack is not a customs broker or law firm. Confirm bond type, amount, and filing requirements with a licensed customs broker or CBP before your first entry.',
+};
+
+const zh = {
+  title: '海关保证金：每个进口记录进口商都必须提交的担保 — TariffStack',
+  h1: '海关保证金：每个进口记录进口商都必须提交的担保',
+  intro: '海关保证金是支撑几乎每一票美国正式进口报关背后的财务担保。如果你是进口记录进口商（IOR），没有它 CBP 不会放行你的货物。本文说明保证金是什么、谁需要、两种类型，以及金额如何计算。',
+  updated: '最后更新',
+  back: '← 全部指南',
+  about: '关于',
+  toc: '本页内容',
+
+  s1: '1. 海关保证金到底是什么',
+  s1_p: '海关保证金是三方之间的担保合同：委托人（你，进口商）、担保人（财政部持牌的担保公司）、受益人（美国海关与边境保护局，CBP）。它担保你会缴清一笔进口应付的所有关税、税费，并遵守 CBP 全部法律法规。若你未付款，担保人先付给 CBP，再向你追偿。多数进口以 CBP Form 301（Activity Code 1，"基本进口与报关担保"）提交。',
+
+  s2: '2. 谁依法必须提交',
+  s2_p: '任何正式报关都需要保证金。正式报关指申报货值超过 2,500 美元，或任何受 Partner Government Agency（FDA、FCC、CPSC 等）监管的报关（不论货值）。非正式报关——通常 2,500 美元及以下且不受监管——一般无需保证金。进口记录进口商（IOR）是对报关承担法律责任、且须备有保证金的一方。报关行不能用自有保证金替代你的；他们以你为委托人、代你提交。',
+
+  s3: '3. 连续担保 vs 单票担保',
+  s3_p: '共有两种。连续担保覆盖你 12 个月内所有报关，适合一年进口超过几次的情况。单票担保只覆盖一票进口，用于一次性或偶发进口。连续担保每票成本更低，也是海运进口安全申报（ISF，"10+2"）所必需的；单票担保无法满足 ISF 要求。',
+
+  s4: '4. CBP 如何确定担保金额',
+  s4_p: '连续担保 = 过去 12 个月预估应付关税、税费的 10%，法定下限 100 美元。单票担保 = 该票预估应付关税、税费的 110%。下表展示实际差别。',
+
+  s5: '5. 索赔、没收与保证金保护什么',
+  s5_p: '若你少缴关税或违反 CBP 法规，CBP 可向保证金索赔。情节严重时（重大过失或欺诈），CBP 可宣布保证金没收，并要求先提交新保证金才放后续货。保证金保护的是政府税收，不保护你。报关行通常在申报前调取你的保证金副本（CBP Form 301），所以随着进口量增长，及时更新 activity code 与金额。',
+
+  caveat: '本指南仅供一般教育用途。TariffStack 不是报关行或律所。在首次报关前，请向持牌报关行或 CBP 确认担保类型、金额与申报要求。',
+};
+const d = en;
+import SeoHead from '../../components/SeoHead.astro';
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="What a U.S. customs bond is, who must post one, continuous vs single-transaction bonds, and how CBP calculates the 10% / 110% amount." />
+  <meta name="robots" content="index,follow" />
+  <SeoHead />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .ex-table{border:1px solid var(--line2);border-radius:12px;overflow:hidden;margin:16px 0 26px;background:var(--card);}
+    .ex-table .ex-row{display:flex;border-top:1px solid var(--line2);font-size:15px;}
+    .ex-table .ex-row:first-child{border-top:0;}
+    .ex-table .ex-row.head{background:var(--accent-soft);font-weight:800;color:var(--ink);}
+    .ex-table .ex-key{flex:1 1 0;padding:12px 16px;border-right:1px solid var(--line2);color:var(--content);}
+    .ex-table .ex-val{flex:1 1 0;padding:12px 16px;color:var(--content);}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}.ex-table .ex-key,.ex-table .ex-val{font-size:13.5px;}}
+  </style>
+</head>
+<body>
+  <SiteHeader />
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+
+    <div class="ex-table">
+      <div class="ex-row head"><div class="ex-key">Bond type</div><div class="ex-val">Amount CBP requires</div></div>
+      <div class="ex-row"><div class="ex-key">Continuous</div><div class="ex-val">10% of prior 12-month duties/taxes/fees (min $100)</div></div>
+      <div class="ex-row"><div class="ex-key">Single-transaction</div><div class="ex-val">110% of that one entry's duties/taxes/fees</div></div>
+    </div>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <ArticleJsonLd slug="customs-bonds" title={d.title} description={d.intro} dateModified={pageUpdated} />
+  <CookieConsent />
+
+  <script is:inline define:vars={{ zh, en }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        var isZh = (lang === 'zh' || lang === 'zh-TW');
+        var dict = isZh ? zh : en;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (dict[k] != null) nodes[i].textContent = dict[k];
+        }
+        document.documentElement.lang = lang;
+        if (isZh) document.title = zh['title'];
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>
