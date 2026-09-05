@@ -37,6 +37,26 @@ const en = {
   g7_title: 'UFLPA: the 12.5% forced-labor assessment',
   g7_desc: 'Uyghur Forced Labor Prevention Act: rebuttable presumption, the +12.5% assessment option, UFLPA Entity List, and the supply-chain evidence importers must keep to clear CBP detention.',
 
+  g8_kicker: 'TRADE REMEDY',
+  g8_title: 'Anti-dumping & countervailing duties (AD/CVD)',
+  g8_desc: 'The case-by-case surcharges that can run into the hundreds of percent. How ITA and USITC arrive at a rate, the A-570-126 example (Chinese aluminum extrusions above 100%), and how AD/CVD stacks with 301 and 232.',
+
+  g9_kicker: 'FUNDAMENTALS',
+  g9_title: 'China’s retaliatory tariffs on U.S. goods',
+  g9_desc: 'The 2018 tariff commission announcement rounds, the 2025 fentanyl-aligned surcharges, and a worked example: a U.S. pickup truck pays 15% MFN + 10% + 10% + 13% VAT — 35% before VAT, not the headline 15%.',
+
+  g10_kicker: 'FUNDAMENTALS',
+  g10_title: 'How to look up an HS code (the right way)',
+  g10_desc: 'A five-step verification routine: pick the destination, search USITC HTS or the 2026 China Tariff, read the chapter notes, cross-reference a CBP CROSS ruling, document the rationale.',
+
+  g11_kicker: 'COMPLIANCE',
+  g11_title: 'Country-of-origin marking (19 CFR Part 134)',
+  g11_desc: 'How U.S. Customs decides whether your goods must be marked, what the mark must say, where it must appear, and how the 10% marking duty is assessed when you get it wrong.',
+
+  g12_kicker: 'ENTRY STRATEGY',
+  g12_title: 'Customs brokers and U.S. entry types',
+  g12_desc: 'What a licensed broker actually does, how to pick one, and the difference between Type 01, 06, 51, 81, 82 and 86 entries — plus the importer-of-record bond and recordkeeping discipline.',
+
   more_soon: 'We add new guides as policy changes. Every claim traces back to the official schedule, regulation, or ruling it came from.',
 };
 
@@ -75,6 +95,26 @@ const zh = {
   g7_kicker: '合规',
   g7_title: 'UFLPA：12.5% 强迫劳动评估',
   g7_desc: '《维吾尔强迫劳动预防法》：可反驳推定、+12.5% 评估选项、UFLPA 实体清单，以及进口商要在 CBP 扣留后清关必须保留的供应链证据。',
+
+  g8_kicker: '贸易救济',
+  g8_title: '反倾销与反补贴税（AD/CVD）',
+  g8_desc: '可累计到百分之几百的按案件判定附加税。ITA 与 USITC 如何定税率、A-570-126 案例（中国铝挤压超 100%），以及 AD/CVD 如何与 301、232 叠加。',
+
+  g9_kicker: '基础',
+  g9_title: '中国对美加征关税',
+  g9_desc: '2018 年税委会公告三轮、2025 年新增的芬太尼对齐附加税，以及真实算例：一辆美国皮卡车承担 15% MFN + 10% + 10% + 13% 增值税——税前 35%，远超新闻里说的 15%。',
+
+  g10_kicker: '基础',
+  g10_title: '如何正确查询 HS 编码',
+  g10_desc: '五分钟核对流程：选定目的国、用 USITC HTS 或中国 2026 税则检索、先读章注、对照一份 CBP CROSS 裁定、写下归类理由。',
+
+  g11_kicker: '合规',
+  g11_title: '原产地标记规则（19 CFR Part 134）',
+  g11_desc: '美国海关如何决定你的货要不要标记、标记怎么写、出现在哪里，以及填错时如何被课以 10% 标记税。',
+
+  g12_kicker: '入境策略',
+  g12_title: '报关行与美国入境类型',
+  g12_desc: '持牌报关行到底做什么、如何选择，以及 Type 01、06、51、81、82、86 入境的差别——加入境记录进口商担保与记录保存义务。',
 
   more_soon: '我们随政策变化增添新指南。每一条断言都可追溯至官方税则、法规或裁定。',
 };
@@ -172,6 +212,36 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
         <span class="kicker" data-i18n="g7_kicker">{d.g7_kicker}</span>
         <span class="g-title" data-i18n="g7_title">{d.g7_title}</span>
         <span class="g-desc" data-i18n="g7_desc">{d.g7_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/antidumping-and-countervailing-duties">
+        <span class="kicker" data-i18n="g8_kicker">{d.g8_kicker}</span>
+        <span class="g-title" data-i18n="g8_title">{d.g8_title}</span>
+        <span class="g-desc" data-i18n="g8_desc">{d.g8_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/china-retaliatory-tariffs">
+        <span class="kicker" data-i18n="g9_kicker">{d.g9_kicker}</span>
+        <span class="g-title" data-i18n="g9_title">{d.g9_title}</span>
+        <span class="g-desc" data-i18n="g9_desc">{d.g9_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/lookup-hs-codes-walkthrough">
+        <span class="kicker" data-i18n="g10_kicker">{d.g10_kicker}</span>
+        <span class="g-title" data-i18n="g10_title">{d.g10_title}</span>
+        <span class="g-desc" data-i18n="g10_desc">{d.g10_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/country-of-origin-marking">
+        <span class="kicker" data-i18n="g11_kicker">{d.g11_kicker}</span>
+        <span class="g-title" data-i18n="g11_title">{d.g11_title}</span>
+        <span class="g-desc" data-i18n="g11_desc">{d.g11_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/customs-broker-and-entry-types">
+        <span class="kicker" data-i18n="g12_kicker">{d.g12_kicker}</span>
+        <span class="g-title" data-i18n="g12_title">{d.g12_title}</span>
+        <span class="g-desc" data-i18n="g12_desc">{d.g12_desc}</span>
         <span class="g-read" data-i18n="g_read">Read the guide →</span>
       </a>
     </div>

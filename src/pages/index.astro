@@ -258,7 +258,7 @@ const clkLondon     = fmtClk('Europe/London');
     .lang-row{display:flex;align-items:center;gap:10px;}
     .lang-row label{margin:0;font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;font-weight:600;}
     .lang-row select{font-size:14.5px;color:var(--ink);background:var(--card);border:1px solid var(--line2);border-radius:9px;padding:8px 12px;cursor:pointer;width:auto;}
-    .theme-toggle{display:inline-flex;align-items:center;gap:6px;font-size:14.5px;font-weight:600;color:var(--ink);background:var(--card);border:1px solid var(--line2);border-radius:9px;padding:8px 12px;cursor:pointer;line-height:1;white-space:nowrap;}
+    .theme-toggle{display:inline-flex;align-items:center;gap:6px;font-size:14.5px;font-weight:600;color:var(--ink);background:var(--card);border:1px solid var(--line2);border-radius:9px;padding:8px 12px;cursor:pointer;line-height:1;white-space:nowrap;flex-shrink:0;}
     .theme-toggle:hover{border-color:var(--accent);color:var(--accent);}
     .theme-toggle .tt-ico{font-size:15px;line-height:1;}
     [data-theme="dark"] .theme-toggle{background:#0f1828;color:var(--ink);border-color:var(--line2);}
@@ -688,7 +688,6 @@ const clkLondon     = fmtClk('Europe/London');
     <div class="ft-right">
       <div class="ft-links">
         <a href="/about" data-i18n="footer_about">About TariffStack</a>
-        <a href="/guides" data-i18n="footer_guides">Tariff Guides</a>
         <a href="/terms" data-i18n="footer_terms">Terms of Service & Disclaimer</a>
         <a href="/privacy" data-i18n="footer_privacy">Advertising & Privacy</a>
       </div>

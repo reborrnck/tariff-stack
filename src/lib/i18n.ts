@@ -104,7 +104,6 @@ const en: Dict = {
   hs_hint_cn: 'China destination uses an 8-digit HS code — e.g. 6109.10',
   goods_label_cn: 'Declared value (tariff assessed in CNY)',
   footer_tagline: 'Free import-duty & landed-cost calculator — U.S. + China',
-  footer_guides: 'Tariff Guides',
   guides_btn: 'Guides',
 };
 
@@ -190,7 +189,6 @@ const zh: Dict = {
   hs_hint_cn: '中国目的地使用 8 位 HS 编码 — 例如 6109.10',
   goods_label_cn: '申报货值（关税以人民币计征）',
   footer_tagline: '免费进口关税与到岸成本计算器 — 美国 + 中国',
-  footer_guides: '关税指南',
   guides_btn: '关税指南',
 };
 

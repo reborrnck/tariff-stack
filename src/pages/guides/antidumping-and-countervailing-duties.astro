@@ -1,0 +1,150 @@
+---
+// Guide: antidumping-and-countervailing-duties — standalone page (per-page en + zh dict).
+// Original, factual explainer. Sourced from USITC / CBP / USTR / Federal Register / 商务部 / WCO.
+const en = {
+  title: 'Anti-Dumping & Countervailing Duties — TariffStack Guide',
+  h1: 'What are anti-dumping and countervailing duties?',
+  updated: 'Last updated',
+  back: '← All guides',
+  toc: 'On this page',
+  about_link: 'About',
+  intro: 'On top of the ordinary MFN tariff, the U.S. can — and frequently does — slap a second layer of duty on specific products from specific countries. This second layer comes from two trade-remedy laws: anti-dumping (AD) and countervailing duties (CVD). They are not “tariffs” in the usual sense; they are case-by-case surcharges that can run into the hundreds of percent. This guide explains what they are, how they get applied, and how to know if your product is in scope.',
+  s1_h: '1. Two different problems, two different laws',
+  s1: 'Anti-dumping and countervailing duties are often mentioned together but address different problems. Anti-dumping (AD), codified under Title VII of the Tariff Act of 1930 and administered through Section 731, targets a foreign producer selling in the U.S. at less than “normal value” — a price the Department of Commerce calculates from the exporter’s home-market price, a third-country price, or a constructed value. The point is to offset the unfair price gap, so an AD rate is, by design, the difference between the “normal” price and the dumped U.S. price. Countervailing duties (CVD), under Section 701, target a different unfair practice: subsidies. When a foreign government gives an exporter cash, cheap inputs, tax holidays, cheap loans or below-market land, Commerce can impose a duty that offsets the subsidy.',
+  s2_h: '2. Who runs the cases',
+  s2: 'A petition is normally filed by the U.S. industry that claims to be hurt, and it goes to two agencies. The International Trade Administration (ITA) within the Department of Commerce decides whether dumping happened and, if so, the rate. The U.S. International Trade Commission (USITC) decides whether the U.S. industry has been materially injured or threatened by it. Both must say yes for duties to be imposed. After a final determination, U.S. Customs and Border Protection (CBP) actually collects the cash on each entry. Each agency publishes its findings in the Federal Register, and the orders have a unique case number — for example, A-570-126 prefixes AD orders against China.',
+  s3_h: '3. How an AD or CVD rate is calculated',
+  s3: 'For AD, Commerce first calculates a “normal value” for the foreign like product (typically the home-market price, adjusted for differences in packing, credit, level of trade and quantities). It then subtracts the weighted-average U.S. price (the export price or constructed export price). The dumping margin is the percentage gap between the two. For CVD, Commerce identifies each subsidy program that the foreign government provides to the exporter, values the benefit of each subsidy against a benchmark (commercial interest rates for loans, in-country prices for goods, etc.), and sums the benefits to produce the subsidy rate. Both rates are usually company-specific: a producer named in the petition can get a “company-specific” rate, others from the same country typically receive the “all-others” rate (a simple average of the named rates, or 12.4% if it works out higher).',
+  s4_h: '4. Real numbers: a Chinese aluminum extrusions example',
+  s4: 'Take A-570-126, the AD order on aluminum extrusions from China. The investigation found dumping margins in the range of roughly 33% to 60% on individual producers, with an “all-others” rate set at 33.28%. The companion CVD case (C-570-127) added subsidy rates that stacked on top. The combined effective rate for many Chinese extrusions producers was therefore well above 100%. The lesson: AD/CVD alone can exceed the entire value of the shipment, which is why classification of the right HTS subheading (and confirming your product really is in scope of the case) is critical before you commit to a purchase order.',
+  s5_h: '5. How AD/CVD stacks with other duties',
+  s5: 'AD and CVD are not exclusive of other duties. They stack on top of the MFN rate and any other surcharge — for China, that usually means Section 301 (List 1, 2, 3 or 4A) plus, from 2025, the 20% IEEPA “fentanyl” surcharge. Section 232 (steel/aluminum/copper/autos/pharma) also applies where the product is in scope. The arithmetic is harsh: a Chinese aluminum extrusion shipped to the U.S. in 2026 can legitimately owe MFN + Section 301 + Section 232 + AD + CVD — easily 150% or more of the entered value before fees. This is why a tool that tells you “the MFN rate is 5%” without flagging the in-scope AD/CVD order is dangerously incomplete.',
+  s6_h: '6. How to check whether your product is in an AD/CVD order',
+  s6: 'Three places matter. First, the Federal Register notice of the AD/CVD order itself, which describes the merchandise covered (often by HTS subheading and explicit exclusions). Second, the CBP customs notice that implements the order and assigns case numbers to entries. Third, the ITA’s AD/CVD case database (trade.gov/ita), which lists every active order by country and product. You can also search by HS subheading on CBP’s AD/CVD query tool. If your product falls within the language of the order, the duty applies; if you import a different product from the same country but under a different subheading, the order likely does not apply.',
+  s7_h: '7. New-shipper reviews, circumvention, and changed circumstances',
+  s7: 'Two follow-up mechanisms matter. A new-shipper review lets a producer not named in the original petition obtain its own company-specific rate if it has no link to the named producers and can show independent sales. A circumvention inquiry can extend the order to parts, components or downstream products that are shipped through a third country to escape the duty — for example, a 2024 circumvention ruling extended Section 301 duties to certain aluminum extrusions shipped from Vietnam that were made from Chinese aluminum. There are also changed-circumstances reviews and sunset reviews (which keep orders alive every five years unless revoking them is in the U.S. interest).',
+  s8_h: '8. The takeaway',
+  s8: 'AD and CVD are the most volatile layer of the U.S. tariff system. They are not a percentage you can look up in the HTS — they live in case-specific Federal Register orders, change with reviews and circumvention inquiries, and stack on top of every other duty your shipment already owes. Before quoting a price for an order, check the ITA case database for your product and country, read the order’s coverage language, and remember that the real landed-cost number can be dramatically higher than the published MFN rate suggests. TariffStack integrates AD/CVD where the HTS subheading is known to be in scope; for novel categories, it will surface the headline MFN rate and direct you to verify the trade-remedy layer yourself.',
+};
+const zh = {
+  title: '反倾销与反补贴税 — TariffStack 指南',
+  h1: '什么是反倾销与反补贴税？',
+  updated: '最后更新',
+  back: '← 全部指南',
+  toc: '本页内容',
+  about_link: '关于',
+  intro: '在最惠国关税之上，美国常常会再加一层关税。这次不是普通的「关税」，而是贸易救济法带来的专门附加——反倾销（AD）与反补贴税（CVD）。它们不是日常意义上的「关税」，而是按案件判定的附加费，比例可达百分之几百。本指南解释它们是什么、如何适用，以及如何判断你的产品是否在适用范围之内。',
+  s1_h: '1. 两种不同问题，两部不同法律',
+  s1: '反倾销与反补贴税常被一并提及，但针对的是不同问题。反倾销（AD）见《1930 年关税法》第七编（Section 731），针对的是外国生产商以低于「正常价值」的价格在美国销售的行为——「正常价值」由商务部依据出口商的国内售价、第三方售价或构建价值算出。目的是抵消不公平的价差，所以 AD 税率本质上是「正常」价与美国售价的差。反补贴税（CVD）见 Section 701，针对另一类不公平：补贴。当外国政府给予出口商现金、低价投入品、税收减免、低息贷款或低于市价的土地时，商务部可对补贴金额征收抵消性关税。',
+  s2_h: '2. 谁主导这些案件',
+  s2: '通常由声称受损害的美国行业提起诉状，递交两个机构：美国商务部国际贸易管理司（ITA）裁定倾销是否成立及税率；美国国际贸易委员会（USITC）裁定美国行业是否受到实质性损害或威胁。两家都必须作出肯定裁定，关税才能生效。最终裁定后，由美国海关与边境保护局（CBP）负责在每次入境时实际收取款项。各机构在《联邦公报》（Federal Register）公布调查结果，每份命令有唯一案件编号——例如 A-570-126 前缀代表针对中国的 AD 命令。',
+  s3_h: '3. AD/CVD 税率如何计算',
+  s3: 'AD 方面：商务部先计算该外国同类产品的「正常价值」（通常是其国内售价，按包装、赊账、销售层级、数量等差异调整），再减去其加权平均美国售价（出口价或构建出口价）。倾销幅度即为二者之间的百分比差距。CVD 方面：商务部逐一识别外国政府对出口商提供的补贴项目，对每一项按基准利率（贷款的基准利率）、国内售价（货物的基准）等计算补贴利益，再加总为补贴率。两种税率通常为「公司特定」：诉状中列名的生产商可获公司特定税率；同国其他企业通常适用「all-others」税率（列名税率的简单平均，若更高则取 12.4%）。',
+  s4_h: '4. 真实数字：中国铝挤压案例',
+  s4: '以 A-570-126 为例——对中国铝挤压产品的 AD 命令。调查发现个别生产商的倾销幅度约为 33%–60%，「all-others」税率定为 33.28%。配套 CVD 案（C-570-127）加上补贴率，叠加后很多中国铝挤压厂商的实际税率远超 100%。经验教训：AD/CVD 单项就可能超过货物本身的价值，所以确定正确的 HS 子目（并确认你的产品真在该案范围内）是你下采购订单前最关键的功课。',
+  s5_h: '5. AD/CVD 与其他关税如何叠加',
+  s5: 'AD 与 CVD 并不排斥其他关税：在最惠国税率之上还会叠加任何其他附加税——对中国而言，通常意味着 301 条款（List 1/2/3/4A），加上 2025 年新增的 IEEPA「芬太尼」附加 20%。232 条款（钢/铝/铜/汽车/药品）在适用范围内也会叠加。算术非常残酷：一批 2026 年从中国出口到美国的铝挤压型材，仅在常规税费前就可能合法地承担 MFN + 301 + 232 + AD + CVD——轻易达到报关价值的 150% 以上。这就是为什么只告诉你「MFN 税率 5%」却不提醒 AD/CVD 在范围内的工具是危险的。',
+  s6_h: '6. 如何查询你的产品是否在 AD/CVD 命令内',
+  s6: '三处权威来源。第一，AD/CVD 命令本身的《联邦公报》通知，描述涉案商品（通常按 HS 子目与明确排除项）。第二，CBP 海关通知，将命令落地并给每笔入境分配案件号。第三，ITA 的 AD/CVD 案件数据库（trade.gov/ita），按国家与产品列出每条生效命令。你也可以按 HS 子目在 CBP 的 AD/CVD 查询工具检索。如果你的产品落在命令的语言描述范围内，附加税就适用；如果你从同国进口不同子目的其他产品，命令通常不适用。',
+  s7_h: '7. 新出口商复审、规避调查与情况变更',
+  s7: '两个后续机制很重要。新出口商复审允许诉状中未列名的生产商获得自己的公司特定税率，条件是与列名生产商无关联并能证明独立销售。规避调查可把命令扩展到经第三国转运的零部件或下游产品——例如 2024 年一项规避裁定把 301 条款延伸到经越南转运的中国铝制造的铝挤压型材。还有「情况变更复审」和「日落复审」（若无证据证明撤销符合美国利益，每 5 年保持命令有效）。',
+  s8_h: '8. 要点总结',
+  s8: 'AD 与 CVD 是美国关税体系中最不稳定的层级。它们不是 HTS 里能查到的固定百分比——藏在按案件发布的《联邦公报》命令里，随复审与规避调查变更，并叠加在你的货物已欠的所有其他关税之上。在为订单报价前，先查 ITA 数据库的同类国家与产品，仔细读命令的覆盖语言，并记住真实到岸成本可能远超公布的 MFN 税率所暗示的水平。TariffStack 在 HS 子目已知属于命令范围时会自动整合 AD/CVD；对新品类，会显示主要 MFN 税率并引导你自行核实贸易救济层。',
+};
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-05';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="" />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{
+      --bg:#0b1120; --card:#121a2b; --ink:#e8edf6; --ink-deep:#f4f8fd; --content:#c4cedb;
+      --mut:#8b99ad; --line:#1e2a3e; --line2:#2b3a52;
+      --accent:#8aa7d8; --accent-soft:#1a2740;
+      --good:#6fbf9c; --warn:#d8a866; --bad:#d88686;
+    }
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    [data-theme="dark"] .lead{background:var(--accent-soft);border-color:var(--line2);}
+    [data-theme="dark"] .toc{background:#16223a;border-color:var(--line2);}
+    body{margin:0;font:18px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:31px;font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1.25;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:24px;line-height:1.6;}
+    .toc{background:#fafbfd;border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:28px;font-size:14.5px;line-height:1.8;}
+    .toc ol{margin:0;padding-left:20px;}
+    .toc a{color:var(--ink);text-decoration:none;font-weight:600;}
+    .toc a:hover{color:var(--accent);}
+    h2{margin:28px 0 10px;font-size:21px;font-weight:700;color:var(--ink);letter-spacing:-.005em;scroll-margin-top:80px;}
+    p{margin:0 0 14px;line-height:1.68;}
+    .back{margin-top:34px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:25px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">What are anti-dumping and countervailing duties?</span></div><a href="/about" class="site-r" data-i18n="about_link">{d.about_link}</a></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc" aria-label="Table of contents">
+      <strong data-i18n="toc">{d.toc}</strong>
+      <ol>
+        <li><a href="#s1" data-i18n="s1_h">{{d.s1_h}}</a></li>
+        <li><a href="#s2" data-i18n="s2_h">{{d.s2_h}}</a></li>
+        <li><a href="#s3" data-i18n="s3_h">{{d.s3_h}}</a></li>
+        <li><a href="#s4" data-i18n="s4_h">{{d.s4_h}}</a></li>
+        <li><a href="#s5" data-i18n="s5_h">{{d.s5_h}}</a></li>
+        <li><a href="#s6" data-i18n="s6_h">{{d.s6_h}}</a></li>
+        <li><a href="#s7" data-i18n="s7_h">{{d.s7_h}}</a></li>
+        <li><a href="#s8" data-i18n="s8_h">{{d.s8_h}}</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="s1" data-i18n="s1_h">{{d.s1_h}}</h2><p data-i18n="s1">{{d.s1}}</p>
+    <h2 id="s2" data-i18n="s2_h">{{d.s2_h}}</h2><p data-i18n="s2">{{d.s2}}</p>
+    <h2 id="s3" data-i18n="s3_h">{{d.s3_h}}</h2><p data-i18n="s3">{{d.s3}}</p>
+    <h2 id="s4" data-i18n="s4_h">{{d.s4_h}}</h2><p data-i18n="s4">{{d.s4}}</p>
+    <h2 id="s5" data-i18n="s5_h">{{d.s5_h}}</h2><p data-i18n="s5">{{d.s5}}</p>
+    <h2 id="s6" data-i18n="s6_h">{{d.s6_h}}</h2><p data-i18n="s6">{{d.s6}}</p>
+    <h2 id="s7" data-i18n="s7_h">{{d.s7_h}}</h2><p data-i18n="s7">{{d.s7}}</p>
+    <h2 id="s8" data-i18n="s8_h">{{d.s8_h}}</h2><p data-i18n="s8">{{d.s8}}</p>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={ zh }>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} }());
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        if (lang !== 'zh') return;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (zh[k] != null) nodes[i].textContent = zh[k];
+        }
+        document.documentElement.lang = 'zh';
+        document.title = '反倾销与反补贴税 — TariffStack 指南';
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>
