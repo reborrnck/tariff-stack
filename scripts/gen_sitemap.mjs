@@ -15,7 +15,8 @@ const PAGE_SIZE = 8;
 
 const guidesDir = join(ROOT, 'src/pages/guides');
 const guideSlugs = readdirSync(guidesDir)
-  .filter((f) => f.endsWith('.astro') && f !== 'index.astro')
+  .filter((f) => f.endsWith('.astro'))
+  .filter((f) => !/^index\.astro$/.test(f) && !/^\[\.+\w+\]\.astro$/.test(f))
   .map((f) => f.replace(/\.astro$/, ''))
   .sort();
 
@@ -48,5 +49,8 @@ ${all.map((p) => `  <url>
 </urlset>
 `;
 
-writeFileSync(join(ROOT, 'public/sitemap.xml'), xml);
+// Local-dev fallback: sandboxed shells can't overwrite D:\public\sitemap.xml (file watcher),
+// so write to a temp path; WorkBuddy Write tool copies the result to the real location.
+const outPath = process.env.TS_SITEMAP_OUT || join(ROOT, 'public/sitemap.xml');
+writeFileSync(outPath, xml);
 console.log(`sitemap.xml written: ${all.length} urls (${guideSlugs.length} guides, ${totalPages} guide pages)`);

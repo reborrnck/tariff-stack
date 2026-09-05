@@ -223,10 +223,14 @@ const zh = {
 };
 const d = en;
 const page = Astro.props.page;
-const list = page.data;
+const list = (page && page.data) || [];
+const currentPage = (page && page.currentPage) || 1;
+const lastPage = (page && page.lastPage) || 1;
+const prevUrl = (page && page.url && page.url.prev) || '';
+const nextUrl = (page && page.url && page.url.next) || '';
 const en_pg = { prev: '← Newer guides', next: 'Older guides →', page: 'Page' };
 const zh_pg = { prev: '← 较新指南', next: '更早指南 →', page: '第' };
-const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+const pageUpdated = String((overlay && (overlay.last_checked || overlay.as_of)) || '').slice(0, 10) || '2026-09-04';
 ---
 <!doctype html>
 <html lang="en">
@@ -299,14 +303,14 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
       })}
     </div>
 
-    {page.last > 1 && (
+    {lastPage > 1 && (
       <nav class="pager" aria-label="Pagination">
-        {page.url.prev
-          ? <a class="pg" href={page.url.prev} data-i18n="pg_prev">{en_pg.prev}</a>
+        {prevUrl
+          ? <a class="pg" href={prevUrl} data-i18n="pg_prev">{en_pg.prev}</a>
           : <span class="pg pg-disabled" data-i18n="pg_prev">{en_pg.prev}</span>}
-        <span class="pg-cur"><span data-i18n="pg_page">{en_pg.page}</span> {page.current} / {page.last}</span>
-        {page.url.next
-          ? <a class="pg" href={page.url.next} data-i18n="pg_next">{en_pg.next}</a>
+        <span class="pg-cur"><span data-i18n="pg_page">{en_pg.page}</span> {currentPage} / {lastPage}</span>
+        {nextUrl
+          ? <a class="pg" href={nextUrl} data-i18n="pg_next">{en_pg.next}</a>
           : <span class="pg pg-disabled" data-i18n="pg_next">{en_pg.next}</span>}
       </nav>
     )}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.s3.org/1999/ns/sitemap">
+<urlset xmlns="http://www.s3.org/2006/sitemap">
   <url>
     <loc>https://tariffstack.bbroot.com/</loc>
     <lastmod>2026-09-05</lastmod>
@@ -163,3 +163,5 @@
     <priority>0.8</priority>
   </url>
 </urlset>
+</content>
+</invoke>
