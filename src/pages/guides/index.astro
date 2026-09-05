@@ -3,9 +3,10 @@
 // Lists the original explainer articles. Add a new card per article.
 import CookieConsent from '../../components/CookieConsent.astro';
 import SeoHead from '../../components/SeoHead.astro';
-import { paginate } from 'astro';
+import overlay from '../../data/policy_overlay.json';
+import type { GetStaticPaths } from 'astro';
 
-// Ordered article table. Pagination is generated via getStaticPaths + paginate().
+// Ordered article table. Pagination is generated via getStaticPaths (paginate is a callback arg, not an import).
 const ARTICLES = [
   { n: 1, slug: 'how-duty-calculated' },
   { n: 2, slug: 'hs-codes-explained' },
@@ -29,7 +30,9 @@ const ARTICLES = [
   { n: 20, slug: 'importer-of-record' },
 ];
 
-export function getStaticPaths() { return paginate(ARTICLES, { pageSize: 8 }); }
+export const getStaticPaths = (({ paginate }) => {
+  return paginate(ARTICLES, { pageSize: 8 });
+}) satisfies GetStaticPaths;
 
 const en = {
   title: 'Tariff Guides & Explainers — TariffStack',
@@ -219,7 +222,6 @@ const zh = {
   pg_page: '第',
 };
 const d = en;
-import overlay from '../../data/policy_overlay.json';
 const page = Astro.props.page;
 const list = page.data;
 const en_pg = { prev: '← Newer guides', next: 'Older guides →', page: 'Page' };
