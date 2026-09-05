@@ -78,6 +78,7 @@ jobs:
           name: freshness-report
           path: ${{ runner.temp }}/reports/*.md
           if-no-files-found: ignore
+          retention-days: 7   # 审计报告只留 7 天，避免 artifact 无限累积（铁律：定时清理旧数据）
 
       # ===== 关键修复：刷新数据后必须重建并重新部署，否则线上永远停在旧构建（伪刷新） =====
       - name: Set up Node
@@ -103,3 +104,11 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         # 注：若 CLOUDFLARE_API_TOKEN 未配置/权限不对，wrangler 会因缺鉴权使本 run 变红，暴露"未部署"。
+
+      # ===== 定时清理旧数据（铁律：防止审计日志/临时锁文件无限累积） =====
+      # 每日刷新跑完即清理：删除超过 30 天的 FRESHNESS_REPORT、以及 *.tmp / *.pending.json 锁残留。
+      # 真实税率数据（tariff_full*.json / policy_overlay.json / news_feed.json / origins.json）受脚本保护，绝不删除。
+      # CI 中 runner.temp/reports 为临时目录本就随 job 销毁；此步主要兜底仓库内可能残留的 *.tmp/*.pending.json。
+      - name: Cleanup old data
+        if: always()
+        run: python scripts/cleanup_old_data.py
