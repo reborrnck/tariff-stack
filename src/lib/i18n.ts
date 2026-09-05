@@ -103,14 +103,8 @@ const en: Dict = {
   hs_hint_us: 'U.S. destination uses a 10-digit HTS code — e.g. 6109.10.00',
   hs_hint_cn: 'China destination uses an 8-digit HS code — e.g. 6109.10',
   goods_label_cn: 'Declared value (tariff assessed in CNY)',
-  about_btn: 'About',
   footer_tagline: 'Free import-duty & landed-cost calculator — U.S. + China',
-  guides_title: 'Tariff Guides & Explainers',
-  guides_sub: 'Plain-language articles on how import duties, HS codes and trade remedies actually work — written from the official schedules we use.',
-  guide_kicker: 'GUIDE',
-  guide1_title: 'What is an HS / HTS code (and why it decides your duty)?',
-  guide1_desc: 'The 6–10 digit number that determines every rate. How it is built, where to find yours, and why getting it wrong costs you.',
-  guides_cta: 'Read the guide →',
+  footer_guides: 'Tariff Guides',
 };
 
 const zh: Dict = {
@@ -194,14 +188,8 @@ const zh: Dict = {
   hs_hint_us: '美国目的地使用 10 位 HTS 编码 — 例如 6109.10.00',
   hs_hint_cn: '中国目的地使用 8 位 HS 编码 — 例如 6109.10',
   goods_label_cn: '申报货值（关税以人民币计征）',
-  about_btn: '关于',
   footer_tagline: '免费进口关税与到岸成本计算器 — 美国 + 中国',
-  guides_title: '关税科普与指南',
-  guides_sub: '用通俗语言讲清进口关税、HS 编码与贸易救济措施如何运作——素材与驱动本计算器的官方税则同源。',
-  guide_kicker: '指南',
-  guide1_title: '什么是 HS / HTS 编码（以及它为何决定你的关税）？',
-  guide1_desc: '决定每个税率的那串 6–10 位数字。它如何构成、去哪里查你的编码，以及填错它会让你付出什么代价。',
-  guides_cta: '查看指南 →',
+  footer_guides: '关税指南',
 };
 
 // ja / es / de — fully translated (every visible string covered).

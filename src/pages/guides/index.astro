@@ -7,6 +7,7 @@ const en = {
   updated: 'Last updated',
   back: '← Back to TariffStack',
   intro: 'Plain-language guides to how import duties, HS codes and trade remedies actually work — written from the same official schedules that power the TariffStack calculator. Every guide is original, factual, and free to read.',
+  about_link: 'About',
 
   g1_kicker: 'GUIDE',
   g1_title: 'What is an HS / HTS code (and why it decides your duty)?',
@@ -22,6 +23,7 @@ const zh = {
   updated: '最后更新',
   back: '← 返回 TariffStack',
   intro: '用通俗语言讲清进口关税、HS 编码与贸易救济措施到底如何运作——素材与驱动 TariffStack 计算器的官方税则同源。每篇指南均为原创、真实、免费阅读。',
+  about_link: '关于',
 
   g1_kicker: '指南',
   g1_title: '什么是 HS / HTS 编码（以及它为何决定你的关税）？',
@@ -56,9 +58,12 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
     body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
     .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
     header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
-    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
     .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
     .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
     h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
     .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
     .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
@@ -75,7 +80,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   </style>
 </head>
 <body>
-  <header class="site"><div class="site-inner"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">Tariff Guides & Explainers</span></div></header>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">Tariff Guides & Explainers</span></div><a href="/about" class="site-r" data-i18n="about_link">{d.about_link}</a></div></header>
   <main class="wrap">
     <h1 data-i18n="h1">{d.h1}</h1>
     <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
