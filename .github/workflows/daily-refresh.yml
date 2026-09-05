@@ -1,12 +1,20 @@
 name: Daily Tariff Data Refresh
 
-# 每天北京时间 03:00 自动刷新关税数据并 push → Cloudflare 自动重建。
+# 每天北京时间 03:00 自动刷新关税数据 → 重新构建 → 重新部署到 Cloudflare Pages。
 # 运行在 GitHub 服务器（美国），与用户本机开关机无关。
+#
+# ⚠️ 关键修复（2026-09-05）：此前工作流只把数据 commit/push 到 git，但没有任何构建/部署步骤，
+#   线上 tariff-stack.pages.dev 一直停在最后一次手动 `wrangler pages deploy` 的陈旧 dist，
+#   导致"Actions 在跑、页面数据/日期不变"的伪刷新。现改为刷新后自建自部署，闭环。
+#
+# 需要在仓库 Settings → Secrets and variables → Actions 配置：
+#   CLOUDFLARE_API_TOKEN  （权限：Account.Cloudflare Pages: Edit  + Zone 可选）
+#   CLOUDFLARE_ACCOUNT_ID （Cloudflare 控制面板右下角 "Account ID"）
 on:
   schedule:
     # 19:00 UTC = 次日 03:00 北京时间 (UTC+8)
     - cron: '0 19 * * *'
-  workflow_dispatch: {}   # 允许在 Actions 标签页手动触发（调试用）
+  workflow_dispatch: {}   # 允许在 Actions 标签页手动触发（调试/立即生效用）
 
 # 防止定时触发与手动触发重叠导致两个 run 同时向 main 推送（非快进冲突）
 concurrency:
@@ -48,7 +56,7 @@ jobs:
         # 仓库无 requirements.txt，此处显式安装，避免 CI 跑预处理时 ModuleNotFoundError。
         run: python -m pip install pypdf pdfplumber
 
-      - name: Run daily refresh
+      - name: Run daily refresh (多源核对 + 写回真值 + 提交推送 git)
         env:
           # CI 中仓库根即平台目录；报告写到临时目录（作为 artifact 留存）
           PLATFORM_DIR: ${{ github.workspace }}
@@ -63,3 +71,27 @@ jobs:
           name: freshness-report
           path: ${{ runner.temp }}/reports/*.md
           if-no-files-found: ignore
+
+      # ===== 关键修复：刷新数据后必须重建并重新部署，否则线上永远停在旧构建（伪刷新） =====
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static site
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        # tariff-stack.pages.dev 是 Cloudflare Pages 项目；用 wrangler 直接上传 dist 发布。
+        # 若 Cloudflare 后台同时开着"连 git 自动部署"，会产生重复部署（无害）；
+        # 建议把后台自动部署关掉，让本工作流成为唯一发布来源。
+        run: npx wrangler pages deploy ./dist --project-name tariff-stack
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        # 注：若 CLOUDFLARE_API_TOKEN 未配置，wrangler 会因缺少鉴权而失败并使本 run 变红，
+        # 从而暴露「未部署」而非再次伪刷新。
