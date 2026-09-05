@@ -222,8 +222,13 @@ const clkLondon     = fmtClk('Europe/London');
     .brand .tag{margin-top:10px;font-size:clamp(15px,1.4vw,19px);color:var(--ink);font-weight:600;line-height:1.4;}
     .brand .badge{display:inline-block;margin-top:12px;font-size:14px;color:var(--good);background:#ecfdf3;border:1px solid #c8f0d4;border-radius:999px;padding:6px 16px;font-weight:600;}
     .brand .lang-row{margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-    .brand .lang-row label{flex-shrink:0;}
-    .brand .lang-row select{flex:1 1 130px;min-width:110px;max-width:200px;}
+    .brand .lang-row label{flex-shrink:0;font-size:11px;letter-spacing:.06em;color:var(--ink);opacity:.78;}
+    .brand .lang-row select{
+      /* 强制固定 110px——Chrome 默认按最长 option（Português/Français/Deutsch/Italiano）撑宽到 ~150px，
+         中文版被同步压缩。固定宽度让 select 不抢 label+Dark+Guides 的空间。 */
+      flex:0 0 110px;width:110px;min-width:110px;max-width:110px;
+      padding:6px 8px;font-size:13px;height:32px;
+    }
     /* Dark + Guides 按钮：跟 Language 同一行（用户 2026-09-05 钉死"放在语言旁边"）。
        flex-shrink:0 保证按钮文字永远完整不被压窄；select 用 flex:1 可压缩吸收空间。
        空间不够时 flex-wrap 让按钮自动换到下一行，绝不挤压。 */
@@ -263,9 +268,9 @@ const clkLondon     = fmtClk('Europe/London');
     .lang-row{display:flex;align-items:center;gap:10px;}
     .lang-row label{margin:0;font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;font-weight:600;}
     .lang-row select{font-size:14.5px;color:var(--ink);background:var(--card);border:1px solid var(--line2);border-radius:9px;padding:8px 12px;cursor:pointer;width:auto;}
-    .theme-toggle{display:inline-flex;align-items:center;gap:6px;font-size:14.5px;font-weight:600;color:var(--ink);background:var(--card);border:1px solid var(--line2);border-radius:9px;padding:8px 12px;cursor:pointer;line-height:1;white-space:nowrap;flex-shrink:0;}
+    .theme-toggle{display:inline-flex;align-items:center;gap:5px;font-size:13.5px;font-weight:600;color:var(--ink);background:var(--card);border:1px solid var(--line2);border-radius:9px;padding:6px 10px;cursor:pointer;line-height:1;white-space:nowrap;flex-shrink:0;}
     .theme-toggle:hover{border-color:var(--accent);color:var(--accent);}
-    .theme-toggle .tt-ico{font-size:15px;line-height:1;}
+    .theme-toggle .tt-ico{font-size:14px;line-height:1;}
     [data-theme="dark"] .theme-toggle{background:#0f1828;color:var(--ink);border-color:var(--line2);}
     @media (max-width:900px){
       .lang-block{align-items:flex-start;text-align:left;max-width:100%;}
