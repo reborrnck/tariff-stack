@@ -1,0 +1,165 @@
+---
+// Guide: What is an HS / HTS code — standalone page (per-page en + zh dict).
+// Original, factual explainer. References only verifiable facts about the Harmonized System.
+const en = {
+  title: 'What is an HS / HTS code? — TariffStack Guide',
+  h1: 'What is an HS / HTS code (and why it decides your duty)?',
+  updated: 'Last updated',
+  back: '← All guides',
+  toc: 'On this page',
+
+  intro: 'Every import duty on earth is triggered by a number. Before a single dollar of tariff is assessed, a customs officer (or a computer) has to answer one question: what is this product, exactly? The answer is written as an HS or HTS code — a short string of digits that quietly determines whether you pay 0%, 3%, or 60% at the border. This guide explains what that number is, how it is built, and why getting it right is the single highest-leverage thing you can do to control your landed cost.',
+
+  s1_h: '1. The Harmonized System, in one paragraph',
+  s1: 'The Harmonized System (HS) is the global dictionary of traded goods, maintained by the World Customs Organization (WCO) in Brussels. Almost every country in the world uses it as the common language for classifying imports and exports. At its core it is a 6-digit code that means the same thing in Tokyo, Rotterdam and Chicago: code 6109.10 always refers to the same basket of knitted shirts, regardless of border. That shared 6-digit layer is what makes international trade statistics comparable and lets a tariff schedule be translated across languages.',
+
+  s2_h: '2. How the code is built (chapter → heading → subheading)',
+  s2: 'The HS is hierarchical, like a filing system with progressively finer folders. The first two digits are the CHAPTER (there are 99 of them, grouped by broad material or type — live animals, minerals, chemicals, machinery, and so on). The first four digits are the HEADING, which narrows the product within the chapter. The full six digits are the SUBHEADING, the internationally agreed level of detail. So 61 is “articles of apparel, knitted”; 6109 is “t-shirts, knitted”; 6109.10 is the specific subheading for “knitted t-shirts, of cotton”. Each extra digit adds specificity — and specificity is where the rate is decided.',
+
+  s3_h: '3. Why the code decides your duty',
+  s3: 'Customs does not price your goods by description or by brand. It prices them by classification. The published tariff schedule assigns a rate to each subheading, not to “a red ceramic mug from a particular factory”. Change the code by one digit and you can move from a free rate to a double-digit percentage — and trigger entirely different rules on top (anti-dumping duties, quotas, licensing). In other words, the number is not a label you attach afterwards; it is the input that produces the duty. Get it wrong and you either overpay (leaving margin on the table) or underpay (a violation that can bring penalties, seizure or a demand for back duty).',
+
+  s4_h: '4. Countries add digits: U.S. HTS (10) vs China HS (8)',
+  s4: 'The 6-digit HS is only the international floor. Each country extends it for its own legal and statistical needs. The United States uses the Harmonized Tariff Schedule (HTS): it keeps the 6-digit subheading and adds 2 more digits for the legal rate, then 2 more for statistics — a 10-digit code such as 6109.10.00. The U.S. schedule runs to roughly 25,900 subheadings. China uses an 8-digit HS code for its import and export tariff (the 2026 schedule contains 8,972 subheadings); some lines carry further detail. The lesson: the SAME physical product often carries a 10-digit U.S. code and an 8-digit Chinese code, and you must use the right length for the destination you are shipping to.',
+
+  s5_h: '5. Where to find your code',
+  s5: 'You rarely invent the code — you look it up. For the U.S., the official source is the USITC HTS search (hts.usitc.gov), where you can type a product description and read the matching subheadings, their rates and any special-program indicators. For China, the official 2026 Import & Export Tariff is published by the State Council Tariff Commission and available through China Customs channels. A practical shortcut: find a competitor’s or supplier’s declared code on a commercial invoice or packing list, then confirm it against the official schedule for your destination. TariffStack’s classifier does the first step for you — it matches your words against the official U.S. HTS to suggest a code, then computes the real stacked rate for your chosen destination.',
+
+  s6_h: '6. The mistakes that cost importers money',
+  s6: 'Three errors show up constantly. First, classifying by product name alone: “phone case” could fall under plastics, leather or textiles depending on material, and each has a different rate. Second, trusting a freight forwarder’s default code without checking — they optimize for speed, not for your duty. Third, forgetting that a free-trade agreement (FTA) only helps if the product meets that agreement’s rules of origin; the HS code is necessary but not sufficient, and a wrong origin claim can void the preference. The cheapest insurance is to confirm the subheading on the official schedule for your exact destination before you file.',
+
+  s7_h: '7. How TariffStack turns the code into a number',
+  s7: 'When you enter an HS code (or let the classifier find one) and pick an origin and destination, TariffStack applies that destination’s real schedule. For the U.S. it stacks the base MFN rate with Section 301 (for China), the forced-labour duty, and MPF/HMF fees, then applies your origin’s FTA preference where it qualifies. For China it returns the official 2026 rate (MFN, or the lower provisional rate where one exists). The code you supply is the key that unlocks all of it — which is exactly why this guide starts here. Pick the right number and the rest of the estimate is mechanical; pick the wrong one and the estimate, however precise, is built on sand.',
+
+  s8_h: '8. The takeaway',
+  s8: 'An HS/HTS code is the single most consequential input in any import calculation. It is standardized internationally to 6 digits, then extended by each country (10 digits in the U.S., 8 in China). It — not the product name — is what customs uses to set your duty, so one misplaced digit can mean the difference between a free entry and a double-digit percentage. Spend your effort on getting the subheading right at the official source for your destination, and treat any tool (including this one) as a calculator on top of that classification, never a replacement for verifying it.',
+};
+
+const zh = {
+  title: '什么是 HS / HTS 编码？— TariffStack 指南',
+  h1: '什么是 HS / HTS 编码（以及它为何决定你的关税）？',
+  updated: '最后更新',
+  back: '← 全部指南',
+  toc: '本页内容',
+
+  intro: '地球上每一笔进口关税，都由一串数字触发。在海关核定哪怕一美元关税之前，官员（或电脑）必须先回答一个问题：这到底是什么商品？答案就写在一串 HS 或 HTS 编码里——短短几位数字，悄悄决定了你在边境是缴 0%、3% 还是 60%。本指南解释这串数字是什么、如何构成，以及为何"填对它"是控制到岸成本杠杆最高的一件事。',
+
+  s1_h: '1. 协调制度（HS），一段话讲清',
+  s1: '协调制度（Harmonized System，HS）是全球贸易商品的通用字典，由位于布鲁塞尔的世界海关组织（WCO）维护。世界上几乎每个国家都把它作为归类进出口商品的共同语言。其核心是一串 6 位数字，在东京、鹿特丹和芝加哥含义完全一致：编码 6109.10 永远指同一类针织衬衫，与国界无关。这层共享的 6 位编码，正是国际贸易统计得以比较、税则得以跨越语言翻译的基础。',
+
+  s2_h: '2. 编码如何构成（章 → 品目 → 子目）',
+  s2: 'HS 是层级式的，像一套越分越细的档案柜。前两位是"章"（共 99 章，按大类的材质或类型划分——活动物、矿产品、化工品、机械等）。前四位是"品目"，在章内进一步收窄商品范围。完整的六位是"子目"，即国际公认的详细层级。所以 61 是"针织服装"；6109 是"针织 T 恤"；6109.10 是"棉制针织 T 恤"的具体子目。每增加一位数字就多一层精确——而精确，正是税率被决定的地方。',
+
+  s3_h: '3. 为何编码决定你的关税',
+  s3: '海关不是按商品描述或品牌来定价，而是按归类来定价。官方发布的税则给每个子目分配一个税率，而不是给"某家工厂出的红色陶瓷杯"。改动一位数字，你可能就从免税滑落到两位数百分比——并且触发完全不同的叠加规则（反倾销税、配额、许可证）。换言之，这串数字不是事后贴上去的标签，而是生成关税的输入项。填错，要么多缴（白白损失利润空间），要么少缴（属于违规，可能招致罚款、查扣或追缴补税）。',
+
+  s4_h: '4. 各国追加位数：美国 HTS（10 位）vs 中国 HS（8 位）',
+  s4: '6 位 HS 只是国际底线。每个国家会为本国的法律与统计需要追加位数。美国使用《协调关税表》（HTS）：保留 6 位子目，再加 2 位用于法定税率、2 位用于统计——即 10 位编码，例如 6109.10.00。美国税则约有 25,900 个子目。中国对进出口税则使用 8 位 HS 编码（2026 年税则含 8,972 个子目），部分税目还有更细的层级。经验法则：同一件实体商品，往往同时拥有一个 10 位的美国编码和一个 8 位的中国编码，你必须按所运目的国使用正确位数。',
+
+  s5_h: '5. 去哪里查你的编码',
+  s5: '编码通常不需要自己编，而是去查。美国官方来源是 USITC 的 HTS 检索（hts.usitc.gov），输入商品描述即可读取匹配的子目、对应税率及特殊程序标识。中国方面，官方《2026 年进出口税则》由国务院关税税则委员会发布，可通过中国海关渠道获取。一个实用捷径：从商业发票或装箱单上找到供应商申报的编码，再按你目的国的官方税则核对。TariffStack 的归类器帮你完成第一步——它把你的描述与官方美国 HTS 匹配以给出建议编码，再按你选择的目的地计算真实的叠加税率。',
+
+  s6_h: '6. 让进口商花钱的那些错误',
+  s6: '有三个错误反复出现。第一，只按品名归类："手机壳"按材质可能归入塑料、皮革或纺织品，税率各不相同。第二，不经核对就轻信货代的默认编码——他们追求速度，而非为你省税。第三，忘记自由贸易协定（FTA）只有在商品满足该协定的"原产地规则"时才生效；HS 编码是必要条件而非充分条件，错误的原产国申报会让优惠失效。最省钱的保险，是在报关前，按你确切目的国的官方税则确认子目。',
+
+  s7_h: '7. TariffStack 如何把编码变成数字',
+  s7: '当你输入一个 HS 编码（或让归类器找到编码）并选择原产国与目的国后，TariffStack 套用该目的国的真实税则。美国方向：在基础 MFN 税率上叠加 301 条款（对中国）、强迫劳动税，以及 MPF/HMF 费用，再在你原产国符合资格时套用其 FTA 优惠。中国方向：返回官方 2026 年税率（最惠国税率，或存在时更低的暂定税率）。你提供的编码是解锁这一切的钥匙——这也正是本指南从它讲起的原因。选对数字，后面的估算是机械的；选错数字，估算再精确也建在沙子上。',
+
+  s8_h: '8. 要点总结',
+  s8: 'HS/HTS 编码是任何进口计算中最具决定性的一项输入。它在国际上是 6 位标准，再由各国追加（美国 10 位、中国 8 位）。决定你关税的是它——而非商品名称，所以错一位数字可能意味着"免税"与"两位数百分比"的天壤之别。把精力花在按目的国官方来源确认正确的子目上，并把任何工具（包括本工具）视为建立在该归类之上的计算器，而非替代你核实它的东西。',
+};
+
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="A plain-language explainer of HS and HTS codes — how the 6-to-10 digit classification is built, why it sets your import duty, and how the U.S. and China number goods differently." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{
+      --bg:#0b1120; --card:#121a2b; --ink:#e8edf6; --ink-deep:#f4f8fd; --content:#c4cedb;
+      --mut:#8b99ad; --line:#1e2a3e; --line2:#2b3a52;
+      --accent:#8aa7d8; --accent-soft:#1a2740;
+      --good:#6fbf9c; --warn:#d8a866; --bad:#d88686;
+    }
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    [data-theme="dark"] .lead{background:var(--accent-soft);border-color:var(--line2);}
+    [data-theme="dark"] .toc{background:#16223a;border-color:var(--line2);}
+    body{margin:0;font:18px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    h1{margin:0 0 8px;font-size:31px;font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1.25;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:24px;line-height:1.6;}
+    .toc{background:#fafbfd;border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:28px;font-size:14.5px;line-height:1.8;}
+    .toc ol{margin:0;padding-left:20px;}
+    .toc a{color:var(--ink);text-decoration:none;font-weight:600;}
+    .toc a:hover{color:var(--accent);}
+    h2{margin:28px 0 10px;font-size:21px;font-weight:700;color:var(--ink);letter-spacing:-.005em;scroll-margin-top:80px;}
+    p{margin:0 0 14px;line-height:1.68;}
+    .back{margin-top:34px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:25px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">What is an HS / HTS code?</span></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc" aria-label="Table of contents">
+      <strong data-i18n="toc">{d.toc}</strong>
+      <ol>
+        <li><a href="#s1" data-i18n="s1_h">{d.s1_h}</a></li>
+        <li><a href="#s2" data-i18n="s2_h">{d.s2_h}</a></li>
+        <li><a href="#s3" data-i18n="s3_h">{d.s3_h}</a></li>
+        <li><a href="#s4" data-i18n="s4_h">{d.s4_h}</a></li>
+        <li><a href="#s5" data-i18n="s5_h">{d.s5_h}</a></li>
+        <li><a href="#s6" data-i18n="s6_h">{d.s6_h}</a></li>
+        <li><a href="#s7" data-i18n="s7_h">{d.s7_h}</a></li>
+        <li><a href="#s8" data-i18n="s8_h">{d.s8_h}</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="s1" data-i18n="s1_h">{d.s1_h}</h2><p data-i18n="s1">{d.s1}</p>
+    <h2 id="s2" data-i18n="s2_h">{d.s2_h}</h2><p data-i18n="s2">{d.s2}</p>
+    <h2 id="s3" data-i18n="s3_h">{d.s3_h}</h2><p data-i18n="s3">{d.s3}</p>
+    <h2 id="s4" data-i18n="s4_h">{d.s4_h}</h2><p data-i18n="s4">{d.s4}</p>
+    <h2 id="s5" data-i18n="s5_h">{d.s5_h}</h2><p data-i18n="s5">{d.s5}</p>
+    <h2 id="s6" data-i18n="s6_h">{d.s6_h}</h2><p data-i18n="s6">{d.s6}</p>
+    <h2 id="s7" data-i18n="s7_h">{d.s7_h}</h2><p data-i18n="s7">{d.s7}</p>
+    <h2 id="s8" data-i18n="s8_h">{d.s8_h}</h2><p data-i18n="s8">{d.s8}</p>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        if (lang !== 'zh') return;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (zh[k] != null) nodes[i].textContent = zh[k];
+        }
+        document.documentElement.lang = 'zh';
+        document.title = '什么是 HS / HTS 编码？— TariffStack 指南';
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

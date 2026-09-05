@@ -21,4 +21,4 @@ User-agent: Bingbot
 Allow: /
 
 # 部署时把域名换成真实域名（与 astro.config.mjs 的 site 一致）
-Sitemap: https://tariff-platform.example.com/sitemap.xml
+Sitemap: https://tariffstack.bbroot.com/sitemap.xml

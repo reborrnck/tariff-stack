@@ -408,6 +408,20 @@ const clkLondon     = fmtClk('Europe/London');
 
     /* full-width footer divider (spans the viewport, not the 1700px container) */
     .site-divider{width:100%;height:0;border-top:1px solid var(--line);}
+
+    /* ---------- tariff guides band (homepage link to original explainers) ---------- */
+    .guides-band{margin:36px auto 0;max-width:1700px;padding:0 56px;}
+    .gb-inner{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px;display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between;}
+    .gb-head{max-width:430px;}
+    .gb-head h2{margin:0 0 8px;font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    .gb-head p{margin:0;font-size:14.5px;color:var(--mut);line-height:1.6;}
+    .gb-card{display:block;text-decoration:none;background:var(--bg);border:1px solid var(--line2);border-radius:14px;padding:18px 20px;max-width:560px;flex:1 1 340px;transition:border-color .15s, transform .15s, box-shadow .15s;}
+    .gb-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 10px 28px rgba(15,23,42,.08);}
+    .gb-card .gb-card-kicker{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--accent);background:var(--card);border:1px solid var(--line2);border-radius:6px;padding:2px 8px;margin-bottom:10px;}
+    .gb-card .gb-card-title{display:block;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:7px;line-height:1.4;}
+    .gb-card .gb-card-desc{display:block;font-size:14px;color:var(--content);line-height:1.6;margin-bottom:10px;}
+    .gb-card .gb-card-cta{display:inline-block;font-weight:700;color:var(--accent);font-size:14px;}
+    @media (max-width:900px){.guides-band{padding:0 20px;}.gb-inner{flex-direction:column;align-items:stretch;}}
     /* news ticker: vertical auto-scroll of daily real tariff-policy headlines */
     .news-ticker{margin-top:10px;width:100%;max-width:560px;}
     .news-head{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);margin-bottom:7px;}
@@ -488,6 +502,9 @@ const clkLondon     = fmtClk('Europe/London');
           <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="切换深色 / 浅色">
             <span class="tt-ico">🌙</span><span class="tt-txt" data-i18n="theme_dark">深色</span>
           </button>
+          <a id="about-btn" class="theme-toggle" href="/about" aria-label="About TariffStack" title="About TariffStack">
+            <span class="tt-ico">ℹ️</span><span class="tt-txt" data-i18n="about_btn">About</span>
+          </a>
         </div>
       </div>
 
@@ -672,6 +689,22 @@ const clkLondon     = fmtClk('Europe/London');
 
   </main>
 
+  <!-- ===== tariff guides band (links to original explainer articles) ===== -->
+  <section class="guides-band" id="guides" aria-label="Tariff guides">
+    <div class="gb-inner">
+      <div class="gb-head">
+        <h2 data-i18n="guides_title">Tariff Guides &amp; Explainers</h2>
+        <p data-i18n="guides_sub">Plain-language articles on how import duties, HS codes and trade remedies actually work — written from the official schedules we use.</p>
+      </div>
+      <a class="gb-card" href="/guides/hs-codes-explained">
+        <span class="gb-card-kicker" data-i18n="guide_kicker">GUIDE</span>
+        <span class="gb-card-title" data-i18n="guide1_title">What is an HS / HTS code (and why it decides your duty)?</span>
+        <span class="gb-card-desc" data-i18n="guide1_desc">The 6–10 digit number that determines every rate. How it is built, where to find yours, and why getting it wrong costs you.</span>
+        <span class="gb-card-cta" data-i18n="guides_cta">Read the guide →</span>
+      </a>
+    </div>
+  </section>
+
   <!-- ===== full-width divider ===== -->
   <div class="site-divider"></div>
 
@@ -679,10 +712,11 @@ const clkLondon     = fmtClk('Europe/London');
   <footer class="site-footer">
     <div>
       <div class="ft-brand">TariffStack</div>
-      <div class="ft-meta" data-i18n="footer_about">About TariffStack</div>
+      <div class="ft-meta" data-i18n="footer_tagline">Free import-duty & landed-cost calculator — U.S. + China</div>
     </div>
     <div class="ft-right">
       <div class="ft-links">
+        <a href="/about" data-i18n="footer_about">About TariffStack</a>
         <a href="/terms" data-i18n="footer_terms">Terms of Service & Disclaimer</a>
         <a href="/privacy" data-i18n="footer_privacy">Advertising & Privacy</a>
       </div>

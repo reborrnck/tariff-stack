@@ -1,0 +1,5 @@
+# TariffStack — ads.txt for Google AdSense
+# 把下面的发布者 ID 换成你 AdSense 账户里真实的 ID（AdSense → 网站 → 你的站点 → 以 pub- 开头）。
+# 在粘贴真实 ID 之前广告不会投放。本站通过该文件的根路径提供，例如 https://tariffstack.bbroot.com/ads.txt
+# 格式: google.com, pub-你的ID, DIRECT, Google 的 ads.txt 证书 ID(对所有 AdSense 账户通用)
+google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0

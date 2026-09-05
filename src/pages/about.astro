@@ -1,0 +1,164 @@
+---
+// About TariffStack — standalone page (per-page en + zh dict, mirrors privacy.astro).
+// Other languages fall back to en (per i18n convention); nothing added to the global i18n.ts.
+const en = {
+  title: 'About TariffStack',
+  h1: 'About TariffStack',
+  updated: 'Last updated',
+  back: '← Back to TariffStack',
+  toc: 'Contents',
+
+  intro: 'TariffStack is a free, independent, advertising-supported tool that estimates import duties and landed costs for the United States and China. We built it because the official schedules are hard to read and easy to mis-price — and because a good estimator should not sit behind a paywall. This page explains who we are, what the tool does, where our numbers come from, and what we deliberately are not.',
+
+  // 1. Mission
+  s1_h: '1. Our mission',
+  s1: 'Make real, official tariff data legible to importers, freight forwarders, customs brokers, compliance teams and curious shoppers — without an account, without a spreadsheet, and without a consultant. You type an HS code (or describe a product), pick an origin and a destination, and you get a stacked, source-backed estimate in seconds.',
+
+  // 2. What the tool does
+  s2_h: '2. What TariffStack does',
+  s2: 'For the U.S. destination we apply the full official stacked tariff — the USITC Harmonized Tariff Schedule at subheading level (base MFN), plus Section 301 (China List 4A), the forced-labour duty, and MPF/HMF — combined with your origin’s FTA preference, to produce a landed-cost figure for a given HS code, origin, destination and declared value. For the China destination we use the OFFICIAL 2026 Import & Export Tariff (State Council Tariff Commission, effective 2026-01-01), parsed from the published government schedule, and return REAL rates (MFN, or the lower provisional rate where applicable) when the HS code matches — no fabricated figures. All calculation runs entirely in your browser once the dataset is loaded; your inputs are never sent to our servers.',
+
+  // 3. Data sources
+  s3_h: '3. Where our data comes from',
+  s3: 'Every rate is traced to an authoritative open-data feed, cross-checked nightly by an automated pipeline: the USITC Harmonized Tariff Schedule, the U.S. Federal Register and USTR proclamations (for Section 301 / reciprocal / Section 232 actions), CBP CROSS rulings, the U.S. Census Bureau, and UN Comtrade (used for the export-country trade-linkage that powers the origin selector). China rates are taken from the official 2026 tariff schedule published by the State Council Tariff Commission. We show the source and the “as of” date next to every figure so you can verify it yourself.',
+
+  // 4. What we are NOT
+  s4_h: '4. What we are NOT',
+  s4: 'TariffStack is an estimator, not a law firm, tax adviser, customs brokerage or licensed compliance service. We do not issue binding classifications or rulings, and we are not a substitute for a licensed broker or counsel. Our numbers are best-effort estimates: exclusions, Section 232 (steel/aluminium 50%, autos 25%, pharmaceuticals 100% from 2026-09-29), AD/CVD, FTA origin-qualification, de-minimis thresholds and destination VAT/GST may change your actual entry. Always confirm with the destination’s customs authority — or a licensed broker — before you file.',
+
+  // 5. Independence & funding
+  s5_h: '5. How we stay free',
+  s5: 'The tool is kept free by displaying contextual and personalized ads via Google AdSense. We do not sell or share your calculation inputs with advertisers, and we never transmit your inputs to our servers in the first place. If you prefer, you can opt out of personalized ads through Google’s Ads Settings or by blocking third-party cookies in your browser — the calculator still works either way. The full picture is on our Advertising & Privacy page.',
+
+  // 6. Contact
+  s6_h: '6. Contact',
+  s6: 'Questions, corrections or takedown requests: write to TariffStack@outlook.com. For partnerships or business enquiries, contact the team lead directly at zmarkz123zxc@gmail.com. When reporting a data issue, please include the HS code and destination so we can investigate quickly.',
+};
+
+const zh = {
+  title: '关于 TariffStack',
+  h1: '关于 TariffStack',
+  updated: '最后更新',
+  back: '← 返回 TariffStack',
+  toc: '目录',
+
+  intro: 'TariffStack 是一个免费、独立、由广告支持的公益工具，用于估算输往美国与中国的进口关税与到岸成本。我们做这个工具，是因为官方税则晦涩难读、极易算错价——而一个好用的估算器不该被挡在付费墙后面。本页说明我们是谁、这个工具做什么、数字从哪来，以及我们刻意不做的事。',
+
+  s1_h: '1. 我们的使命',
+  s1: '让进口商、货运代理、报关行、合规团队和好奇的买家，都能读懂真实、官方的关税数据——无需注册账号、无需打开表格、也无需请顾问。你输入一个 HS 编码（或描述商品），选好原产国与目的国，几秒内就能得到一份有出处支撑的叠加估算结果。',
+
+  s2_h: '2. TariffStack 能做什么',
+  s2: '美国目的地采用完整的官方叠加关税——USITC《协调关税表》子目级基础 MFN，叠加 301 条款（中国 List 4A）、强迫劳动税、以及 MPF/HMF——再结合你所选原产国的 FTA 优惠，针对给定 HS 编码、原产国、目的国与申报金额生成到岸成本。中国目的地采用官方《2026 年进出口税则》（国务院关税税则委员会，2026-01-01 起施行），解析自政府发布的税则；在 HS 编码匹配时返回真实税率（最惠国税率，或更低时的暂定税率），无任何虚构数值。数据集加载后，全部计算都在你的浏览器本地完成，你的输入从不传送到我们的服务器。',
+
+  s3_h: '3. 数据从哪来',
+  s3: '每一个税率都可追溯到权威公开数据源，并由自动化管线每晚交叉核验：USITC《协调关税表》、美国 Federal Register 与 USTR 公告（301 条款 / 对等关税 / 232 条款动作）、CBP CROSS 裁定、美国人口普查局，以及 UN Comtrade（用于驱动原产国选择器的出口国贸易联动数据）。中国税率取自国务院关税税则委员会发布的官方 2026 年税则。我们在每个数字旁都标注来源与"截至"日期，方便你自行复核。',
+
+  s4_h: '4. 我们不是什么',
+  s4: 'TariffStack 是估算器，不是律师事务所、税务顾问、报关行或持牌合规服务机构。我们不出具具有约束力的归类或裁定，也无法替代持牌报关行或法律顾问。我们的数字是基于尽力假设的估算：排他性条款、232 条款（钢铝 50%、汽车 25%、药品自 2026-09-29 起 100%）、反倾销/反补贴（AD-CVD）、FTA 原产国资格、de minimis 免税额，以及目的国增值税/消费税，均可能改变你的实际报关结果。在提交报关前，务必与目的国海关机关——或持牌报关行——确认。',
+
+  s5_h: '5. 我们如何保持免费',
+  s5: '本工具通过 Google AdSense 展示情境化与个性化广告保持免费。我们不向广告主出售或共享你的计算输入，而且从根本上从不把你的输入传送到我们的服务器。如果你愿意，可通过 Google 广告设置或浏览器屏蔽第三方 Cookie 退出个性化广告——无论哪种方式，计算器都照常工作。完整说明见我们的《广告与隐私》页。',
+
+  s6_h: '6. 联系方式',
+  s6: '疑问、纠错或删除请求，请写信至 TariffStack@outlook.com。合作或商务事宜，请直接联系团队负责人：zmarkz123zxc@gmail.com。报告数据问题时，请附上 HS 编码与目的国，以便我们快速核查。',
+};
+
+const d = en;
+import overlay from '../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="About TariffStack — an independent, free import-duty & landed-cost estimator for the U.S. and China, built on official tariff schedules with source-backed rates." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;--scroll-thumb:#c8d0dd;--scroll-thumb-hover:#a8b3c5;--scroll-track:transparent;}
+    *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) var(--scroll-track);}
+    *::-webkit-scrollbar{width:10px;height:10px;}
+    *::-webkit-scrollbar-track{background:var(--scroll-track);}
+    *::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:10px;border:2px solid transparent;background-clip:padding-box;}
+    *::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover);background-clip:padding-box;border:2px solid transparent;}
+    *::-webkit-scrollbar-corner{background:transparent;}
+    [data-theme="dark"]{
+      --bg:#0b1120; --card:#121a2b; --ink:#e8edf6; --ink-deep:#f4f8fd; --content:#c4cedb;
+      --mut:#8b99ad; --line:#1e2a3e; --line2:#2b3a52;
+      --accent:#8aa7d8; --accent-soft:#1a2740;
+      --good:#6fbf9c; --warn:#d8a866; --bad:#d88686;
+      --scroll-thumb:#2b3a52; --scroll-thumb-hover:#3d5070;
+    }
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    [data-theme="dark"] .lead{background:var(--accent-soft);border-color:var(--line2);}
+    [data-theme="dark"] .toc{background:#16223a;border-color:var(--line2);}
+    body{margin:0;font:19px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:20px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:24px;line-height:1.6;}
+    .toc{background:#fafbfd;border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:28px;font-size:14.5px;line-height:1.8;}
+    .toc ol{margin:0;padding-left:20px;}
+    .toc a{color:var(--ink);text-decoration:none;font-weight:600;}
+    .toc a:hover{color:var(--accent);}
+    h2{margin:30px 0 10px;font-size:21px;font-weight:700;color:var(--ink);letter-spacing:-.005em;scroll-margin-top:80px;}
+    p{margin:0 0 14px;line-height:1.65;}
+    .back{margin-top:36px;display:inline-block;font-weight:700;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:19px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">About TariffStack</span></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc" aria-label="Table of contents">
+      <strong data-i18n="toc">{d.toc}</strong>
+      <ol>
+        <li><a href="#s1" data-i18n="s1_h">{d.s1_h}</a></li>
+        <li><a href="#s2" data-i18n="s2_h">{d.s2_h}</a></li>
+        <li><a href="#s3" data-i18n="s3_h">{d.s3_h}</a></li>
+        <li><a href="#s4" data-i18n="s4_h">{d.s4_h}</a></li>
+        <li><a href="#s5" data-i18n="s5_h">{d.s5_h}</a></li>
+        <li><a href="#s6" data-i18n="s6_h">{d.s6_h}</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="s1" data-i18n="s1_h">{d.s1_h}</h2><p data-i18n="s1">{d.s1}</p>
+    <h2 id="s2" data-i18n="s2_h">{d.s2_h}</h2><p data-i18n="s2">{d.s2}</p>
+    <h2 id="s3" data-i18n="s3_h">{d.s3_h}</h2><p data-i18n="s3">{d.s3}</p>
+    <h2 id="s4" data-i18n="s4_h">{d.s4_h}</h2><p data-i18n="s4">{d.s4}</p>
+    <h2 id="s5" data-i18n="s5_h">{d.s5_h}</h2><p data-i18n="s5">{d.s5}</p>
+    <h2 id="s6" data-i18n="s6_h">{d.s6_h}</h2><p data-i18n="s6">{d.s6}</p>
+
+    <a class="back" href="/" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh }}>
+    // Lightweight zh swap — mirrors the home page language preference (localStorage 'ts-lang').
+    // The full `zh` dictionary is injected from the server-side object above via define:vars,
+    // so the client copy can NEVER drift from the SSR source of truth.
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        if (lang !== 'zh') return;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (zh[k] != null) nodes[i].textContent = zh[k];
+        }
+        document.documentElement.lang = 'zh';
+        document.title = '关于 TariffStack — TariffStack';
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

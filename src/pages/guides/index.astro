@@ -1,0 +1,115 @@
+---
+// Guides index — standalone page (per-page en + zh dict, mirrors about.astro).
+// Lists the original explainer articles. Add a new card per article.
+const en = {
+  title: 'Tariff Guides & Explainers — TariffStack',
+  h1: 'Tariff Guides & Explainers',
+  updated: 'Last updated',
+  back: '← Back to TariffStack',
+  intro: 'Plain-language guides to how import duties, HS codes and trade remedies actually work — written from the same official schedules that power the TariffStack calculator. Every guide is original, factual, and free to read.',
+
+  g1_kicker: 'GUIDE',
+  g1_title: 'What is an HS / HTS code (and why it decides your duty)?',
+  g1_desc: 'The 6–10 digit number behind every rate. How it is built, how the U.S. and China number theirs differently, where to find yours, and why getting it wrong costs you.',
+  g1_read: 'Read the guide →',
+
+  more_soon: 'More guides are published as we expand the library. Each one traces its claims to the official schedules.',
+};
+
+const zh = {
+  title: '关税科普与指南 — TariffStack',
+  h1: '关税科普与指南',
+  updated: '最后更新',
+  back: '← 返回 TariffStack',
+  intro: '用通俗语言讲清进口关税、HS 编码与贸易救济措施到底如何运作——素材与驱动 TariffStack 计算器的官方税则同源。每篇指南均为原创、真实、免费阅读。',
+
+  g1_kicker: '指南',
+  g1_title: '什么是 HS / HTS 编码（以及它为何决定你的关税）？',
+  g1_desc: '每个税率背后那串 6–10 位数字。它如何构成、美国与中国的编号方式有何不同、去哪里查你的编码，以及填错它会让你付出什么代价。',
+  g1_read: '查看指南 →',
+
+  more_soon: '更多指南将随文库扩充陆续发布。每一篇的说法都可追溯到官方税则。',
+};
+
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="Original, factual guides to import duties, HS/HTS codes and trade remedies — written from the official U.S. and China tariff schedules that power the TariffStack calculator." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{
+      --bg:#0b1120; --card:#121a2b; --ink:#e8edf6; --ink-deep:#f4f8fd; --content:#c4cedb;
+      --mut:#8b99ad; --line:#1e2a3e; --line2:#2b3a52;
+      --accent:#8aa7d8; --accent-soft:#1a2740;
+      --good:#6fbf9c; --warn:#d8a866; --bad:#d88686;
+    }
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .grid{display:grid;grid-template-columns:1fr;gap:16px;}
+    .g-card{display:block;text-decoration:none;background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:20px 22px;transition:border-color .15s, transform .15s, box-shadow .15s;}
+    .g-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 10px 28px rgba(15,23,42,.08);}
+    .g-card .kicker{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--accent);background:var(--accent-soft);border-radius:6px;padding:3px 9px;margin-bottom:10px;}
+    .g-card .g-title{display:block;font-size:19px;font-weight:700;color:var(--ink);margin-bottom:8px;line-height:1.4;}
+    .g-card .g-desc{display:block;font-size:14.5px;color:var(--content);line-height:1.6;margin-bottom:12px;}
+    .g-card .g-read{display:inline-block;font-weight:700;color:var(--accent);font-size:14.5px;}
+    .more{margin-top:22px;font-size:14px;color:var(--mut);}
+    .back{margin-top:32px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">Tariff Guides & Explainers</span></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <div class="grid">
+      <a class="g-card" href="/guides/hs-codes-explained">
+        <span class="kicker" data-i18n="g1_kicker">{d.g1_kicker}</span>
+        <span class="g-title" data-i18n="g1_title">{d.g1_title}</span>
+        <span class="g-desc" data-i18n="g1_desc">{d.g1_desc}</span>
+        <span class="g-read" data-i18n="g1_read">{d.g1_read}</span>
+      </a>
+    </div>
+
+    <p class="more" data-i18n="more_soon">{d.more_soon}</p>
+
+    <a class="back" href="/" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        if (lang !== 'zh') return;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (zh[k] != null) nodes[i].textContent = zh[k];
+        }
+        document.documentElement.lang = 'zh';
+        document.title = '关税科普与指南 — TariffStack';
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>
