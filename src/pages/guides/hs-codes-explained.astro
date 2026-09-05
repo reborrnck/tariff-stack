@@ -73,6 +73,7 @@ const zh = {
 };
 
 const d = en;
+import SeoHead from '../../components/SeoHead.astro';
 import overlay from '../../data/policy_overlay.json';
 const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
 ---
@@ -84,6 +85,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   <title>{d.title}</title>
   <meta name="description" content="A plain-language explainer of HS and HTS codes — how the 6-to-10 digit classification is built, why it sets your import duty, and how the U.S. and China number goods differently." />
   <meta name="robots" content="index,follow" />
+  <SeoHead />
   <style is:global>
     :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
     *{box-sizing:border-box;}

@@ -3,13 +3,25 @@
   <url>
     <loc>https://tariffstack.bbroot.com/</loc>
     <lastmod>2026-09-05</lastmod>
-    <changefreq>daily</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://tariffstack.bbroot.com/about</loc>
+    <loc>https://tariffstack.bbroot.com/about/</loc>
     <lastmod>2026-09-05</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tariffstack.bbroot.com/privacy/</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tariffstack.bbroot.com/terms/</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
@@ -19,87 +31,135 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tariffstack.bbroot.com/guides/hs-codes-explained</loc>
+    <loc>https://tariffstack.bbroot.com/guides/antidumping-and-countervailing-duties/</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tariffstack.bbroot.com/guides/how-duty-calculated</loc>
+    <loc>https://tariffstack.bbroot.com/guides/binding-rulings-cross/</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tariffstack.bbroot.com/guides/section-301-china</loc>
+    <loc>https://tariffstack.bbroot.com/guides/cbp-fees-mpf-hmf/</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tariffstack.bbroot.com/guides/section-232</loc>
+    <loc>https://tariffstack.bbroot.com/guides/china-retaliatory-tariffs/</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tariffstack.bbroot.com/guides/de-minimis-800</loc>
+    <loc>https://tariffstack.bbroot.com/guides/country-of-origin-marking/</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tariffstack.bbroot.com/guides/usmca-and-fta</loc>
+    <loc>https://tariffstack.bbroot.com/guides/customs-broker-and-entry-types/</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tariffstack.bbroot.com/guides/uflpa-forced-labor</loc>
+    <loc>https://tariffstack.bbroot.com/guides/customs-valuation-basics/</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tariffstack.bbroot.com/guides/antidumping-and-countervailing-duties</loc>
+    <loc>https://tariffstack.bbroot.com/guides/de-minimis-800/</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tariffstack.bbroot.com/guides/china-retaliatory-tariffs</loc>
+    <loc>https://tariffstack.bbroot.com/guides/duty-drawback/</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tariffstack.bbroot.com/guides/lookup-hs-codes-walkthrough</loc>
+    <loc>https://tariffstack.bbroot.com/guides/foreign-trade-zones/</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tariffstack.bbroot.com/guides/country-of-origin-marking</loc>
+    <loc>https://tariffstack.bbroot.com/guides/how-duty-calculated/</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tariffstack.bbroot.com/guides/customs-broker-and-entry-types</loc>
+    <loc>https://tariffstack.bbroot.com/guides/hs-codes-explained/</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tariffstack.bbroot.com/privacy</loc>
+    <loc>https://tariffstack.bbroot.com/guides/importer-of-record/</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tariffstack.bbroot.com/terms</loc>
+    <loc>https://tariffstack.bbroot.com/guides/incoterms-2020/</loc>
     <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tariffstack.bbroot.com/guides/lookup-hs-codes-walkthrough/</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tariffstack.bbroot.com/guides/reconciliation-and-protest/</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tariffstack.bbroot.com/guides/section-232/</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tariffstack.bbroot.com/guides/section-301-china/</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tariffstack.bbroot.com/guides/uflpa-forced-labor/</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tariffstack.bbroot.com/guides/usmca-and-fta/</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tariffstack.bbroot.com/guides/2/</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tariffstack.bbroot.com/guides/3/</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

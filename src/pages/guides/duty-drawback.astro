@@ -97,6 +97,7 @@ const zh = {
   caveat: "TariffStack 不是报关行或律所。退税有精确的法定时限、替代规则与记录要求；要就你方事实提出申报，请咨询持牌海关律师或退税专家。规则可能变化。",
 };
 const d = en;
+import SeoHead from '../../components/SeoHead.astro';
 import overlay from '../../data/policy_overlay.json';
 const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-05';
 ---
@@ -108,6 +109,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   <title>{d.title}</title>
   <meta name="description" content="What duty drawback is, the three main types (unused, manufacturing, rejected), TFTEA substitution rules, the five-year timing window, and the records CBP requires." />
   <meta name="robots" content="index,follow" />
+  <SeoHead />
   <style is:global>
     :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
     *{box-sizing:border-box;}

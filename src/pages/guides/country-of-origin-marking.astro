@@ -53,6 +53,7 @@ const zh = {
   s8: '美国原产地标记不是可选项，也不是非正式要求。法律来源是 19 CFR Part 134；规则是英文「Made in [Country]」，易读且永久；原产地判定标准是实质性改变。例外很窄且程序严格——它们不取消要求，只是改变满足方式。10% 标记税是违规的标准处罚，加在常规关税之上；「工厂忘了」不是 CBP 会接受的理由。把标记措辞写进采购订单，量产首单拍照核对，你就避开了最常见的港口延误。',
 };
 const d = en;
+import SeoHead from '../../components/SeoHead.astro';
 import overlay from '../../data/policy_overlay.json';
 const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-05';
 ---
@@ -64,6 +65,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   <title>{d.title}</title>
   <meta name="description" content="" />
   <meta name="robots" content="index,follow" />
+  <SeoHead />
   <style is:global>
     :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
     *{box-sizing:border-box;}

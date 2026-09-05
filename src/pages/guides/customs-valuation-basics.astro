@@ -105,6 +105,7 @@ const zh = {
   caveat: "TariffStack 不是报关行或律所。海关估价因事实而异且会被审计；申报前请用持牌海关律师或 CBP 确认成交价格法与加计项目。税率与方法可能变化。",
 };
 const d = en;
+import SeoHead from '../../components/SeoHead.astro';
 import overlay from '../../data/policy_overlay.json';
 const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-05';
 ---
@@ -116,6 +117,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   <title>{d.title}</title>
   <meta name="description" content="How U.S. customs value is calculated: the transaction-value method, the five mandatory additions (packing, assists, royalties, proceeds), and why valuation errors underpay duty and MPF." />
   <meta name="robots" content="index,follow" />
+  <SeoHead />
   <style is:global>
     :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
     *{box-sizing:border-box;}

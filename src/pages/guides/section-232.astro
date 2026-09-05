@@ -97,6 +97,7 @@ const zh = {
   caveat: '本指南反映截至 2025 年末颁布的公告及 2026 年预定生效事项。TariffStack 不是报关行。最终归类与 Section 232 适用与否，请以 CBP 或持牌报关行为准。',
 };
 const d = en;
+import SeoHead from '../../components/SeoHead.astro';
 import overlay from '../../data/policy_overlay.json';
 const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
 ---
@@ -108,6 +109,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   <title>{d.title}</title>
   <meta name="description" content="Section 232 tariffs and the live schedule: steel/aluminum/copper at 50%, autos at 25%, lumber 10%, pharma 100%, drones 100%, polysilicon 100%." />
   <meta name="robots" content="index,follow" />
+  <SeoHead />
   <style is:global>
     :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
     *{box-sizing:border-box;}

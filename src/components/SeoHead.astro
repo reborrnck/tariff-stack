@@ -1,0 +1,44 @@
+---
+// Site-wide SEO head fragment: canonical URL + Open Graph + JSON-LD
+// (Organization / WebSite / BreadcrumbList). Insert once inside <head>.
+// Google/Bing verification meta tags are emitted ONLY when the corresponding
+// PUBLIC_* build env vars are set — otherwise nothing is injected (safe no-op).
+const site = (Astro.site?.toString() || 'https://tariffstack.bbroot.com').replace(/\/$/, '');
+const raw = Astro.url.pathname;
+const canonical = site + (raw === '/' ? '/' : (raw.endsWith('/') ? raw.slice(0, -1) : raw));
+const segs = raw.split('/').filter(Boolean);
+const crumbs = [{ name: 'Home', url: site + '/' }].concat(
+  segs.map((s, i) => ({
+    name: decodeURIComponent(s).replace(/-/g, ' '),
+    url: site + '/' + segs.slice(0, i + 1).join('/') + '/',
+  }))
+);
+const env = import.meta.env as Record<string, string | undefined>;
+const gv = env.PUBLIC_GOOGLE_VERIFICATION;
+const bv = env.PUBLIC_BING_VERIFICATION;
+const org = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'TariffStack',
+  url: site + '/',
+  description: 'Official-schedule import duty, HS/HTS code and trade-remedy calculator for U.S. and China imports, with original explainer guides.',
+};
+const web = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'TariffStack',
+  url: site + '/',
+};
+const bc = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: c.url })),
+};
+---
+<link rel="canonical" href={canonical} />
+{gv && <meta name="google-site-verification" content={gv} />}
+{bv && <meta name="msvalidate.01" content={bv} />}
+<meta property="og:site_name" content="TariffStack" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonical} />
+<script type="application/ld+json" set:html={JSON.stringify([org, web, bc])} />

@@ -53,6 +53,7 @@ const zh = {
   s8: 'AD 与 CVD 是美国关税体系中最不稳定的层级。它们不是 HTS 里能查到的固定百分比——藏在按案件发布的《联邦公报》命令里，随复审与规避调查变更，并叠加在你的货物已欠的所有其他关税之上。在为订单报价前，先查 ITA 数据库的同类国家与产品，仔细读命令的覆盖语言，并记住真实到岸成本可能远超公布的 MFN 税率所暗示的水平。TariffStack 在 HS 子目已知属于命令范围时会自动整合 AD/CVD；对新品类，会显示主要 MFN 税率并引导你自行核实贸易救济层。',
 };
 const d = en;
+import SeoHead from '../../components/SeoHead.astro';
 import overlay from '../../data/policy_overlay.json';
 const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-05';
 ---
@@ -64,6 +65,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   <title>{d.title}</title>
   <meta name="description" content="" />
   <meta name="robots" content="index,follow" />
+  <SeoHead />
   <style is:global>
     :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
     *{box-sizing:border-box;}

@@ -53,6 +53,7 @@ const zh = {
   s8: '持牌报关行是你在美国最规范商业交易之一的代表。选有行业经验、有持牌员工、收费透明的。选与你业务模式匹配的入境类型（消费货用 Type 01，存储用 Type 06，退税用 Type 51，de minimis 仍可用就用 Type 86）。维持入境记录进口商担保与五年记录保存。TariffStack 不替代报关行——它给你比较报关行报价、审计归类、事后追究错误所需的关税与费用数字。',
 };
 const d = en;
+import SeoHead from '../../components/SeoHead.astro';
 import overlay from '../../data/policy_overlay.json';
 const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-05';
 ---
@@ -64,6 +65,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   <title>{d.title}</title>
   <meta name="description" content="" />
   <meta name="robots" content="index,follow" />
+  <SeoHead />
   <style is:global>
     :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
     *{box-sizing:border-box;}

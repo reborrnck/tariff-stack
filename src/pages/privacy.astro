@@ -1,6 +1,7 @@
 ---
 // Advertising & Privacy — standalone page (NOT a copy of the Terms).
 // en + zh fully translated; other languages fall back to en (per i18n convention).
+import SeoHead from '../components/SeoHead.astro';
 import CookieConsent from '../components/CookieConsent.astro';
 const en = {
   title: 'Advertising & Privacy — TariffStack',
@@ -111,6 +112,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   <title>{d.title}</title>
   <meta name="description" content="TariffStack Advertising & Privacy — what data we handle, how Google AdSense ads work on the site, and your opt-out choices." />
   <meta name="robots" content="index,follow" />
+  <SeoHead />
   <style is:global>
     :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;--scroll-thumb:#c8d0dd;--scroll-thumb-hover:#a8b3c5;--scroll-track:transparent;}
     *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) var(--scroll-track);}

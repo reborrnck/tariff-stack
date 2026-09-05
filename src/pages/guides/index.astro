@@ -2,6 +2,35 @@
 // Guides index — standalone page (per-page en + zh dict, mirrors about.astro).
 // Lists the original explainer articles. Add a new card per article.
 import CookieConsent from '../../components/CookieConsent.astro';
+import SeoHead from '../../components/SeoHead.astro';
+import { paginate } from 'astro';
+
+// Ordered article table. Pagination is generated via getStaticPaths + paginate().
+const ARTICLES = [
+  { n: 1, slug: 'how-duty-calculated' },
+  { n: 2, slug: 'hs-codes-explained' },
+  { n: 3, slug: 'section-301-china' },
+  { n: 4, slug: 'section-232' },
+  { n: 5, slug: 'de-minimis-800' },
+  { n: 6, slug: 'usmca-and-fta' },
+  { n: 7, slug: 'uflpa-forced-labor' },
+  { n: 8, slug: 'antidumping-and-countervailing-duties' },
+  { n: 9, slug: 'china-retaliatory-tariffs' },
+  { n: 10, slug: 'lookup-hs-codes-walkthrough' },
+  { n: 11, slug: 'country-of-origin-marking' },
+  { n: 12, slug: 'customs-broker-and-entry-types' },
+  { n: 13, slug: 'customs-valuation-basics' },
+  { n: 14, slug: 'binding-rulings-cross' },
+  { n: 15, slug: 'duty-drawback' },
+  { n: 16, slug: 'foreign-trade-zones' },
+  { n: 17, slug: 'incoterms-2020' },
+  { n: 18, slug: 'cbp-fees-mpf-hmf' },
+  { n: 19, slug: 'reconciliation-and-protest' },
+  { n: 20, slug: 'importer-of-record' },
+];
+
+export function getStaticPaths() { return paginate(ARTICLES, { pageSize: 8 }); }
+
 const en = {
   title: 'Tariff Guides & Explainers — TariffStack',
   h1: 'Tariff Guides & Explainers',
@@ -91,6 +120,9 @@ const en = {
   g20_desc: 'The IOR is legally on the hook for the entry. The reasonable-care standard, the customs bond, the power of attorney, and the five-year recordkeeping rule (19 CFR Part 163).',
 
   more_soon: 'We add new guides as policy changes. Every claim traces back to the official schedule, regulation, or ruling it came from.',
+  pg_prev: '← Newer guides',
+  pg_next: 'Older guides →',
+  pg_page: 'Page',
 };
 
 const zh = {
@@ -182,9 +214,16 @@ const zh = {
   g20_desc: 'IOR 对报关负有法律责任。合理注意标准、海关保证金、授权书，以及五年记录保存规则（19 CFR Part 163）。',
 
   more_soon: '我们随政策变化增添新指南。每一条断言都可追溯至官方税则、法规或裁定。',
+  pg_prev: '← 较新指南',
+  pg_next: '更早指南 →',
+  pg_page: '第',
 };
 const d = en;
 import overlay from '../../data/policy_overlay.json';
+const page = Astro.props.page;
+const list = page.data;
+const en_pg = { prev: '← Newer guides', next: 'Older guides →', page: 'Page' };
+const zh_pg = { prev: '← 较新指南', next: '更早指南 →', page: '第' };
 const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
 ---
 <!doctype html>
@@ -195,6 +234,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   <title>{d.title}</title>
   <meta name="description" content="Original, factual guides to import duties, HS/HTS codes, Section 301, Section 232, de minimis, USMCA / FTAs, and UFLPA — written from the official U.S. and China tariff schedules that power the TariffStack calculator." />
   <meta name="robots" content="index,follow" />
+  <SeoHead />
   <style is:global>
     :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
     *{box-sizing:border-box;}
@@ -226,6 +266,13 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
     .g-card .g-read{display:inline-block;font-weight:700;color:var(--accent);font-size:14.5px;}
     .more{margin-top:22px;font-size:14px;color:var(--mut);}
     .back{margin-top:32px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    .pager{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:30px;flex-wrap:wrap;}
+    .pg{display:inline-block;padding:9px 16px;border:1px solid var(--line2);border-radius:10px;background:var(--card);color:var(--accent);text-decoration:none;font-weight:700;font-size:14.5px;transition:border-color .15s,transform .15s;}
+    .pg:hover{border-color:var(--accent);transform:translateY(-1px);}
+    .pg-disabled{color:var(--mut);cursor:default;border-style:dashed;}
+    .pg-disabled:hover{transform:none;border-color:var(--line2);}
+    .pg-cur{font-size:14.5px;color:var(--content);font-weight:600;padding:0 4px;}
+    @media (max-width:600px){.pager{gap:8px;}.pg{padding:8px 12px;font-size:13.5px;}}
     @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}}
   </style>
 </head>
@@ -237,127 +284,30 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
     <div class="lead" data-i18n="intro">{d.intro}</div>
 
     <div class="grid">
-      <a class="g-card" href="/guides/how-duty-calculated">
-        <span class="kicker" data-i18n="g1_kicker">{d.g1_kicker}</span>
-        <span class="g-title" data-i18n="g1_title">{d.g1_title}</span>
-        <span class="g-desc" data-i18n="g1_desc">{d.g1_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/hs-codes-explained">
-        <span class="kicker" data-i18n="g2_kicker">{d.g2_kicker}</span>
-        <span class="g-title" data-i18n="g2_title">{d.g2_title}</span>
-        <span class="g-desc" data-i18n="g2_desc">{d.g2_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/section-301-china">
-        <span class="kicker" data-i18n="g3_kicker">{d.g3_kicker}</span>
-        <span class="g-title" data-i18n="g3_title">{d.g3_title}</span>
-        <span class="g-desc" data-i18n="g3_desc">{d.g3_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/section-232">
-        <span class="kicker" data-i18n="g4_kicker">{d.g4_kicker}</span>
-        <span class="g-title" data-i18n="g4_title">{d.g4_title}</span>
-        <span class="g-desc" data-i18n="g4_desc">{d.g4_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/de-minimis-800">
-        <span class="kicker" data-i18n="g5_kicker">{d.g5_kicker}</span>
-        <span class="g-title" data-i18n="g5_title">{d.g5_title}</span>
-        <span class="g-desc" data-i18n="g5_desc">{d.g5_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/usmca-and-fta">
-        <span class="kicker" data-i18n="g6_kicker">{d.g6_kicker}</span>
-        <span class="g-title" data-i18n="g6_title">{d.g6_title}</span>
-        <span class="g-desc" data-i18n="g6_desc">{d.g6_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/uflpa-forced-labor">
-        <span class="kicker" data-i18n="g7_kicker">{d.g7_kicker}</span>
-        <span class="g-title" data-i18n="g7_title">{d.g7_title}</span>
-        <span class="g-desc" data-i18n="g7_desc">{d.g7_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/antidumping-and-countervailing-duties">
-        <span class="kicker" data-i18n="g8_kicker">{d.g8_kicker}</span>
-        <span class="g-title" data-i18n="g8_title">{d.g8_title}</span>
-        <span class="g-desc" data-i18n="g8_desc">{d.g8_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/china-retaliatory-tariffs">
-        <span class="kicker" data-i18n="g9_kicker">{d.g9_kicker}</span>
-        <span class="g-title" data-i18n="g9_title">{d.g9_title}</span>
-        <span class="g-desc" data-i18n="g9_desc">{d.g9_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/lookup-hs-codes-walkthrough">
-        <span class="kicker" data-i18n="g10_kicker">{d.g10_kicker}</span>
-        <span class="g-title" data-i18n="g10_title">{d.g10_title}</span>
-        <span class="g-desc" data-i18n="g10_desc">{d.g10_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/country-of-origin-marking">
-        <span class="kicker" data-i18n="g11_kicker">{d.g11_kicker}</span>
-        <span class="g-title" data-i18n="g11_title">{d.g11_title}</span>
-        <span class="g-desc" data-i18n="g11_desc">{d.g11_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/customs-broker-and-entry-types">
-        <span class="kicker" data-i18n="g12_kicker">{d.g12_kicker}</span>
-        <span class="g-title" data-i18n="g12_title">{d.g12_title}</span>
-        <span class="g-desc" data-i18n="g12_desc">{d.g12_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/customs-valuation-basics">
-        <span class="kicker" data-i18n="g13_kicker">{d.g13_kicker}</span>
-        <span class="g-title" data-i18n="g13_title">{d.g13_title}</span>
-        <span class="g-desc" data-i18n="g13_desc">{d.g13_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/binding-rulings-cross">
-        <span class="kicker" data-i18n="g14_kicker">{d.g14_kicker}</span>
-        <span class="g-title" data-i18n="g14_title">{d.g14_title}</span>
-        <span class="g-desc" data-i18n="g14_desc">{d.g14_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/duty-drawback">
-        <span class="kicker" data-i18n="g15_kicker">{d.g15_kicker}</span>
-        <span class="g-title" data-i18n="g15_title">{d.g15_title}</span>
-        <span class="g-desc" data-i18n="g15_desc">{d.g15_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/foreign-trade-zones">
-        <span class="kicker" data-i18n="g16_kicker">{d.g16_kicker}</span>
-        <span class="g-title" data-i18n="g16_title">{d.g16_title}</span>
-        <span class="g-desc" data-i18n="g16_desc">{d.g16_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/incoterms-2020">
-        <span class="kicker" data-i18n="g17_kicker">{d.g17_kicker}</span>
-        <span class="g-title" data-i18n="g17_title">{d.g17_title}</span>
-        <span class="g-desc" data-i18n="g17_desc">{d.g17_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/cbp-fees-mpf-hmf">
-        <span class="kicker" data-i18n="g18_kicker">{d.g18_kicker}</span>
-        <span class="g-title" data-i18n="g18_title">{d.g18_title}</span>
-        <span class="g-desc" data-i18n="g18_desc">{d.g18_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/reconciliation-and-protest">
-        <span class="kicker" data-i18n="g19_kicker">{d.g19_kicker}</span>
-        <span class="g-title" data-i18n="g19_title">{d.g19_title}</span>
-        <span class="g-desc" data-i18n="g19_desc">{d.g19_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
-      <a class="g-card" href="/guides/importer-of-record">
-        <span class="kicker" data-i18n="g20_kicker">{d.g20_kicker}</span>
-        <span class="g-title" data-i18n="g20_title">{d.g20_title}</span>
-        <span class="g-desc" data-i18n="g20_desc">{d.g20_desc}</span>
-        <span class="g-read" data-i18n="g_read">Read the guide →</span>
-      </a>
+      {list.map((item) => {
+        const id = 'g' + item.n;
+        return (
+          <a class="g-card" href={`/guides/${item.slug}`}>
+            <span class="kicker" data-i18n={`${id}_kicker`}>{d[`${id}_kicker`]}</span>
+            <span class="g-title" data-i18n={`${id}_title`}>{d[`${id}_title`]}</span>
+            <span class="g-desc" data-i18n={`${id}_desc`}>{d[`${id}_desc`]}</span>
+            <span class="g-read" data-i18n="g_read">Read the guide →</span>
+          </a>
+        );
+      })}
     </div>
+
+    {page.last > 1 && (
+      <nav class="pager" aria-label="Pagination">
+        {page.url.prev
+          ? <a class="pg" href={page.url.prev} data-i18n="pg_prev">{en_pg.prev}</a>
+          : <span class="pg pg-disabled" data-i18n="pg_prev">{en_pg.prev}</span>}
+        <span class="pg-cur"><span data-i18n="pg_page">{en_pg.page}</span> {page.current} / {page.last}</span>
+        {page.url.next
+          ? <a class="pg" href={page.url.next} data-i18n="pg_next">{en_pg.next}</a>
+          : <span class="pg pg-disabled" data-i18n="pg_next">{en_pg.next}</span>}
+      </nav>
+    )}
 
     <p class="more" data-i18n="more_soon">{d.more_soon}</p>
 

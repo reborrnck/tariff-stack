@@ -13,11 +13,12 @@ for (const f of files) {
   const m = src.split('---');
   if (m.length < 3) { console.log(`FAIL ${f}: no frontmatter`); failures++; continue; }
   let fm = m[1];
-  // strip import + pageUpdated + const d = en; lines
-  fm = fm.split('\n').filter((l) => !/^\s*import /.test(l) && !/const pageUpdated/.test(l) && !/const d = en;/.test(l)).join('\n');
+  // strip import + pageUpdated + const d = en; + export (getStaticPaths) lines
+  fm = fm.split('\n').filter((l) => !/^\s*import /.test(l) && !/const pageUpdated/.test(l) && !/const d = en;/.test(l) && !/^\s*export\s/.test(l)).join('\n');
   let en, zh;
   try {
-    const ctx = {};
+    // Mock Astro so paginated pages (const page = Astro.props.page) validate cleanly.
+    const ctx = { Astro: { props: { page: { data: [], current: 1, last: 1, url: { prev: '', next: '' } } }, site: new URL('https://tariffstack.bbroot.com/'), url: new URL('https://tariffstack.bbroot.com/guides/') } };
     vm.createContext(ctx);
     vm.runInContext(fm + '\nthis.__en=en;this.__zh=zh;', ctx);
     en = ctx.__en; zh = ctx.__zh;

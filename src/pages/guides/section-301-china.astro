@@ -103,6 +103,7 @@ const zh = {
   caveat: '本指南仅供一般教育用途。TariffStack 不是报关行或律所。在正式申报前，请务必以 CBP CROSS 裁定或持牌报关行为准，核实归类、原产地与任何 Section 301 / IEEPA 特殊修改。',
 };
 const d = en;
+import SeoHead from '../../components/SeoHead.astro';
 import overlay from '../../data/policy_overlay.json';
 const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
 ---
@@ -114,6 +115,7 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
   <title>{d.title}</title>
   <meta name="description" content="Section 301 tariffs on Chinese goods: the four original lists, the 2025 IEEPA fentanyl layer, exclusions, and a worked example to 61.97% effective rate." />
   <meta name="robots" content="index,follow" />
+  <SeoHead />
   <style is:global>
     :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
     *{box-sizing:border-box;}
