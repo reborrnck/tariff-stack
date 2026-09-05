@@ -94,14 +94,12 @@ jobs:
 
       - name: Deploy to Cloudflare Worker (Static Assets)
         # 线上 tariff-stack.zmarkz123zxc.workers.dev 是一个 Cloudflare Worker（wrangler.toml 用
-        # [assets] directory="./dist" 服务静态资源）。CI 报错 wrangler CLI 已明确指出：
+        # [assets] directory="./dist" 服务静态资源，无 KV/R2/D1 等绑定）。CI 报错 wrangler CLI 已明确指出：
         #   "Pages project 'tariff-stack' does not exist. ... wrangler.toml does not appear to be
         #    for a Pages project (missing pages_build_output_dir). Did you mean `wrangler deploy`?"
         # 故必须用 `wrangler deploy` 而非 `wrangler pages deploy`。
-        # 鉴权：账号 API Token 权限下拉无 "Cloudflare Workers" 项（只有 Pages），改用 Cloudflare
-        # 全局 API Key（CLOUDFLARE_API_KEY + CLOUDFLARE_EMAIL），绕开 token 权限不可选的死结。
+        # 鉴权：用 scoped API Token（权限 Account.Workers Scripts:Edit），不碰 2FA、不依赖全局 Key。
         run: npx wrangler deploy
         env:
-          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
-          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
-        # 注：若未配置上述任一变量，wrangler 会因缺鉴权使本 run 变红，暴露"未部署"。
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        # 注：若 CLOUDFLARE_API_TOKEN 未配置/权限不对，wrangler 会因缺鉴权使本 run 变红，暴露"未部署"。
