@@ -1,0 +1,229 @@
+---
+// Binding rulings — CROSS & HQ. Original, factual explainer.
+const en = {
+  title: "Binding rulings: how to get certainty on classification — TariffStack",
+  h1: "Binding rulings (CROSS & HQ)",
+  intro: "When a product is hard to classify, you can ask CBP for a binding ruling before you import — and rely on it. This guide explains what a ruling is, how to find existing ones in the CROSS database, and how to request your own.",
+  updated: "Last updated",
+  back: "← All guides",
+  about: "About",
+  toc: "On this page",
+
+  s1: "1. What a binding ruling is",
+  s1_p: "A binding ruling is CBP's official, written determination of the tariff classification, origin, marking or valuation of specific merchandise, issued before importation under 19 U.S.C. §1625 and 19 CFR Part 177. If you import goods that match the ruling's material facts, CBP is bound by it — so it removes classification risk on that product.",
+  s1_l1: "It binds CBP nationwide for merchandise 'identical in material facts' to the ruling.",
+  s1_l2: "It covers classification (HTSUS), country of origin, marking (Part 134) and valuation questions.",
+  s1_l3: "It is issued before entry, so you file with confidence rather than guessing.",
+
+  s2: "2. Search CROSS before you ask",
+  s2_p: "Before requesting a new ruling, search CROSS — the Customs Rulings Online Search System. Millions of prior rulings are public and free. An existing ruling on a near-identical product may answer your question instantly and at no cost.",
+  s2_l1: "CROSS is at rulings.cbp.gov; filter by HTSUS chapter, date, or keyword.",
+  s2_l2: "A prior ruling on the same or similar article is strong evidence of how CBP will treat yours.",
+  s2_l3: "Even a non-binding internal advice may signal CBP's thinking.",
+
+  s3: "3. How to request your own ruling",
+  s3_p: "If no existing ruling fits, file a request with CBP Headquarters (the Commercial Rulings Division) with a complete description, photographs, technical specs, and the proposed HTSUS number. A good request states the material facts precisely and includes a sample where possible.",
+  s3_l1: "File electronically through the CBP eRulings portal (or by mail to Headquarters).",
+  s3_l2: "Include composition, function, method of use, and how the article is distinct from others.",
+  s3_l3: "Processing typically takes several months; plan lead time before launch.",
+
+  s4: "4. Ruling format and how to read it",
+  s4_p: "Rulings carry a unique identifier — modern ones begin with 'N' (for example, NXXXXXXX) or 'HQ' for Headquarters letters. The body states the facts, the legal analysis under the HTSUS General Rules of Interpretation, and the holding (the HTSUS subheading and rate).",
+  s4_l1: "The holding names the exact 10-digit HTSUS subheading that applies.",
+  s4_l2: "The 'GRI' analysis (General Rules of Interpretation 1–6) is why the number was chosen — read it to test fit.",
+  s4_l3: "A ruling can be modified or revoked, but only prospectively, with notice in the Federal Register.",
+
+  s5: "5. Limits and pitfalls",
+  s5_p: "A ruling binds only on the stated material facts. Change the product and it may not apply. CBP can also revoke a ruling (for error or policy change) but, by law, only prospectively — you are protected for entries made before the revocation takes effect.",
+  s5_l1: "Minor product changes can void the 'identical facts' test — re-request when you reformulate.",
+  s5_l2: "Rulings are not private; they publish in CROSS, so competitors see your classification rationale.",
+  s5_l3: "A ruling is not a license to import — admissibility and other agencies still apply.",
+
+  s6: "6. Why it matters for landed cost",
+  s6_p: "Classification drives the rate. A binding ruling locks the subheading so your duty math (and any Section 301 / 232 stacking) is predictable across shipments. For a product you import repeatedly, the few months of lead time is cheap insurance against a costly post-entry reclassification.",
+  s6_l1: "Certainty on HTSUS = certainty on the MFN rate and every layered surcharge.",
+  s6_l2: "It also strengthens your 'reasonable care' defense in a CBP audit.",
+  s6_p2: "Use TariffStack to model the rate once you have the subheading; use a ruling to be sure you have the right one.",
+
+  caveat: "TariffStack is not a customs broker or law firm. Rulings are fact-specific and prospective; for a binding opinion on your product, file with CBP or consult a licensed customs attorney. Rules and processes can change.",
+};
+
+const zh = {
+  title: "约束性裁定：如何锁定归类确定性 — TariffStack",
+  h1: "约束性裁定（CROSS 与 HQ）",
+  intro: "当某产品难以归类时，你可以在进口前向 CBP 申请一份约束性裁定并据此执行。本指南讲解裁定是什么、如何在 CROSS 数据库中查找已有裁定，以及如何申请你自己的裁定。",
+  updated: "最后更新",
+  back: "← 全部指南",
+  about: "关于",
+  toc: "本页内容",
+
+  s1: "1. 什么是约束性裁定",
+  s1_p: "约束性裁定是 CBP 在进口前，依 19 U.S.C. §1625 与 19 CFR Part 177 对特定商品的税则归类、原产地、标记或估价作出的官方书面决定。若你进口的货物与该裁定的「实质事实相同」，CBP 受该裁定约束——从而消除该产品的归类风险。",
+  s1_l1: "它对 CBP 全国有效，适用于与裁定「实质事实相同」的商品。",
+  s1_l2: "它涵盖归类（HTSUS）、原产国、标记（Part 134）与估价问题。",
+  s1_l3: "它在报关前作出，因此你可有把握地申报，而非猜测。",
+
+  s2: "2. 申请前先查 CROSS",
+  s2_p: "在申请新裁定前，先检索 CROSS（Customs Rulings Online Search System，海关裁定在线检索系统）。数百万份既往裁定公开且免费。一份针对近似产品的既有裁定可能立即、零成本地回答你的问题。",
+  s2_l1: "CROSS 位于 rulings.cbp.gov；可按 HTSUS 章、日期或关键词筛选。",
+  s2_l2: "针对相同或类似商品的既往裁定，是 CBP 将如何对待你方货物的有力证据。",
+  s2_l3: "即便一份不具约束力的内部意见，也可能透露 CBP 的思路。",
+
+  s3: "3. 如何申请你自己的裁定",
+  s3_p: "若没有既有裁定适用，向 CBP 总部（商业裁定处）提交申请，附完整描述、照片、技术规格与建议的 HTSUS 税号。一份好的申请精确陈述实质事实，并尽可能附样品。",
+  s3_l1: "通过 CBP eRulings 门户电子提交（或邮寄至总部）。",
+  s3_l2: "包含成分、功能、使用方法，以及该商品区别于他物的要点。",
+  s3_l3: "处理通常需数月；在上市前预留提前量。",
+
+  s4: "4. 裁定格式与阅读方法",
+  s4_p: "裁定带唯一编号——现代编号以「N」开头（如 NXXXXXXX），总部函件以「HQ」开头。正文陈述事实、依 HTSUS 通用解释规则（GRI）的法律分析，以及裁定结论（HTSUS 子目与税率）。",
+  s4_l1: "结论列明适用的确切 10 位 HTSUS 子目。",
+  s4_l2: "「GRI」分析（通用解释规则 1–6）说明了为何选定该税号——读它以检验是否契合。",
+  s4_l3: "裁定可被修改或撤销，但仅具前瞻性，且须在《联邦公报》公告。",
+
+  s5: "5. 限制与陷阱",
+  s5_p: "裁定仅对所述实质事实具有约束力。产品一旦改变，可能不再适用。CBP 也可撤销裁定（因错误或政策变化），但依法仅具前瞻性——在撤销生效前申报的货载仍受保护。",
+  s5_l1: "微小的产品改动可能使「实质事实相同」测试失效——重新配方时须重新申请。",
+  s5_l2: "裁定不保密；它们在 CROSS 中公开，竞争对手可见你的归类理由。",
+  s5_l3: "裁定不是进口许可证——准入与其他机构规定仍然适用。",
+
+  s6: "6. 为何它对到岸成本重要",
+  s6_p: "归类决定税率。约束性裁定锁定子目，使你的关税测算（及任何 301/232 叠加）在各批货之间可预测。对反复进口的产品，数月提前量是为避免 costly 的入境后重新归类买的一份便宜保险。",
+  s6_l1: "HTSUS 的确定性 = MFN 税率与每一层附加税的确定性。",
+  s6_l2: "它也强化你在 CBP 审计中的「合理注意」抗辩。",
+  s6_p2: "拿到子目后用 TariffStack 建模税率；用裁定确保你拿的是正确的子目。",
+
+  caveat: "TariffStack 不是报关行或律所。裁定因事实而异且具前瞻性；要获得针对你产品的约束性意见，请向 CBP 申请或咨询持牌海关律师。规则与流程可能变化。",
+};
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-05';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="What a CBP binding ruling is, how to search the CROSS database for existing rulings, and how to request your own classification ruling before you import." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    h3{margin:24px 0 8px;font-size:17px;font-weight:700;color:var(--ink);}
+    ul{padding-left:22px;}
+    li{margin:6px 0;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+      <li><a href="#s6" data-i18n="s6">{d.s6}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+    <ul>
+      <li data-i18n="s1_l1">{d.s1_l1}</li>
+      <li data-i18n="s1_l2">{d.s1_l2}</li>
+      <li data-i18n="s1_l3">{d.s1_l3}</li>
+    </ul>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+    <ul>
+      <li data-i18n="s2_l1">{d.s2_l1}</li>
+      <li data-i18n="s2_l2">{d.s2_l2}</li>
+      <li data-i18n="s2_l3">{d.s2_l3}</li>
+    </ul>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+    <ul>
+      <li data-i18n="s3_l1">{d.s3_l1}</li>
+      <li data-i18n="s3_l2">{d.s3_l2}</li>
+      <li data-i18n="s3_l3">{d.s3_l3}</li>
+    </ul>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+    <ul>
+      <li data-i18n="s4_l1">{d.s4_l1}</li>
+      <li data-i18n="s4_l2">{d.s4_l2}</li>
+      <li data-i18n="s4_l3">{d.s4_l3}</li>
+    </ul>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+    <ul>
+      <li data-i18n="s5_l1">{d.s5_l1}</li>
+      <li data-i18n="s5_l2">{d.s5_l2}</li>
+      <li data-i18n="s5_l3">{d.s5_l3}</li>
+    </ul>
+
+    <h2 id="s6" data-i18n="s6">{d.s6}</h2>
+    <p data-i18n="s6_p">{d.s6_p}</p>
+    <ul>
+      <li data-i18n="s6_l1">{d.s6_l1}</li>
+      <li data-i18n="s6_l2">{d.s6_l2}</li>
+    </ul>
+    <p data-i18n="s6_p2">{d.s6_p2}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh, en }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        var isZh = (lang === 'zh' || lang === 'zh-TW');
+        var dict = isZh ? zh : en;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (dict[k] != null) nodes[i].textContent = dict[k];
+        }
+        document.documentElement.lang = lang;
+        if (isZh) document.title = zh['title'];
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

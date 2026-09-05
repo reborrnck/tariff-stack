@@ -1,0 +1,229 @@
+---
+// Reconciliation & protest. Original, factual explainer.
+const en = {
+  title: "Reconciliation & protest: fixing an entry after the fact — TariffStack",
+  h1: "Reconciliation & post-entry protest",
+  intro: "Entered the wrong value, classification or origin? You usually have a window to fix it after liquidation. This guide explains Reconciliation (19 CFR Part 174) and the 180-day protest, and when each applies.",
+  updated: "Last updated",
+  back: "← All guides",
+  about: "About",
+  toc: "On this page",
+
+  s1: "1. Liquidation is not the end",
+  s1_p: "When CBP 'liquidates' an entry, it fixes the duty. But liquidation is not always final. Two post-entry mechanisms let an importer correct or contest the assessment: Reconciliation (for value, classification or origin) and Protest (19 U.S.C. §1514) for a wider set of decisions.",
+  s1_l1: "Liquidation sets the initial duty; corrections happen after.",
+  s1_l2: "Reconciliation covers value, classification and origin questions.",
+  s1_l3: "Protest covers liquidation and many other CBP decisions.",
+
+  s2: "2. Reconciliation",
+  s2_p: "Reconciliation (19 CFR Part 174, Subpart C) lets you file a separate document correcting the valuation, classification or country of origin of entries, after they liquidate. It is the tool for facts not known at filing time.",
+  s2_l1: "Filed for value, classification or origin — the three 'recon' elements.",
+  s2_l2: "Under the Reconciliation Prototype, it may be filed within 300 days after liquidation of the subject entry.",
+  s2_l3: "It separates the correction from the original entry, so regular shipments keep moving.",
+
+  s3: "3. The 180-day protest",
+  s3_p: "A Protest (19 U.S.C. §1514) challenges CBP's liquidation or decision. The importer must file within 180 days of liquidation (or of the decision being protested). This is the primary vehicle for 'we disagree with the rate CBP assessed.'",
+  s3_l1: "Window: 180 days from liquidation / decision — strict and mostly jurisdictional.",
+  s3_l2: "Covers classification, value, origin, rate, and many admissibility and exaction decisions.",
+  s3_l3: "If CBP denies, you can escalate to the Court of International Trade.",
+
+  s4: "4. Which one do you use?",
+  s4_p: "The choice depends on whether you are correcting a fact you now know, or disputing CBP's legal call.",
+  s4_l1: "Know the right value / classification now? Reconcile the entries.",
+  s4_l2: "Dispute CBP's legal determination? File a protest within 180 days.",
+  s4_l3: "They can overlap, but the protest clock is the harder deadline.",
+
+  s5: "5. Documentation and risk",
+  s5_p: "Both mechanisms require a reasoned basis and evidence. A protest without merit can be rejected, and repeated weak filings draw audit attention.",
+  s5_l1: "Support each claim with the ruling, invoice, or legal citation.",
+  s5_l2: "Reconciliation needs the corrected data and a link to the entries.",
+  s5_l3: "Missing the deadline is fatal — there is almost no relief after 180 days.",
+
+  s6: "6. Why it matters",
+  s6_p: "Post-entry tools are your safety net when a classification or valuation error surfaces after import. Used well, they recover overpaid duty or lock in a better position; used late, they are gone.",
+  s6_l1: "They turn a one-shot entry into a correctable process.",
+  s6_l2: "Track liquidation dates so the 180-day clock never expires unnoticed.",
+  s6_p2: "TariffStack shows the rate you should have paid; reconciliation and protest are how you align the entry with it.",
+
+  caveat: "TariffStack is not a customs broker or law firm. Reconciliation and protest have strict deadlines and procedural rules; for action on your entries, consult a licensed customs attorney promptly — the 180-day clock is unforgiving.",
+};
+
+const zh = {
+  title: "后续申报与抗议：入境后的纠错 — TariffStack",
+  h1: "后续申报与抗议",
+  intro: "申报错了价值、归类或原产地？通常在清税后你仍有一个窗口可以更正。本指南讲解后续申报（19 CFR Part 174）与 180 天抗议，以及各自何时适用。",
+  updated: "最后更新",
+  back: "← 全部指南",
+  about: "关于",
+  toc: "本页内容",
+
+  s1: "1. 清税不是终点",
+  s1_p: "当 CBP「清税」（liquidation）一笔报关时，它锁定了关税。但清税并非总是终局。两种入境后机制让进口商更正或争议该税额：后续申报（针对价值、归类或原产地）与抗议（19 U.S.C. §1514，针对更广泛的决定）。",
+  s1_l1: "清税确定初始关税；更正发生在其后。",
+  s1_l2: "后续申报涵盖价值、归类与原产地问题。",
+  s1_l3: "抗议涵盖清税以及许多其他 CBP 决定。",
+
+  s2: "2. 后续申报（Reconciliation）",
+  s2_p: "后续申报（19 CFR Part 174, Subpart C）让你在报关清税后，提交单独文件更正其估价、归类或原产国。它是为申报时未知事实准备的纠错工具。",
+  s2_l1: "针对价值、归类或原产地提交——三个「recon」要素。",
+  s2_l2: "在后续申报试点下，可在相关报关清税后 300 天内提交。",
+  s2_l3: "它将更正与原报关分离，因此常规货载可继续流动。",
+
+  s3: "3. 180 天抗议",
+  s3_p: "抗议（19 U.S.C. §1514）质疑 CBP 的清税或决定。进口商须在清税后（或被抗议决定作出后）180 天内提交。这是「我们不同意 CBP 评定的税率」的主要途径。",
+  s3_l1: "窗口：自清税/决定起 180 天——严格且多为管辖权性质。",
+  s3_l2: "涵盖归类、价值、原产地、税率，以及许多准入与征费决定。",
+  s3_l3: "若 CBP 拒绝，可上诉至国际贸易法院。",
+
+  s4: "4. 该用哪个",
+  s4_p: "选择取决于你是在更正现在已知的事实，还是在争议 CBP 的法律认定。",
+  s4_l1: "现在知道正确的价值/归类？对报关做后续申报。",
+  s4_l2: "争议 CBP 的法律认定？在 180 天内提交抗议。",
+  s4_l3: "二者可能重叠，但抗议时钟是更硬的最后期限。",
+
+  s5: "5. 文件与风险",
+  s5_p: "两种机制都要求有理据与证据。无依据的抗议可能被拒，反复薄弱的提交会引起审计注意。",
+  s5_l1: "用裁定、发票或法律引用来支撑每项主张。",
+  s5_l2: "后续申报需要更正后的数据及与报关的关联。",
+  s5_l3: "错过期限是致命的——180 天后几乎无救济。",
+
+  s6: "6. 为何重要",
+  s6_p: "入境后工具是归类或估价错误在进口后暴露时的安全网。用得好，可追回多缴关税或锁定更有利地位；用晚了，就没了。",
+  s6_l1: "它们把一次性报关变成可纠错的过程。",
+  s6_l2: "追踪清税日期，让 180 天时钟永不悄然过期。",
+  s6_p2: "TariffStack 显示你本应缴的税率；后续申报与抗议是你让报关与之对齐的方式。",
+
+  caveat: "TariffStack 不是报关行或律所。后续申报与抗议有严格期限与程序规则；要对你方报关采取行动，请尽快咨询持牌海关律师——180 天时钟毫不留情。",
+};
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-05';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="How to correct a U.S. entry after liquidation: Reconciliation for value/classification/origin (19 CFR Part 174) and the 180-day Protest (19 U.S.C. §1514), and when to use each." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    h3{margin:24px 0 8px;font-size:17px;font-weight:700;color:var(--ink);}
+    ul{padding-left:22px;}
+    li{margin:6px 0;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+      <li><a href="#s6" data-i18n="s6">{d.s6}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+    <ul>
+      <li data-i18n="s1_l1">{d.s1_l1}</li>
+      <li data-i18n="s1_l2">{d.s1_l2}</li>
+      <li data-i18n="s1_l3">{d.s1_l3}</li>
+    </ul>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+    <ul>
+      <li data-i18n="s2_l1">{d.s2_l1}</li>
+      <li data-i18n="s2_l2">{d.s2_l2}</li>
+      <li data-i18n="s2_l3">{d.s2_l3}</li>
+    </ul>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+    <ul>
+      <li data-i18n="s3_l1">{d.s3_l1}</li>
+      <li data-i18n="s3_l2">{d.s3_l2}</li>
+      <li data-i18n="s3_l3">{d.s3_l3}</li>
+    </ul>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+    <ul>
+      <li data-i18n="s4_l1">{d.s4_l1}</li>
+      <li data-i18n="s4_l2">{d.s4_l2}</li>
+      <li data-i18n="s4_l3">{d.s4_l3}</li>
+    </ul>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+    <ul>
+      <li data-i18n="s5_l1">{d.s5_l1}</li>
+      <li data-i18n="s5_l2">{d.s5_l2}</li>
+      <li data-i18n="s5_l3">{d.s5_l3}</li>
+    </ul>
+
+    <h2 id="s6" data-i18n="s6">{d.s6}</h2>
+    <p data-i18n="s6_p">{d.s6_p}</p>
+    <ul>
+      <li data-i18n="s6_l1">{d.s6_l1}</li>
+      <li data-i18n="s6_l2">{d.s6_l2}</li>
+    </ul>
+    <p data-i18n="s6_p2">{d.s6_p2}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh, en }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        var isZh = (lang === 'zh' || lang === 'zh-TW');
+        var dict = isZh ? zh : en;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (dict[k] != null) nodes[i].textContent = dict[k];
+        }
+        document.documentElement.lang = lang;
+        if (isZh) document.title = zh['title'];
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

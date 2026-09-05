@@ -1,0 +1,229 @@
+---
+// Foreign-Trade Zones & bonded warehouses. Original, factual explainer.
+const en = {
+  title: "Foreign-Trade Zones & bonded warehouses — TariffStack",
+  h1: "Foreign-Trade Zones & bonded warehouses",
+  intro: "Two tools let you land goods in the U.S. without immediately paying duty: Foreign-Trade Zones (FTZs) and bonded warehouses. This guide explains how each works, where they differ, and when each is the right call.",
+  updated: "Last updated",
+  back: "← All guides",
+  about: "About",
+  toc: "On this page",
+
+  s1: "1. The core idea: defer or avoid duty",
+  s1_p: "Both FTZs and bonded warehouses let you store foreign goods on U.S. soil without paying duty at the border. Duty is paid only when (and if) the goods are withdrawn for U.S. consumption. Goods that are re-exported never incur U.S. duty at all.",
+  s1_l1: "No duty is paid on goods that stay in the zone / warehouse and are later exported.",
+  s1_l2: "Duty is triggered only on withdrawal for U.S. consumption.",
+  s1_l3: "This frees working capital and removes duty from goods you might never sell domestically.",
+
+  s2: "2. Foreign-Trade Zones (FTZs)",
+  s2_p: "An FTZ is a secured area, in or near a U.S. port, treated as outside U.S. customs territory for tariff purposes (Foreign-Trade Zones Act of 1934). Merchandise may be stored, displayed, assembled, or manufactured inside. Zones are activated and operated under CBP oversight.",
+  s2_l1: "You can perform manufacturing, assembly and relabeling inside the zone.",
+  s2_l2: "Zone-to-zone transfer lets you move goods between zones without formal entry.",
+  s2_l3: "FTZ status (privileged vs general) affects which duty rate applies on withdrawal.",
+
+  s3: "3. The 'inverted tariff' advantage",
+  s3_p: "An FTZ is especially powerful when U.S. components carry a higher duty than the finished product. Instead of paying duty on the high-rate component and then more on the finished good, you can admit the component, assemble in the zone, and withdraw the finished product at the LOWER finished-good rate — the 'inverted tariff' benefit.",
+  s3_l1: "You pay the duty rate of the finished article, not the higher component rate (where inverted).",
+  s3_l2: "This can substantially cut duty on complex manufactured goods.",
+  s3_l3: "It only helps when the finished rate is lower than the component rate.",
+
+  s4: "4. Bonded warehouses",
+  s4_p: "A bonded warehouse (19 U.S.C. §1555, 19 CFR Part 19) is a CBP-secured warehouse where imported goods are stored under bond, duty-unpaid, for up to three years. Unlike an FTZ, you generally cannot manufacture inside — storage and some handling only.",
+  s4_l1: "Maximum storage is three years from the date of importation.",
+  s4_l2: "Goods may be manipulated (cleaned, repacked) but not substantially transformed.",
+  s4_l3: "Duty is paid on withdrawal; if re-exported, no duty is paid.",
+
+  s5: "5. FTZ vs bonded warehouse",
+  s5_p: "The choice turns on what you need to do with the goods while they sit.",
+  s5_l1: "Need manufacturing, assembly or inverted-tariff savings? FTZ is the fit.",
+  s5_l2: "Need simple storage, deferring duty, with no transformation? Bonded warehouse is simpler.",
+  s5_l3: "FTZ requires activation and ongoing compliance; bonded warehousing is lighter to set up.",
+
+  s6: "6. Interaction with Section 301 / 232",
+  s6_p: "Goods in an FTZ or bonded warehouse are not 'entered for consumption,' so the Section 301, IEEPA and 232 surcharges are also deferred until withdrawal. That deferral is valuable when rates are high or in flux — but the surcharge is still owed on withdrawal for U.S. sale.",
+  s6_l1: "Layered surcharges are deferred, not waived, while goods sit in the zone.",
+  s6_l2: "If rates fall (or an exclusion applies) before withdrawal, you pay the lower rate on withdrawal.",
+  s6_p2: "TariffStack shows the rate that will apply on withdrawal; zones and warehouses let you choose when that withdrawal happens.",
+
+  caveat: "TariffStack is not a customs broker or law firm. FTZ and bonded-warehouse rules are detailed and fact-specific; for a structure on your facts, consult a licensed customs attorney. Rules can change.",
+};
+
+const zh = {
+  title: "外贸区与保税仓 — TariffStack",
+  h1: "外贸区与保税仓",
+  intro: "有两种工具让你在美国落地货物而无需立即缴税：外贸区（FTZ）与保税仓。本指南讲解各自如何运作、区别何在，以及何时该选哪一个。",
+  updated: "最后更新",
+  back: "← 全部指南",
+  about: "关于",
+  toc: "本页内容",
+
+  s1: "1. 核心思路：递延或避免关税",
+  s1_p: "外贸区与保税仓都让你在美国境内存放外国货物而无需在边境缴税。关税仅在货物为美国消费而提取时才缴（且若该缴才缴）。被再出口的货物根本不产生美国关税。",
+  s1_l1: "留在区/仓内随后出口的货物不缴关税。",
+  s1_l2: "关税仅在为美国消费而提取时触发。",
+  s1_l3: "这释放营运资金，并使你可能对永远不会在国内售出的货物免缴关税。",
+
+  s2: "2. 外贸区（FTZ）",
+  s2_p: "外贸区是设于美国口岸内或附近的受管区域，在关税意义上被视为美国海关领土之外（1934 年《外贸区法》）。货物可在区内储存、展示、组装或制造。区域在 CBP 监管下激活与运营。",
+  s2_l1: "你可以在区内进行制造、组装与重新贴标。",
+  s2_l2: "区间转移让你在无需正式报关的情况下在区域间移动货物。",
+  s2_l3: "FTZ 状态（特权 vs 通用）影响提取时适用的税率。",
+
+  s3: "3. 「倒置关税」优势",
+  s3_p: "当美国零部件的关税高于制成品时，FTZ 尤为有力。你无需先为高税率零部件缴税、再为制成品缴更多，而是可引入零部件、在区内组装，再以较低的制成品税率提取——这就是「倒置关税」收益。",
+  s3_l1: "你缴的是制成品的关税率，而非更高的零部件税率（在倒置情形下）。",
+  s3_l2: "这可大幅削减复杂制造货物的关税。",
+  s3_l3: "仅当制成品税率低于零部件税率时才有帮助。",
+
+  s4: "4. 保税仓",
+  s4_p: "保税仓（19 U.S.C. §1555，19 CFR Part 19）是由 CBP 监管的仓库，进口货物在保税、未缴税状态下存放最长三年。与 FTZ 不同，区内通常不得制造——仅限储存与部分处理。",
+  s4_l1: "最长存放期为自进口日起三年。",
+  s4_l2: "货物可被处理（清洁、重新包装）但不得实质性转化。",
+  s4_l3: "提取时缴税；若再出口则不缴税。",
+
+  s5: "5. FTZ 与保税仓对比",
+  s5_p: "选择取决于货物停留期间你需要做什么。",
+  s5_l1: "需要制造、组装或倒置关税节省？选 FTZ。",
+  s5_l2: "只需简单储存、递延关税、不做转化？保税仓更简单。",
+  s5_l3: "FTZ 需激活与持续合规；保税仓设立更轻量。",
+
+  s6: "6. 与 Section 301 / 232 的相互作用",
+  s6_p: "处于 FTZ 或保税仓的货物未被「为消费而申报入境」，因此 Section 301、IEEPA 与 232 附加税也递延至提取时才缴。当税率高或波动时，这种递延很有价值——但为美国销售而提取时，附加税仍须缴。",
+  s6_l1: "各层附加税在货物停留区内时被递延而非豁免。",
+  s6_l2: "若在提取前税率下降（或适用排除），你按较低的提取税率缴纳。",
+  s6_p2: "TariffStack 显示提取时将适用的税率；区与仓让你选择何时发生该提取。",
+
+  caveat: "TariffStack 不是报关行或律所。FTZ 与保税仓规则详尽且因事实而异；要就你方事实设计结构，请咨询持牌海关律师。规则可能变化。",
+};
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-05';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="How Foreign-Trade Zones and bonded warehouses let you defer or avoid U.S. duty, the inverted-tariff benefit of FTZs, and how each interacts with Section 301 / 232 surcharges." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    h3{margin:24px 0 8px;font-size:17px;font-weight:700;color:var(--ink);}
+    ul{padding-left:22px;}
+    li{margin:6px 0;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+      <li><a href="#s6" data-i18n="s6">{d.s6}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+    <ul>
+      <li data-i18n="s1_l1">{d.s1_l1}</li>
+      <li data-i18n="s1_l2">{d.s1_l2}</li>
+      <li data-i18n="s1_l3">{d.s1_l3}</li>
+    </ul>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+    <ul>
+      <li data-i18n="s2_l1">{d.s2_l1}</li>
+      <li data-i18n="s2_l2">{d.s2_l2}</li>
+      <li data-i18n="s2_l3">{d.s2_l3}</li>
+    </ul>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+    <ul>
+      <li data-i18n="s3_l1">{d.s3_l1}</li>
+      <li data-i18n="s3_l2">{d.s3_l2}</li>
+      <li data-i18n="s3_l3">{d.s3_l3}</li>
+    </ul>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+    <ul>
+      <li data-i18n="s4_l1">{d.s4_l1}</li>
+      <li data-i18n="s4_l2">{d.s4_l2}</li>
+      <li data-i18n="s4_l3">{d.s4_l3}</li>
+    </ul>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+    <ul>
+      <li data-i18n="s5_l1">{d.s5_l1}</li>
+      <li data-i18n="s5_l2">{d.s5_l2}</li>
+      <li data-i18n="s5_l3">{d.s5_l3}</li>
+    </ul>
+
+    <h2 id="s6" data-i18n="s6">{d.s6}</h2>
+    <p data-i18n="s6_p">{d.s6_p}</p>
+    <ul>
+      <li data-i18n="s6_l1">{d.s6_l1}</li>
+      <li data-i18n="s6_l2">{d.s6_l2}</li>
+    </ul>
+    <p data-i18n="s6_p2">{d.s6_p2}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh, en }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        var isZh = (lang === 'zh' || lang === 'zh-TW');
+        var dict = isZh ? zh : en;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (dict[k] != null) nodes[i].textContent = dict[k];
+        }
+        document.documentElement.lang = lang;
+        if (isZh) document.title = zh['title'];
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

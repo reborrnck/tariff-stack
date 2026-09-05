@@ -57,6 +57,38 @@ const en = {
   g12_title: 'Customs brokers and U.S. entry types',
   g12_desc: 'What a licensed broker actually does, how to pick one, and the difference between Type 01, 06, 51, 81, 82 and 86 entries — plus the importer-of-record bond and recordkeeping discipline.',
 
+  g13_kicker: 'FUNDAMENTALS',
+  g13_title: 'How U.S. customs value is calculated',
+  g13_desc: 'Why the duty base is not your invoice price: the transaction-value method, the five mandatory additions (packing, assists, royalties, proceeds), and why valuation errors underpay duty and MPF.',
+
+  g14_kicker: 'COMPLIANCE',
+  g14_title: 'Binding rulings (CROSS & HQ)',
+  g14_desc: 'Ask CBP for a written classification ruling before you import. How to search the public CROSS database and request your own — and why it removes classification risk.',
+
+  g15_kicker: 'ENTRY STRATEGY',
+  g15_title: 'Duty drawback: recover up to 99%',
+  g15_desc: 'If you import, pay duty, then export or destroy, you may refund up to 99% of the duties. The three main drawback types, the five-year window, and the records CBP requires.',
+
+  g16_kicker: 'ENTRY STRATEGY',
+  g16_title: 'Foreign-Trade Zones & bonded warehouses',
+  g16_desc: 'Land goods in the U.S. without paying duty at the border. How FTZs and bonded warehouses defer or avoid duty, the inverted-tariff advantage, and how each meets Section 301 / 232.',
+
+  g17_kicker: 'FUNDAMENTALS',
+  g17_title: 'Incoterms 2020: who pays duty & freight',
+  g17_desc: 'The 11 Incoterms 2020 rules and what each means for landed cost — why CIF/CFR exclude duty, and how DDP differs from DAP on who clears customs.',
+
+  g18_kicker: 'FEES',
+  g18_title: 'MPF, HMF & other CBP fees',
+  g18_desc: 'Duty is only part of what CBP collects. How the Merchandise Processing Fee (0.3464%) and Harbor Maintenance Fee (0.125%) are computed, and why they compound with duty.',
+
+  g19_kicker: 'COMPLIANCE',
+  g19_title: 'Reconciliation & post-entry protest',
+  g19_desc: 'Entered the wrong value, class or origin? Reconciliation (19 CFR Part 174) and the 180-day protest (19 U.S.C. §1514) let you fix it after liquidation — if you act in time.',
+
+  g20_kicker: 'COMPLIANCE',
+  g20_title: 'Importer of record (IOR) duties & records',
+  g20_desc: 'The IOR is legally on the hook for the entry. The reasonable-care standard, the customs bond, the power of attorney, and the five-year recordkeeping rule (19 CFR Part 163).',
+
   more_soon: 'We add new guides as policy changes. Every claim traces back to the official schedule, regulation, or ruling it came from.',
 };
 
@@ -115,6 +147,38 @@ const zh = {
   g12_kicker: '入境策略',
   g12_title: '报关行与美国入境类型',
   g12_desc: '持牌报关行到底做什么、如何选择，以及 Type 01、06、51、81、82、86 入境的差别——加入境记录进口商担保与记录保存义务。',
+
+  g13_kicker: '基础',
+  g13_title: '美国海关价值如何计算',
+  g13_desc: '为何税基不是你的发票价：成交价格法、五项强制加计（包装、协助、特许权使用费、收益），以及为何估价错误会少缴关税与 MPF。',
+
+  g14_kicker: '合规',
+  g14_title: '约束性裁定（CROSS 与 HQ）',
+  g14_desc: '进口前向 CBP 申请书面归类裁定。如何检索公开的 CROSS 数据库并申请你自己的裁定——以及它为何消除归类风险。',
+
+  g15_kicker: '入境策略',
+  g15_title: '关税退税：最高拿回 99%',
+  g15_desc: '若你进口、缴税后出口或销毁，可退还高达 99% 的税款。三种主要退税类型、五年窗口，以及 CBP 要求的记录。',
+
+  g16_kicker: '入境策略',
+  g16_title: '外贸区与保税仓',
+  g16_desc: '在美国落地货物而无需在边境缴税。FTZ 与保税仓如何递延或避免关税、倒置关税优势，以及各自如何应对 Section 301 / 232。',
+
+  g17_kicker: '基础',
+  g17_title: 'Incoterms 2020：谁付关税与运费',
+  g17_desc: '11 个 Incoterms 2020 规则及其对到岸成本的含义——为何 CIF/CFR 不含关税，以及 DDP 与 DAP 在谁清关上的区别。',
+
+  g18_kicker: '费用',
+  g18_title: 'MPF、HMF 与 CBP 其他费用',
+  g18_desc: '关税只是 CBP 征收的一部分。商品处理费（0.3464%）与港口维护费（0.125%）如何计算，以及为何它们与关税复合。',
+
+  g19_kicker: '合规',
+  g19_title: '后续申报与抗议',
+  g19_desc: '申报错了价值、归类或原产地？后续申报（19 CFR Part 174）与 180 天抗议（19 U.S.C. §1514）让你在清税后更正——前提是及时行动。',
+
+  g20_kicker: '合规',
+  g20_title: '进口记录进口商（IOR）的责任与记录',
+  g20_desc: 'IOR 对报关负有法律责任。合理注意标准、海关保证金、授权书，以及五年记录保存规则（19 CFR Part 163）。',
 
   more_soon: '我们随政策变化增添新指南。每一条断言都可追溯至官方税则、法规或裁定。',
 };
@@ -242,6 +306,54 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
         <span class="kicker" data-i18n="g12_kicker">{d.g12_kicker}</span>
         <span class="g-title" data-i18n="g12_title">{d.g12_title}</span>
         <span class="g-desc" data-i18n="g12_desc">{d.g12_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/customs-valuation-basics">
+        <span class="kicker" data-i18n="g13_kicker">{d.g13_kicker}</span>
+        <span class="g-title" data-i18n="g13_title">{d.g13_title}</span>
+        <span class="g-desc" data-i18n="g13_desc">{d.g13_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/binding-rulings-cross">
+        <span class="kicker" data-i18n="g14_kicker">{d.g14_kicker}</span>
+        <span class="g-title" data-i18n="g14_title">{d.g14_title}</span>
+        <span class="g-desc" data-i18n="g14_desc">{d.g14_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/duty-drawback">
+        <span class="kicker" data-i18n="g15_kicker">{d.g15_kicker}</span>
+        <span class="g-title" data-i18n="g15_title">{d.g15_title}</span>
+        <span class="g-desc" data-i18n="g15_desc">{d.g15_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/foreign-trade-zones">
+        <span class="kicker" data-i18n="g16_kicker">{d.g16_kicker}</span>
+        <span class="g-title" data-i18n="g16_title">{d.g16_title}</span>
+        <span class="g-desc" data-i18n="g16_desc">{d.g16_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/incoterms-2020">
+        <span class="kicker" data-i18n="g17_kicker">{d.g17_kicker}</span>
+        <span class="g-title" data-i18n="g17_title">{d.g17_title}</span>
+        <span class="g-desc" data-i18n="g17_desc">{d.g17_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/cbp-fees-mpf-hmf">
+        <span class="kicker" data-i18n="g18_kicker">{d.g18_kicker}</span>
+        <span class="g-title" data-i18n="g18_title">{d.g18_title}</span>
+        <span class="g-desc" data-i18n="g18_desc">{d.g18_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/reconciliation-and-protest">
+        <span class="kicker" data-i18n="g19_kicker">{d.g19_kicker}</span>
+        <span class="g-title" data-i18n="g19_title">{d.g19_title}</span>
+        <span class="g-desc" data-i18n="g19_desc">{d.g19_desc}</span>
+        <span class="g-read" data-i18n="g_read">Read the guide →</span>
+      </a>
+      <a class="g-card" href="/guides/importer-of-record">
+        <span class="kicker" data-i18n="g20_kicker">{d.g20_kicker}</span>
+        <span class="g-title" data-i18n="g20_title">{d.g20_title}</span>
+        <span class="g-desc" data-i18n="g20_desc">{d.g20_desc}</span>
         <span class="g-read" data-i18n="g_read">Read the guide →</span>
       </a>
     </div>

@@ -1,0 +1,229 @@
+---
+// Importer of record. Original, factual explainer.
+const en = {
+  title: "Importer of record: duties, reasonable care & records — TariffStack",
+  h1: "Importer of record (IOR)",
+  intro: "The importer of record carries the legal duty to get the entry right — classification, value, origin and payment. This guide explains who the IOR is, the 'reasonable care' standard, the bond, and the five-year recordkeeping rule.",
+  updated: "Last updated",
+  back: "← All guides",
+  about: "About",
+  toc: "On this page",
+
+  s1: "1. Who the IOR is",
+  s1_p: "The importer of record is the person or entity named on the entry that is responsible for the accuracy of the entry and for paying the duties. It is usually the U.S. buyer / owner of the goods, or a licensed customs broker acting on a power of attorney. Whoever is the IOR is legally on the hook.",
+  s1_l1: "Commonly the U.S. subsidiary, buyer, or owner of the goods at import.",
+  s1_l2: "A broker can be IOR only with a valid power of attorney and the right structure.",
+  s1_l3: "The IOR — not the seller — is liable for duty, penalties and compliance.",
+
+  s2: "2. The reasonable-care standard",
+  s2_p: "Every IOR must use 'reasonable care' to enter merchandise correctly (19 U.S.C. §1484, 19 CFR 159.21). That means making a good-faith effort on classification, valuation and origin, using available information. Reasonable care is the line between an innocent mistake and a penalty.",
+  s2_l1: "You must classify using the HTSUS and GRI, value correctly, and state origin.",
+  s2_l2: "Reasonable care is judged on what a prudent importer would do with the facts known.",
+  s2_l3: "Negligence or fraud (not reasonable care) escalates penalties under §1592.",
+
+  s3: "3. The customs bond",
+  s3_p: "A formal entry requires a customs bond — a financial guarantee that duties, taxes and fees will be paid and laws obeyed. Most importers use a continuous bond covering all entries for a year, rather than a single-entry bond per shipment.",
+  s3_l1: "Continuous bond: one annual bond for all entries (typical for regular importers).",
+  s3_l2: "Single-entry bond: per shipment; used for one-offs.",
+  s3_l3: "Bond amount is typically tied to estimated duties (e.g., 10% of annual duties, minimums apply).",
+
+  s4: "4. The power of attorney",
+  s4_p: "To let a broker file in your name, the IOR grants a power of attorney (POA). The POA lets the broker act, but liability stays with the IOR — the broker is your agent, not your substitute.",
+  s4_l1: "A POA is required for a broker to make entries as IOR.",
+  s4_l2: "Liability for errors remains with the IOR, not the broker.",
+  s4_l3: "Review and revoke POAs when changing brokers.",
+
+  s5: "5. Recordkeeping: five years",
+  s5_p: "The IOR must keep all entry-related records for five years from the date of entry (or the related transaction) under 19 CFR Part 163. CBP can audit within that window, so the records must be complete and retrievable.",
+  s5_l1: "Keep invoices, entry summaries, classification rationale, and valuation worksheets.",
+  s5_l2: "The period is five years from entry (longer in some investigations).",
+  s5_l3: "Poor records turn a correct entry into a presumptive violation.",
+
+  s6: "6. Why it matters for compliance",
+  s6_p: "Being IOR is a responsibility, not a formality. The combination of reasonable care, a bond, a POA and five years of records is what keeps an import program defensible when CBP comes calling.",
+  s6_l1: "Get classification and value right up front — it is cheaper than correcting later.",
+  s6_l2: "Keep the records; they are your defense in any audit.",
+  s6_p2: "TariffStack helps you model the rate; the IOR is who stands behind the number.",
+
+  caveat: "TariffStack is not a customs broker or law firm. IOR responsibility, reasonable care, bonds and recordkeeping are legal duties; for your specific obligations, consult a licensed customs attorney. Rules can change.",
+};
+
+const zh = {
+  title: "进口记录进口商：关税、合理注意与记录 — TariffStack",
+  h1: "进口记录进口商（IOR）",
+  intro: "进口记录进口商负有让报关正确的法律责任——归类、价值、原产地与缴税。本指南讲解 IOR 是谁、「合理注意」标准、保证金，以及五年记录保存规则。",
+  updated: "最后更新",
+  back: "← 全部指南",
+  about: "关于",
+  toc: "本页内容",
+
+  s1: "1. IOR 是谁",
+  s1_p: "进口记录进口商是报关单上具名、对报关准确性与关税缴纳负责的自然人或实体。通常是美国买方/货主，或凭授权书行事的持牌报关行。无论谁担任 IOR，都负有法律责任。",
+  s1_l1: "通常是美国子公司、买方或进口时的货主。",
+  s1_l2: "报关行仅在持有效授权书且结构合规时方可担任 IOR。",
+  s1_l3: "IOR——而非卖方——对关税、罚款与合规负责。",
+
+  s2: "2. 合理注意标准",
+  s2_p: "每个 IOR 都必须以「合理注意」正确申报货物（19 U.S.C. §1484，19 CFR 159.21）。即在归类、估价与原产地上尽善意努力，使用可得信息。合理注意是无心之过与罚款之间的分界线。",
+  s2_l1: "你必须用 HTSUS 与 GRI 归类、正确估价，并申报原产地。",
+  s2_l2: "合理注意以审慎进口商在已知事实下会做的为标准判断。",
+  s2_l3: "疏忽或欺诈（未尽合理注意）依 §1592 升级罚款。",
+
+  s3: "3. 海关保证金",
+  s3_p: "正式报关需要海关保证金——保证关税、税款与费用将被缴纳、法律将被遵守的财务担保。多数进口商使用覆盖全年所有报关的连续保证金，而非每票单票保证金。",
+  s3_l1: "连续保证金：一年一保，覆盖所有报关（常规进口商的典型做法）。",
+  s3_l2: "单票保证金：按票；用于一次性进口。",
+  s3_l3: "保证金金额通常挂钩预估关税（如年关税的 10%，有下限）。",
+
+  s4: "4. 授权书（POA）",
+  s4_p: "要让报关行以你的名义申报，IOR 须授予授权书（POA）。POA 让报关行行事，但责任仍属 IOR——报关行是你的代理人，而非替代者。",
+  s4_l1: "报关行以 IOR 身份申报须有 POA。",
+  s4_l2: "错误的责任仍由 IOR 承担，而非报关行。",
+  s4_l3: "更换报关行时复核并撤销 POA。",
+
+  s5: "5. 记录保存：五年",
+  s5_p: "IOR 须依 19 CFR Part 163，自报关日（或相关交易日）起保存所有报关相关记录五年。CBP 可在该窗口内审计，因此记录必须完整且可取。",
+  s5_l1: "保存发票、报关摘要、归类理由与估价计算表。",
+  s5_l2: "期限为自报关起五年（部分调查更长）。",
+  s5_l3: "记录不全会把一笔正确报关变成推定的违规。",
+
+  s6: "6. 为何它对合规重要",
+  s6_p: "担任 IOR 是一种责任，而非形式。合理注意、保证金、POA 与五年记录的组合，正是 CBP 找上门时让进口项目经得起推敲的原因。",
+  s6_l1: "一开始就把归类与价值做对——比事后更正便宜。",
+  s6_l2: "保存记录；它们是你任何审计中的辩护。",
+  s6_p2: "TariffStack 帮你建模税率；IOR 是站在那个数字背后的人。",
+
+  caveat: "TariffStack 不是报关行或律所。IOR 责任、合理注意、保证金与记录保存是法律义务；就你方具体义务，请咨询持牌海关律师。规则可能变化。",
+};
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-05';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="Who the importer of record is, the reasonable-care standard (19 CFR 159.21), the customs bond, the power of attorney, and the five-year recordkeeping rule (19 CFR Part 163)." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    h3{margin:24px 0 8px;font-size:17px;font-weight:700;color:var(--ink);}
+    ul{padding-left:22px;}
+    li{margin:6px 0;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+      <li><a href="#s6" data-i18n="s6">{d.s6}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+    <ul>
+      <li data-i18n="s1_l1">{d.s1_l1}</li>
+      <li data-i18n="s1_l2">{d.s1_l2}</li>
+      <li data-i18n="s1_l3">{d.s1_l3}</li>
+    </ul>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+    <ul>
+      <li data-i18n="s2_l1">{d.s2_l1}</li>
+      <li data-i18n="s2_l2">{d.s2_l2}</li>
+      <li data-i18n="s2_l3">{d.s2_l3}</li>
+    </ul>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+    <ul>
+      <li data-i18n="s3_l1">{d.s3_l1}</li>
+      <li data-i18n="s3_l2">{d.s3_l2}</li>
+      <li data-i18n="s3_l3">{d.s3_l3}</li>
+    </ul>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+    <ul>
+      <li data-i18n="s4_l1">{d.s4_l1}</li>
+      <li data-i18n="s4_l2">{d.s4_l2}</li>
+      <li data-i18n="s4_l3">{d.s4_l3}</li>
+    </ul>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+    <ul>
+      <li data-i18n="s5_l1">{d.s5_l1}</li>
+      <li data-i18n="s5_l2">{d.s5_l2}</li>
+      <li data-i18n="s5_l3">{d.s5_l3}</li>
+    </ul>
+
+    <h2 id="s6" data-i18n="s6">{d.s6}</h2>
+    <p data-i18n="s6_p">{d.s6_p}</p>
+    <ul>
+      <li data-i18n="s6_l1">{d.s6_l1}</li>
+      <li data-i18n="s6_l2">{d.s6_l2}</li>
+    </ul>
+    <p data-i18n="s6_p2">{d.s6_p2}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh, en }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        var isZh = (lang === 'zh' || lang === 'zh-TW');
+        var dict = isZh ? zh : en;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (dict[k] != null) nodes[i].textContent = dict[k];
+        }
+        document.documentElement.lang = lang;
+        if (isZh) document.title = zh['title'];
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+---
+// CBP fees — MPF, HMF. Original, factual explainer.
+const en = {
+  title: "MPF, HMF & other CBP fees — TariffStack",
+  h1: "MPF, HMF & CBP fees",
+  intro: "Duty is only part of what CBP collects. Merchandise Processing Fee (MPF), Harbor Maintenance Fee (HMF) and a handful of other charges stack on top. This guide explains each fee, how it is computed, and why it matters for landed cost.",
+  updated: "Last updated",
+  back: "← All guides",
+  about: "About",
+  toc: "On this page",
+
+  s1: "1. Merchandise Processing Fee (MPF)",
+  s1_p: "MPF is a user fee CBP charges on formally entered commercial merchandise, computed as a percentage of the entered value (the customs value). It is ad valorem, like duty, so it scales with your declared value.",
+  s1_l1: "Rate: 0.3464% of entered value (rates are set annually by CBP).",
+  s1_l2: "Minimum: about $32.71 per entry; maximum: about $634.62 per entry (FY2026 figures; indexed annually).",
+  s1_l3: "Applies to most formal entries; some informal entries and exemptions (e.g., Section 321 / de minimis) are outside MPF.",
+
+  s2: "2. Harbor Maintenance Fee (HMF)",
+  s2_p: "HMF funds maintenance of U.S. harbor channels and is charged only on cargo entering the U.S. by vessel. It is also ad valorem but has no minimum or maximum.",
+  s2_l1: "Rate: 0.125% of entered value (vessel-arriving cargo only).",
+  s2_l2: "No minimum and no cap — it scales purely with value.",
+  s2_l3: "Air, truck and rail cargo are not subject to HMF.",
+
+  s3: "3. How the fees compound with duty",
+  s3_p: "Both MPF and HMF are computed on the entered (customs) value, the same base as ad valorem duty. So a percentage point of duty and a percentage point of fee have the same multiplying effect on your cost.",
+  s3_l1: "All three — duty, MPF, HMF — ride the same customs-value base.",
+  s3_l2: "Because MPF is ad valorem, understating value underpays MPF too (an audit issue).",
+  s3_l3: "HMF only bites on ocean freight; air shipments skip it.",
+
+  s4: "4. Other CBP and government charges",
+  s4_p: "Beyond MPF/HMF, importers commonly meet brokerage, the customs bond, and partner-agency fees (FDA, USDA, FCC, CPSC) that are not 'tariffs' but are part of getting goods cleared.",
+  s4_l1: "Brokerage: the licensed broker's fee for preparing the entry (negotiated, not set by CBP).",
+  s4_l2: "Customs bond: a yearly continuous bond (or single-entry bond) required for formal entry.",
+  s4_l3: "Partner-agency fees: product-specific (e.g., FDA review) and separate from tariff.",
+
+  s5: "5. Informal vs formal entry",
+  s5_p: "Low-value shipments may qualify for 'informal entry,' which carries a flat MPF (not the percentage) and no bond. The threshold is set by CBP; above it you need a formal entry with the percentage MPF and a bond.",
+  s5_l1: "Informal entry: flat, low MPF; no bond required; simpler.",
+  s5_l2: "Formal entry: percentage MPF (with min/max), continuous bond, full documentation.",
+  s5_l3: "The choice is driven by value and type of merchandise, not by your preference.",
+
+  s6: "6. Why it matters for the calculator",
+  s6_p: "A rate tool that shows only the duty understates total cost. MPF and HMF add roughly 0.47% (vessel) or 0.35% (air) of entered value on top of duty — small individually, but real across a year of shipments.",
+  s6_l1: "Add MPF + HMF to every duty estimate for a true landed cost.",
+  s6_l2: "The min/max MPF caps protect very small and very large entries from the percentage.",
+  s6_p2: "TariffStack shows the duty; remember to add MPF/HMF and brokerage to get the full picture.",
+
+  caveat: "TariffStack is not a customs broker or law firm. Fee rates and thresholds are set annually by CBP and can change; confirm current figures with CBP or your broker before filing.",
+};
+
+const zh = {
+  title: "MPF、HMF 与 CBP 其他费用 — TariffStack",
+  h1: "MPF、HMF 与 CBP 费用",
+  intro: "关税只是 CBP 征收的一部分。商品处理费（MPF）、港口维护费（HMF）以及若干其他费用会叠加在上面。本指南讲解每项费用、如何计算，以及为何它对到岸成本重要。",
+  updated: "最后更新",
+  back: "← 全部指南",
+  about: "关于",
+  toc: "本页内容",
+
+  s1: "1. 商品处理费（MPF）",
+  s1_p: "MPF 是 CBP 对正式申报的商业货物征收的使用费，按申报价值（海关价值）的百分比计算。它和关税一样从价，因此随你申报的价值而缩放。",
+  s1_l1: "税率：申报价值的 0.3464%（税率每年由 CBP 设定）。",
+  s1_l2: "下限：每票约 32.71 美元；上限：每票约 634.62 美元（2026 财年数值，每年调整）。",
+  s1_l3: "适用于大多数正式报关；部分非正式报关与豁免（如 Section 321 / de minimis）不征 MPF。",
+
+  s2: "2. 港口维护费（HMF）",
+  s2_p: "HMF 用于维护美国港口航道，仅对以船舶方式进入美国的货物征收。它同样从价，但无下限或上限。",
+  s2_l1: "税率：申报价值的 0.125%（仅限船舶到达的货物）。",
+  s2_l2: "无下限也无上限——纯按价值缩放。",
+  s2_l3: "空运、卡车与铁路货物不征 HMF。",
+
+  s3: "3. 费用如何与关税复合",
+  s3_p: "MPF 与 HMF 均按申报（海关）价值计算，与从价关税同税基。因此关税的一个百分点与费用的一个百分点，对成本的放大效应相同。",
+  s3_l1: "三者——关税、MPF、HMF——基于同一海关价值。",
+  s3_l2: "因 MPF 从价，低报价值也会少缴 MPF（审计问题）。",
+  s3_l3: "HMF 仅作用于海运；空运货物不计。",
+
+  s4: "4. 其他 CBP 与政府收费",
+  s4_p: "除 MPF/HMF 外，进口商通常会遇到报关费、海关保证金，以及合作伙伴机构费用（FDA、USDA、FCC、CPSC）——它们不是「关税」，但是货物清关的一部分。",
+  s4_l1: "报关费：持牌报关行准备报关的单笔费用（议价，非 CBP 设定）。",
+  s4_l2: "海关保证金：正式报关所需的年度连续保证金（或单票保证金）。",
+  s4_l3: "合作伙伴机构费用：按产品计（如 FDA 审查），与关税分离。",
+
+  s5: "5. 非正式报关 vs 正式报关",
+  s5_p: "低价值货物可能符合「非正式报关」，其 MPF 为固定金额（非百分比）且无需保证金。门槛由 CBP 设定；超过则需正式报关，按百分比征 MPF 并需保证金。",
+  s5_l1: "非正式报关：固定、较低的 MPF；无需保证金；更简单。",
+  s5_l2: "正式报关：百分比 MPF（有上下限）、连续保证金、全套文件。",
+  s5_l3: "选择取决于货物价值与类型，而非你的偏好。",
+
+  s6: "6. 为何它对计算器重要",
+  s6_p: "只显示关税的税率工具会低估总成本。MPF 与 HMF 在关税之上再增加约 0.47%（海运）或 0.35%（空运）的申报价值——单项虽小，但一年下来真实存在。",
+  s6_l1: "在每次关税估算上叠加 MPF + HMF，才是真实到岸成本。",
+  s6_l2: "MPF 的上下限保护极小与极大票免遭百分比影响。",
+  s6_p2: "TariffStack 显示关税；记得加上 MPF/HMF 与报关费，才能看到全貌。",
+
+  caveat: "TariffStack 不是报关行或律所。费用税率与门槛由 CBP 每年设定且可能变化；申报前请用 CBP 或你的报关行确认当前数值。",
+};
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-05';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="What the Merchandise Processing Fee (MPF) and Harbor Maintenance Fee (HMF) are, how each is computed on entered value, and how they compound with duty on landed cost." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    h3{margin:24px 0 8px;font-size:17px;font-weight:700;color:var(--ink);}
+    ul{padding-left:22px;}
+    li{margin:6px 0;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+      <li><a href="#s6" data-i18n="s6">{d.s6}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+    <ul>
+      <li data-i18n="s1_l1">{d.s1_l1}</li>
+      <li data-i18n="s1_l2">{d.s1_l2}</li>
+      <li data-i18n="s1_l3">{d.s1_l3}</li>
+    </ul>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+    <ul>
+      <li data-i18n="s2_l1">{d.s2_l1}</li>
+      <li data-i18n="s2_l2">{d.s2_l2}</li>
+      <li data-i18n="s2_l3">{d.s2_l3}</li>
+    </ul>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+    <ul>
+      <li data-i18n="s3_l1">{d.s3_l1}</li>
+      <li data-i18n="s3_l2">{d.s3_l2}</li>
+      <li data-i18n="s3_l3">{d.s3_l3}</li>
+    </ul>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+    <ul>
+      <li data-i18n="s4_l1">{d.s4_l1}</li>
+      <li data-i18n="s4_l2">{d.s4_l2}</li>
+      <li data-i18n="s4_l3">{d.s4_l3}</li>
+    </ul>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+    <ul>
+      <li data-i18n="s5_l1">{d.s5_l1}</li>
+      <li data-i18n="s5_l2">{d.s5_l2}</li>
+      <li data-i18n="s5_l3">{d.s5_l3}</li>
+    </ul>
+
+    <h2 id="s6" data-i18n="s6">{d.s6}</h2>
+    <p data-i18n="s6_p">{d.s6_p}</p>
+    <ul>
+      <li data-i18n="s6_l1">{d.s6_l1}</li>
+      <li data-i18n="s6_l2">{d.s6_l2}</li>
+    </ul>
+    <p data-i18n="s6_p2">{d.s6_p2}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh, en }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        var isZh = (lang === 'zh' || lang === 'zh-TW');
+        var dict = isZh ? zh : en;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (dict[k] != null) nodes[i].textContent = dict[k];
+        }
+        document.documentElement.lang = lang;
+        if (isZh) document.title = zh['title'];
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

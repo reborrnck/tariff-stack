@@ -1,0 +1,229 @@
+---
+// Duty drawback. Original, factual explainer.
+const en = {
+  title: "Duty drawback: recovering tariffs you already paid — TariffStack",
+  h1: "Duty drawback",
+  intro: "If you import goods, pay U.S. duty, and then export or destroy them, you may be entitled to a refund of up to 99% of the duties. This guide explains the main drawback types, the timing windows, and the records you must keep.",
+  updated: "Last updated",
+  back: "← All guides",
+  about: "About",
+  toc: "On this page",
+
+  s1: "1. What drawback is",
+  s1_p: "Duty drawback is the refund of customs duties, taxes and certain fees paid on imported merchandise that is subsequently exported or destroyed in the U.S. It is authorized by 19 U.S.C. §1313 (the 'drawback' statute) and administered by CBP. The modernized rules (Trade Facilitation and Trade Enforcement Act of 2015, TFTEA) simplified claims and raised the refund rate to 99%.",
+  s1_l1: "It applies to duties, most taxes, and fees such as MPF — not to HMF or certain other fees.",
+  s1_l2: "The refund is 99% of the amount paid (the old 1% retained was eliminated by TFTEA).",
+  s1_l3: "It is a cash recovery, not a credit — CBP pays it back after the claim is approved.",
+
+  s2: "2. The three main types",
+  s2_p: "CBP recognizes several drawback routes; the three most used are unused-merchandise, manufacturing, and rejected-merchandise drawback.",
+  s2_l1: "Unused-merchandise drawback (§1313(j)): duty paid on goods that are exported or destroyed unused, in the same condition.",
+  s2_l2: "Manufacturing drawback (§1313(a)–(e)): imported duty-paid inputs substituted into manufactured articles that are exported (or destroyed).",
+  s2_l3: "Rejected-merchandise drawback (§1313(c)): goods rejected as defective or not as ordered, exported or destroyed.",
+
+  s3: "3. Substitution — you need not match the exact item",
+  s3_p: "Under TFTEA, 'substitution' drawback is the default. You can match an import of fungible merchandise to a later export of the same kind, even if it is not the identical physical unit. This is what makes drawback practical for high-volume importers.",
+  s3_l1: "Same-class / fungible substitution is allowed for both unused and manufacturing drawback.",
+  s3_l2: "You do not need to track the specific imported bottle to the specific exported bottle.",
+  s3_l3: "A 'provisional' claim can be filed with less-than-full documentation, then perfected later.",
+
+  s4: "4. Timing windows",
+  s4_p: "Drawback has strict time limits measured from the date of importation. Miss the window and the refund is lost.",
+  s4_l1: "Generally, the import and the export must both occur within a five-year window (three years from import to export, plus the statutory timeframes).",
+  s4_l2: "Unused-merchandise claims: the export / destruction must happen within 5 years of the importation date.",
+  s4_l3: "Manufacturing claims: the export of the article must occur within 5 years of the importation of the input.",
+
+  s5: "5. Records you must keep",
+  s5_p: "CBP pays drawback only after evidence shows the duty was paid and the goods left (or were destroyed). The claimant carries the burden of proof.",
+  s5_l1: "Entry summaries and proof of duty payment for the imported merchandise.",
+  s5_l2: "Export documentation: bills of lading, export declarations, or proof of destruction under CBP supervision.",
+  s5_l3: "For manufacturing, the bill of materials and the link between inputs and exported output.",
+
+  s6: "6. When drawback pays off",
+  s6_p: "Drawback is most valuable when duty rates are high or volumes are large — which is exactly the world of Section 301 / 232 surcharges. A company paying 25% on Chinese inputs that are then re-exported in finished goods can recover almost all of that 25%.",
+  s6_l1: "High MFN + Section 301 / 232 stacks make drawback a real cash lever.",
+  s6_l2: "The administrative cost is the trade-off: you must build the tracking and filing system.",
+  s6_p2: "TariffStack helps you see the rate you paid; drawback is how you get part of it back when the goods leave.",
+
+  caveat: "TariffStack is not a customs broker or law firm. Drawback has precise statutory limits, substitution rules and recordkeeping; for a claim on your facts, consult a licensed customs attorney or a drawback specialist. Rules can change.",
+};
+
+const zh = {
+  title: "关税退税：拿回你已缴的关税 — TariffStack",
+  h1: "关税退税（Duty Drawback）",
+  intro: "如果你进口货物、缴纳美国关税，随后又将其出口或销毁，你可能有权获得高达 99% 的税款退还。本指南讲解主要的退税类型、时间窗口，以及你必须保存的记录。",
+  updated: "最后更新",
+  back: "← 全部指南",
+  about: "关于",
+  toc: "本页内容",
+
+  s1: "1. 退税是什么",
+  s1_p: "关税退税是对已进口、随后在美国出口或销毁的商品所缴关税、税款及部分费用的退还。它由 19 U.S.C. §1313（「退税」成文法）授权，由 CBP 管理。现代化规则（《2015 年贸易便利与贸易执法法》，TFTEA）简化了申报并将退税率提高到 99%。",
+  s1_l1: "适用于关税、大部分税款，以及 MPF 等费用——但不含 HMF 等部分费用。",
+  s1_l2: "退税额为已缴金额的 99%（旧法保留的 1% 已被 TFTEA 取消）。",
+  s1_l3: "它是现金返还而非抵免——CBP 在申报获批后把钱退给你。",
+
+  s2: "2. 三种主要类型",
+  s2_p: "CBP 承认多种退税路径；最常用的是未使用货物退税、制造退税与拒收货物退税。",
+  s2_l1: "未使用货物退税（§1313(j)）：已缴税、以原状态出口或销毁未使用的货物。",
+  s2_l2: "制造退税（§1313(a)–(e)）：已缴税的进口投入物被替代用于出口（或销毁）的制成品中。",
+  s2_l3: "拒收货物退税（§1313(c)）：作为缺陷或不符订单被拒收、出口或销毁的货物。",
+
+  s3: "3. 替代规则——无需对应到具体那件货",
+  s3_p: "依 TFTEA，「替代」退税为默认规则。你可以将一批同类可互换货物的进口，与后来出口的同种货物配对，即便并非同一物理单元。这正使退税对大批量进口商切实可行。",
+  s3_l1: "同类/可互换替代在「未使用」与「制造」两类退税中均被允许。",
+  s3_l2: "你无需把特定的进口瓶追踪到特定的出口瓶。",
+  s3_l3: "可先提交「临时」申报（文件不全），之后再补全。",
+
+  s4: "4. 时间窗口",
+  s4_p: "退税有严格的时间限制，自进口之日起算。错过窗口即丧失退款。",
+  s4_l1: "一般而言，进口与出口须都发生在五年窗口内（进口后三年出口，加上法定的其他时限）。",
+  s4_l2: "未使用货物申报：出口/销毁须在进口日起 5 年内发生。",
+  s4_l3: "制造类申报：制成品出口须在投入物进口起 5 年内发生。",
+
+  s5: "5. 你必须保存的记录",
+  s5_p: "CBP 仅在证据显示税款已缴、货物已离境（或销毁）后才退税。举证负担在申请人。",
+  s5_l1: "进口货物的报关摘要与缴税证明。",
+  s5_l2: "出口文件：提单、出口申报，或在 CBP 监管下销毁的证明。",
+  s5_l3: "制造类须有物料清单，以及投入物与出口产出之间的关联。",
+
+  s6: "6. 退税何时划算",
+  s6_p: "当税率高或体量大时，退税最有价值——而这正是 Section 301 / 232 附加税的世界。一家为下中国投入物缴 25%、随后以制成品再出口的企业，可拿回几乎全部那 25%。",
+  s6_l1: "高 MFN + Section 301 / 232 叠加，使退税成为真正的现金杠杆。",
+  s6_l2: "行政成本是代价：你必须建立追踪与申报系统。",
+  s6_p2: "TariffStack 帮你看到所缴税率；退税是货物离境时拿回一部分的方式。",
+
+  caveat: "TariffStack 不是报关行或律所。退税有精确的法定时限、替代规则与记录要求；要就你方事实提出申报，请咨询持牌海关律师或退税专家。规则可能变化。",
+};
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-05';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="What duty drawback is, the three main types (unused, manufacturing, rejected), TFTEA substitution rules, the five-year timing window, and the records CBP requires." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    h3{margin:24px 0 8px;font-size:17px;font-weight:700;color:var(--ink);}
+    ul{padding-left:22px;}
+    li{margin:6px 0;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+      <li><a href="#s6" data-i18n="s6">{d.s6}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+    <ul>
+      <li data-i18n="s1_l1">{d.s1_l1}</li>
+      <li data-i18n="s1_l2">{d.s1_l2}</li>
+      <li data-i18n="s1_l3">{d.s1_l3}</li>
+    </ul>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+    <ul>
+      <li data-i18n="s2_l1">{d.s2_l1}</li>
+      <li data-i18n="s2_l2">{d.s2_l2}</li>
+      <li data-i18n="s2_l3">{d.s2_l3}</li>
+    </ul>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+    <ul>
+      <li data-i18n="s3_l1">{d.s3_l1}</li>
+      <li data-i18n="s3_l2">{d.s3_l2}</li>
+      <li data-i18n="s3_l3">{d.s3_l3}</li>
+    </ul>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+    <ul>
+      <li data-i18n="s4_l1">{d.s4_l1}</li>
+      <li data-i18n="s4_l2">{d.s4_l2}</li>
+      <li data-i18n="s4_l3">{d.s4_l3}</li>
+    </ul>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+    <ul>
+      <li data-i18n="s5_l1">{d.s5_l1}</li>
+      <li data-i18n="s5_l2">{d.s5_l2}</li>
+      <li data-i18n="s5_l3">{d.s5_l3}</li>
+    </ul>
+
+    <h2 id="s6" data-i18n="s6">{d.s6}</h2>
+    <p data-i18n="s6_p">{d.s6_p}</p>
+    <ul>
+      <li data-i18n="s6_l1">{d.s6_l1}</li>
+      <li data-i18n="s6_l2">{d.s6_l2}</li>
+    </ul>
+    <p data-i18n="s6_p2">{d.s6_p2}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh, en }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        var isZh = (lang === 'zh' || lang === 'zh-TW');
+        var dict = isZh ? zh : en;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (dict[k] != null) nodes[i].textContent = dict[k];
+        }
+        document.documentElement.lang = lang;
+        if (isZh) document.title = zh['title'];
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

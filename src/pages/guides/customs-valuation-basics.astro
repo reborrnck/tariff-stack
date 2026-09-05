@@ -1,0 +1,241 @@
+---
+// Customs valuation — transaction value method. Original, factual explainer.
+const en = {
+  title: "How U.S. customs value is calculated (transaction value) — TariffStack",
+  h1: "How U.S. customs value is calculated",
+  intro: "The duty you pay is a percentage of 'customs value' — and customs value is almost never the same as the price on your invoice. This guide explains the transaction-value method, the mandatory additions CBP makes, and why getting valuation wrong costs you.",
+  updated: "Last updated",
+  back: "← All guides",
+  about: "About",
+  toc: "On this page",
+
+  s1: "1. Why customs value is not your invoice price",
+  s1_p: "U.S. customs value is the basis for every ad valorem duty. By statute (19 U.S.C. §1401a) the primary method is 'transaction value' — the price actually paid or payable for the merchandise when sold for export to the U.S., plus a fixed list of statutory additions. The invoice unit price is only the starting point. CBP does not use your transfer price, your cost-plus, or a foreign list price; it uses the transaction value of the specific sale for export, then adds the mandatory elements below.",
+  s1_l1: "Transaction value = price paid or payable for the export sale to the U.S. (the FOB-equivalent price, before international freight and insurance).",
+  s1_l2: "It excludes international freight, insurance and U.S. inland freight — those are NOT part of customs value.",
+  s1_l3: "It is the price between the buyer and seller, provided the sale is 'for exportation to the U.S.'",
+
+  s2: "2. The five mandatory additions",
+  s2_p: "Even when transaction value is accepted, CBP must add certain costs if they were not already included in the price paid. These are set out in 19 U.S.C. §1401a and 19 CFR Part 152. Missing an addition understates customs value and therefore underpays duty — a common audit finding.",
+  s2_l1: "Packing costs — all containers and coverings, whether for transport or to protect the goods (19 CFR 152.102).",
+  s2_l2: "Selling commissions and the cost of 'assists' (see below) — but NOT buying commissions.",
+  s2_l3: "Royalties and license fees the buyer must pay, directly or indirectly, as a condition of the sale (to the extent not already in the price).",
+  s2_l4: "Proceeds of any subsequent resale, disposal or use accruing to the seller (for example, a portion of downstream resale revenue).",
+  s2_l5: "The value of any 'assist' — materials, tools, dies, moulds, engineering, R&D, art or design work supplied by the buyer free or at reduced cost (19 CFR 152.103).",
+
+  s3: "3. Assists — the most overlooked addition",
+  s3_p: "An 'assist' is anything of value the buyer provides to the seller for use in producing the imported merchandise, free or at reduced cost. Assists are extremely common in apparel, electronics and contract manufacturing, and they are chronically under-reported. Each assist must be valued and added to customs value unless already in the price.",
+  s3_l1: "Materials, components, parts and similar items incorporated in the goods.",
+  s3_l2: "Tools, dies, moulds and similar items used to produce the goods.",
+  s3_l3: "Engineering, development, artwork, design work and plans — generally the cost of production, not the resale value.",
+  s3_l4: "Valuation method: cost to the buyer (or, if appropriate, the value apportioned over the production run).",
+
+  s4: "4. When transaction value is rejected",
+  s4_p: "Transaction value is rejected in specific cases — related-party sales without a test of correctness, conditions on the buyer that affect price, or proceeds flowing back to the seller. CBP then falls to four fallback methods, in order: (1) transaction value of identical merchandise, (2) transaction value of similar merchandise, (3) deductive value (U.S. resale price minus costs), (4) computed value (cost of production plus profit and general expenses). A 'computed value' can be used only if the importer requests it.",
+  s4_l1: "Rejection is not common, but related-party transactions get extra scrutiny (19 U.S.C. §1401a(e)).",
+  s4_l2: "The fallback chain is sequential and may not be skipped, except for the computed-value election.",
+  s4_l3: "Circumstances of sale — such as tying the price to a buy-back of unrelated goods — can also trigger rejection.",
+
+  s5: "5. Why valuation errors are expensive",
+  s5_p: "Understating customs value underpays duty and MPF (both ad valorem). CBP audits routinely re-value assisted manufacturing and find shortfalls, leading to duties owed plus interest and penalties under 19 U.S.C. §1592 for negligent or fraudulent undervaluation. Valuation is also the base for Section 301 / IEEPA / 232 surcharges, so a 5% understatement flows through every layered duty.",
+  s5_l1: "Customs value is the base for duty AND for MPF (0.3464%) and the Section 301 / 232 / IEEPA percentages.",
+  s5_l2: "Assist omissions are the single most common valuation deficiency in manufacturing imports.",
+  s5_l3: "Penalties escalate from negligence to fraud based on the importer's knowledge and intent.",
+
+  s6: "6. Practical checklist",
+  s6_p: "Before you file, confirm the entered value reflects the export-sale price plus every statutory addition. Keep the worksheet.",
+  s6_l1: "Separate freight / insurance from the customs value on the entry.",
+  s6_l2: "List every assist and its apportioned value; retain supplier evidence.",
+  s6_l3: "If royalties are paid, confirm whether they are a condition of sale and already included.",
+  s6_p2: "Correct valuation is the foundation of a defensible landed-cost number. TariffStack shows the rate; the value you enter is yours to get right.",
+
+  caveat: "TariffStack is not a customs broker or law firm. Customs valuation is fact-specific and audited; confirm the transaction-value method and additions with a licensed customs attorney or CBP before filing. Rates and methods can change.",
+};
+
+const zh = {
+  title: "美国海关价值如何计算（成交价格法）— TariffStack",
+  h1: "美国海关价值如何计算",
+  intro: "你缴纳的关税是「海关价值」的百分比——而海关价值几乎从不等于发票上的价格。本指南讲解成交价格法、CBP 强制加计的项目，以及为何估价出错会让你付出代价。",
+  updated: "最后更新",
+  back: "← 全部指南",
+  about: "关于",
+  toc: "本页内容",
+
+  s1: "1. 为什么海关价值不是发票价",
+  s1_p: "美国海关价值是每一项从价税的基础。根据成文法（19 U.S.C. §1401a），首要方法是「成交价格」——货物售往美国出口时实际支付或应付的价格，再加一份法定的强制加计清单。发票单价只是起点。CBP 不使用你的转让定价、成本加成价或外方标价，而是使用面向美国出口销售的具体成交价格，再加上下述强制项目。",
+  s1_l1: "成交价格 = 面向美国出口销售实际支付或应付的价格（相当于 FOB 价，不含国际运费与保险）。",
+  s1_l2: "它不含国际运费、保险与美国内陆运费——这些都不计入海关价值。",
+  s1_l3: "它是买方与卖方之间（关联或非关联）就「对美出口」销售的价格。",
+
+  s2: "2. 五项强制加计",
+  s2_p: "即便成交价格被接受，若下列各项未包含在已付价格中，CBP 仍须加计。这些规定见于 19 U.S.C. §1401a 与 19 CFR Part 152。漏计会低报海关价值，从而少缴税——这是审计中最常见的发现问题之一。",
+  s2_l1: "包装成本——所有容器与覆盖物，无论用于运输还是保护货物（19 CFR 152.102）。",
+  s2_l2: "销售佣金与「协助」（assist，见下）成本——但不含采购佣金。",
+  s2_l3: "买方必须支付（直接或间接）作为销售条件的特许权使用费与许可费（在未计入价格的部分）。",
+  s2_l4: "任何后续转售、处置或使用中归卖方的收益（如下游转售收入的一部分）。",
+  s2_l5: "任何「协助」的价值——买方免费或低价提供的材料、工具、模具、工程、研发、美术或设计劳动（19 CFR 152.103）。",
+
+  s3: "3. 协助：最常被忽略的加计",
+  s3_p: "「协助」是买方为生产进口货物而免费或低价提供给卖方的任何有价值的物品。协助在服装、电子与代工制造中极为普遍，却长期被低报。每项协助都必须计价并计入海关价值，除非已包含在价格中。",
+  s3_l1: "纳入货物的材料、部件、零件及类似物品。",
+  s3_l2: "用于生产货物的工具、模具、铸模及类似物品。",
+  s3_l3: "工程、开发、美术、设计与图纸——通常按生产成本而非转售价值计。",
+  s3_l4: "计价方法：买方成本（或按生产批次分摊的价值）。",
+
+  s4: "4. 成交价格被拒绝时",
+  s4_p: "在特殊情况——关联方销售未经正确性测试、对买方附有影响价格的条件、或收益回流卖方——成交价格会被拒绝。CBP 随即依次适用四种替代方法：(1)相同货物成交价格，(2)类似货物成交价格，(3)扣减价值（美国转售价减各项成本），(4)计算价值（生产成本加利润与一般费用）。「计算价值」仅在进口商要求时才采用。",
+  s4_l1: "拒绝并不常见，但关联方交易会受到额外审查（19 U.S.C. §1401a(e)）。",
+  s4_l2: "替代链条是顺序的，除计算价值的选择外不得跳过。",
+  s4_l3: "销售情形——如将价格与回购无关货物挂钩——也可能触发拒绝。",
+
+  s5: "5. 为何估价错误代价高昂",
+  s5_p: "低报海关价值会少缴从价关税与 MPF（二者均从价）。CBP 审计经常对代工制造重新估价并发现缺口，导致补税加利息，并依 19 U.S.C. §1592 就疏忽或欺诈性低报处以罚款。估价也是 Section 301 / IEEPA / 232 附加税的基础，因此 5% 的低报会传导到每一层附加税。",
+  s5_l1: "海关价值既是关税税基，也是 MPF（0.3464%）以及 301/232/IEEPA 百分比的税基。",
+  s5_l2: "协助漏计是制造类进口中最常见的估价缺陷。",
+  s5_l3: "罚款由疏忽升级到欺诈，取决于进口商的认识与意图。",
+
+  s6: "6. 实务清单",
+  s6_p: "申报前，确认申报价值反映出口销售价格加每一项法定加计。保留计算表。",
+  s6_l1: "在报关单上把运费/保险与海关价值分开。",
+  s6_l2: "列出每一项协助及其分摊价值；保留供应商证据。",
+  s6_l3: "若支付特许权使用费，确认其是否为销售条件且已计入。",
+  s6_p2: "正确的估价是可信到岸成本的基础。TariffStack 给出税率；你输入的价值由你负责算对。",
+
+  caveat: "TariffStack 不是报关行或律所。海关估价因事实而异且会被审计；申报前请用持牌海关律师或 CBP 确认成交价格法与加计项目。税率与方法可能变化。",
+};
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-05';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="How U.S. customs value is calculated: the transaction-value method, the five mandatory additions (packing, assists, royalties, proceeds), and why valuation errors underpay duty and MPF." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    h3{margin:24px 0 8px;font-size:17px;font-weight:700;color:var(--ink);}
+    ul{padding-left:22px;}
+    li{margin:6px 0;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+      <li><a href="#s6" data-i18n="s6">{d.s6}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+    <ul>
+      <li data-i18n="s1_l1">{d.s1_l1}</li>
+      <li data-i18n="s1_l2">{d.s1_l2}</li>
+      <li data-i18n="s1_l3">{d.s1_l3}</li>
+    </ul>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+    <ul>
+      <li data-i18n="s2_l1">{d.s2_l1}</li>
+      <li data-i18n="s2_l2">{d.s2_l2}</li>
+      <li data-i18n="s2_l3">{d.s2_l3}</li>
+      <li data-i18n="s2_l4">{d.s2_l4}</li>
+      <li data-i18n="s2_l5">{d.s2_l5}</li>
+    </ul>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+    <ul>
+      <li data-i18n="s3_l1">{d.s3_l1}</li>
+      <li data-i18n="s3_l2">{d.s3_l2}</li>
+      <li data-i18n="s3_l3">{d.s3_l3}</li>
+      <li data-i18n="s3_l4">{d.s3_l4}</li>
+    </ul>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+    <ul>
+      <li data-i18n="s4_l1">{d.s4_l1}</li>
+      <li data-i18n="s4_l2">{d.s4_l2}</li>
+      <li data-i18n="s4_l3">{d.s4_l3}</li>
+    </ul>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+    <ul>
+      <li data-i18n="s5_l1">{d.s5_l1}</li>
+      <li data-i18n="s5_l2">{d.s5_l2}</li>
+      <li data-i18n="s5_l3">{d.s5_l3}</li>
+    </ul>
+
+    <h2 id="s6" data-i18n="s6">{d.s6}</h2>
+    <p data-i18n="s6_p">{d.s6_p}</p>
+    <ul>
+      <li data-i18n="s6_l1">{d.s6_l1}</li>
+      <li data-i18n="s6_l2">{d.s6_l2}</li>
+      <li data-i18n="s6_l3">{d.s6_l3}</li>
+    </ul>
+    <p data-i18n="s6_p2">{d.s6_p2}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh, en }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        var isZh = (lang === 'zh' || lang === 'zh-TW');
+        var dict = isZh ? zh : en;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (dict[k] != null) nodes[i].textContent = dict[k];
+        }
+        document.documentElement.lang = lang;
+        if (isZh) document.title = zh['title'];
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

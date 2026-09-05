@@ -1,0 +1,229 @@
+---
+// Incoterms 2020. Original, factual explainer.
+const en = {
+  title: "Incoterms 2020: who pays the duty and freight — TariffStack",
+  h1: "Incoterms 2020",
+  intro: "Incoterms decide who arranges and pays for freight, insurance and — critically — who bears the risk of the duty. This guide breaks down the 11 Incoterms 2020 rules and what each means for your landed cost.",
+  updated: "Last updated",
+  back: "← All guides",
+  about: "About",
+  toc: "On this page",
+
+  s1: "1. What Incoterms are (and are not)",
+  s1_p: "Incoterms 2020 are standardized trade terms published by the International Chamber of Commerce (ICC). They allocate tasks, costs and risk between buyer and seller in international shipments. They are NOT law by themselves and they do NOT set who pays the import duty — but they strongly shape who ends up bearing it.",
+  s1_l1: "They define 11 three-letter rules (EXW, FCA, FOB, CIF, CPT, CIP, DAP, DPU, DDP and others).",
+  s1_l2: "They allocate carriage, insurance and the point where risk passes — not the tariff itself.",
+  s1_l3: "They must be written into the sales contract to apply.",
+
+  s2: "2. The duty is almost always the buyer's",
+  s2_p: "Import duty is a liability of the importer of record — normally the buyer in the destination country. Incoterms affect who pays freight and insurance, but under nearly every term the BUYER pays the import duty on arrival. The one major exception is DDP.",
+  s2_l1: "Under FOB, FCA, CIF, CFR, CPT, CIP, DAP, DPU: buyer pays the duty at import.",
+  s2_l2: "Under DDP (Delivered Duty Paid): the SELLER pays the import duty and handles customs clearance.",
+  s2_l3: "EXW (Ex Works) leaves the buyer to collect from the seller's dock and bear all cost and risk from there — including export and import formalities.",
+
+  s3: "3. Why CIF/CFR 'free shipping' is a trap",
+  s3_p: "CIF and CFR include freight (and, for CIF, insurance) to the destination port — but they do NOT include duty, and risk passes to the buyer at the ship's rail. Sellers sometimes pitch CIF as 'all-in,' which it is not. You still pay the duty, MPF, HMF and clearance on arrival.",
+  s3_l1: "CIF/CFR price excludes import duty, MPF, HMF and brokerage.",
+  s3_l2: "Risk transfers at the port of loading, so damage in transit is the buyer's claim.",
+  s3_l3: "A 'cheap' CIF quote can hide a higher declared value that raises your duty.",
+
+  s4: "4. DDP vs DAP — the seller's exposure",
+  s4_p: "DDP (Delivered Duty Paid) puts the full burden — duty, clearance, last-mile — on the seller, who must be registered and able to clear customs in your country. DAP (Delivered at Place) is the same delivery but the BUYER pays the duty. Many sellers refuse DDP because they cannot act as importer of record abroad.",
+  s4_l1: "DDP: seller clears customs and pays duty — simplest for the buyer, but needs a registered seller.",
+  s4_l2: "DAP: seller delivers to the named place, buyer handles duty and clearance.",
+  s4_l3: "DPU (Delivered at Place Unloaded) is like DAP but seller also unloads.",
+
+  s5: "5. Incoterms and your landed-cost math",
+  s5_p: "The Incoterm changes which costs you must add to the seller's price to get true landed cost. Pick the term deliberately; the 'right' one depends on whether you want control of the shipment or a single invoice.",
+  s5_l1: "FOB/FCA: you control freight and can shop for lower ocean rates; duty still yours.",
+  s5_l2: "CIP/CPT: seller arranges main carriage; you still pay duty and last-mile.",
+  s5_l3: "DDP: one invoice, duty included — but you lose visibility and may pay a markup.",
+
+  s6: "6. Common mistakes",
+  s6_p: "Two errors cost importers money repeatedly.",
+  s6_l1: "Assuming CIF/CFR means duty is included — it is not.",
+  s6_l2: "Assuming the seller's quoted 'landed' price under DDP reflects the real duty; it may be estimated or loaded.",
+  s6_p2: "TariffStack computes the duty on the entered value regardless of Incoterm; the term only decides who writes the check.",
+
+  caveat: "TariffStack is not a customs broker or law firm. Incoterms allocation and importer-of-record liability are contract and fact-specific; confirm the term and duty responsibility with counsel before signing. Rules can change.",
+};
+
+const zh = {
+  title: "Incoterms 2020：谁付关税与运费 — TariffStack",
+  h1: "Incoterms 2020",
+  intro: "Incoterms 决定谁安排并支付运费、保险，以及——关键地——谁承担关税风险。本指南拆解 11 个 Incoterms 2020 规则，以及每个对你到岸成本的含义。",
+  updated: "最后更新",
+  back: "← 全部指南",
+  about: "关于",
+  toc: "本页内容",
+
+  s1: "1. Incoterms 是什么（以及不是什么）",
+  s1_p: "Incoterms 2020 是国际商会（ICC）发布的标准化贸易术语。它们在买卖双方之间分配国际运输中的任务、费用与风险。它本身不是法律，也不规定谁付进口关税——但它强烈影响最终由谁承担。",
+  s1_l1: "它定义 11 个三字母规则（EXW、FCA、FOB、CIF、CPT、CIP、DAP、DPU、DDP 等）。",
+  s1_l2: "它分配运输、保险与风险转移点——而非关税本身。",
+  s1_l3: "它必须写入销售合同才适用。",
+
+  s2: "2. 关税几乎总是买方的",
+  s2_p: "进口关税是进口记录进口商（通常为目的国买方）的责任。Incoterms 影响谁付运费与保险，但在几乎每个术语下，买方在到货时缴纳进口关税。唯一重大例外是 DDP。",
+  s2_l1: "在 FOB、FCA、CIF、CFR、CPT、CIP、DAP、DPU 下：买方在进口时缴税。",
+  s2_l2: "在 DDP（完税后交货）下：卖方缴进口关税并办理清关。",
+  s2_l3: "EXW（工厂交货）由买方从卖方处提货，并自该点起承担全部费用与风险——包括出口与进口手续。",
+
+  s3: "3. 为何 CIF/CFR 的「免运费」是陷阱",
+  s3_p: "CIF 与 CFR 含至目的港的运费（CIF 还含保险）——但不含关税，且风险在船舷转移给买方。卖方有时把 CIF 说成「全包」，其实不然。到货时你仍需缴关税、MPF、HMF 与清关费。",
+  s3_l1: "CIF/CFR 价格不含进口关税、MPF、HMF 与报关费。",
+  s3_l2: "风险在装货港转移，因此运输途中的损坏由买方索赔。",
+  s3_l3: "一份「便宜」的 CIF 报价可能隐藏更高的申报价值，从而抬高你的关税。",
+
+  s4: "4. DDP 与 DAP——卖方的敞口",
+  s4_p: "DDP（完税后交货）将全部负担——关税、清关、末端配送——压在卖方身上，卖方必须在你国注册并能清关。DAP（目的地交货）交付相同，但由买方缴税。许多卖方拒绝 DDP，因为他们无法在境外担任进口记录进口商。",
+  s4_l1: "DDP：卖方清关并缴税——对买方最简，但需卖方在境内注册。",
+  s4_l2: "DAP：卖方交至指定地点，买方负责关税与清关。",
+  s4_l3: "DPU（卸货地交货）类似 DAP，但卖方还需卸货。",
+
+  s5: "5. Incoterms 与你的到岸成本测算",
+  s5_p: "Incoterms 改变你须在卖方价格上追加哪些成本以获得真实到岸成本。慎重选择术语；「正确」的那一个取决于你要控制运输，还是要一张发票。",
+  s5_l1: "FOB/FCA：你控制运费，可议更低海运费；关税仍是你的。",
+  s5_l2: "CIP/CPT：卖方安排主干运输；你仍付关税与末端。",
+  s5_l3: "DDP：一张发票含关税——但你失去可见性，并可能支付加价。",
+
+  s6: "6. 常见错误",
+  s6_p: "两个错误反复让进口商花钱。",
+  s6_l1: "以为 CIF/CFR 含关税——其实不含。",
+  s6_l2: "以为卖方在 DDP 下报的「到岸」价反映真实关税；它可能只是估算或加了价。",
+  s6_p2: "TariffStack 不论 Incoterm 如何，都按申报价值计算关税；术语只决定谁开支票。",
+
+  caveat: "TariffStack 不是报关行或律所。Incoterms 分配与进口记录进口商责任是合同且因事实而异；签约前请用顾问确认术语与关税责任。规则可能变化。",
+};
+const d = en;
+import overlay from '../../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-05';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="What Incoterms 2020 rules mean for landed cost: who pays duty, freight and insurance, why CIF/CFR exclude duty, and how DDP differs from DAP." />
+  <meta name="robots" content="index,follow" />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;}
+    *{box-sizing:border-box;}
+    [data-theme="dark"]{--bg:#0b1120;--card:#121a2b;--ink:#e8edf6;--ink-deep:#f4f8fd;--content:#c4cedb;--mut:#8b99ad;--line:#1e2a3e;--line2:#2b3a52;--accent:#8aa7d8;--accent-soft:#1a2740;--good:#6fbf9c;--warn:#d8a866;--bad:#d88686;}
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    body{margin:0;font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    header.site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
+    .site-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+    .site-inner .site-l{display:flex;align-items:baseline;min-width:0;flex:1 1 auto;}
+    .site-inner a{color:var(--accent);text-decoration:none;font-weight:700;font-size:18px;}
+    .site-inner .sub{font-size:13px;color:var(--mut);margin-left:10px;}
+    .site-inner .site-r{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap;}
+    .site-inner .site-r:hover{text-decoration:underline;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    h2{margin:36px 0 12px;font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+    h3{margin:24px 0 8px;font-size:17px;font-weight:700;color:var(--ink);}
+    ul{padding-left:22px;}
+    li{margin:6px 0;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:18px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:28px;line-height:1.6;}
+    .toc{background:var(--card);border:1px solid var(--line2);border-radius:12px;padding:14px 20px;margin-bottom:24px;font-size:14.5px;}
+    .toc strong{display:block;color:var(--ink);margin-bottom:6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
+    .toc ol{margin:6px 0 0;padding-left:22px;color:var(--content);}
+    .toc a{color:var(--accent);text-decoration:none;}
+    .toc a:hover{text-decoration:underline;}
+    .caveat{margin-top:36px;padding:14px 18px;background:var(--card);border:1px dashed var(--line2);border-radius:10px;font-size:13.5px;color:var(--mut);line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;font-weight:700;color:var(--accent);text-decoration:none;}
+    p{margin:0 0 14px;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}.site-inner{padding:14px 16px;}h1{font-size:28px;}h2{font-size:20px;}}
+  </style>
+</head>
+<body>
+  <header class="site"><div class="site-inner"><div class="site-l"><a href="/">TariffStack</a><span class="sub" data-i18n="h1">{d.h1}</span></div><a href="/about" class="site-r" data-i18n="about">{d.about}</a></div></header>
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <nav class="toc"><strong data-i18n="toc">{d.toc}</strong><ol>
+      <li><a href="#s1" data-i18n="s1">{d.s1}</a></li>
+      <li><a href="#s2" data-i18n="s2">{d.s2}</a></li>
+      <li><a href="#s3" data-i18n="s3">{d.s3}</a></li>
+      <li><a href="#s4" data-i18n="s4">{d.s4}</a></li>
+      <li><a href="#s5" data-i18n="s5">{d.s5}</a></li>
+      <li><a href="#s6" data-i18n="s6">{d.s6}</a></li>
+    </ol></nav>
+
+    <h2 id="s1" data-i18n="s1">{d.s1}</h2>
+    <p data-i18n="s1_p">{d.s1_p}</p>
+    <ul>
+      <li data-i18n="s1_l1">{d.s1_l1}</li>
+      <li data-i18n="s1_l2">{d.s1_l2}</li>
+      <li data-i18n="s1_l3">{d.s1_l3}</li>
+    </ul>
+
+    <h2 id="s2" data-i18n="s2">{d.s2}</h2>
+    <p data-i18n="s2_p">{d.s2_p}</p>
+    <ul>
+      <li data-i18n="s2_l1">{d.s2_l1}</li>
+      <li data-i18n="s2_l2">{d.s2_l2}</li>
+      <li data-i18n="s2_l3">{d.s2_l3}</li>
+    </ul>
+
+    <h2 id="s3" data-i18n="s3">{d.s3}</h2>
+    <p data-i18n="s3_p">{d.s3_p}</p>
+    <ul>
+      <li data-i18n="s3_l1">{d.s3_l1}</li>
+      <li data-i18n="s3_l2">{d.s3_l2}</li>
+      <li data-i18n="s3_l3">{d.s3_l3}</li>
+    </ul>
+
+    <h2 id="s4" data-i18n="s4">{d.s4}</h2>
+    <p data-i18n="s4_p">{d.s4_p}</p>
+    <ul>
+      <li data-i18n="s4_l1">{d.s4_l1}</li>
+      <li data-i18n="s4_l2">{d.s4_l2}</li>
+      <li data-i18n="s4_l3">{d.s4_l3}</li>
+    </ul>
+
+    <h2 id="s5" data-i18n="s5">{d.s5}</h2>
+    <p data-i18n="s5_p">{d.s5_p}</p>
+    <ul>
+      <li data-i18n="s5_l1">{d.s5_l1}</li>
+      <li data-i18n="s5_l2">{d.s5_l2}</li>
+      <li data-i18n="s5_l3">{d.s5_l3}</li>
+    </ul>
+
+    <h2 id="s6" data-i18n="s6">{d.s6}</h2>
+    <p data-i18n="s6_p">{d.s6_p}</p>
+    <ul>
+      <li data-i18n="s6_l1">{d.s6_l1}</li>
+      <li data-i18n="s6_l2">{d.s6_l2}</li>
+    </ul>
+    <p data-i18n="s6_p2">{d.s6_p2}</p>
+
+    <div class="caveat" data-i18n="caveat">{d.caveat}</div>
+
+    <a class="back" href="/guides" data-i18n="back">{d.back}</a>
+  </main>
+
+  <script is:inline define:vars={{ zh, en }}>
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        var isZh = (lang === 'zh' || lang === 'zh-TW');
+        var dict = isZh ? zh : en;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (dict[k] != null) nodes[i].textContent = dict[k];
+        }
+        document.documentElement.lang = lang;
+        if (isZh) document.title = zh['title'];
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>
