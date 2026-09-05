@@ -1,20 +1,22 @@
 name: Daily Tariff Data Refresh
 
-# 每天北京时间 03:00 自动刷新关税数据 → 重新构建 → 重新部署到 Cloudflare Pages。
+# 每天北京时间 03:00 自动刷新关税数据 → 重新构建 → 重新部署到 Cloudflare Worker (Static Assets)。
 # 运行在 GitHub 服务器（美国），与用户本机开关机无关。
 #
 # ⚠️ 关键修复（2026-09-05）：此前工作流只把数据 commit/push 到 git，但没有任何构建/部署步骤，
-#   线上 tariff-stack.zmarkz123zxc.workers.dev 一直停在最后一次手动 `wrangler pages deploy` 的陈旧 dist，
+#   线上 tariff-stack.zmarkz123zxc.workers.dev 一直停在最后一次手动部署的陈旧 dist，
 #   导致"Actions 在跑、页面数据/日期不变"的伪刷新。现改为刷新后自建自部署，闭环。
-#   注意：Cloudflare 已把 Pages 迁到 Workers 运行时，新 Pages 项目统一使用 *.workers.dev 域名
-#   （旧 *.pages.dev 不再分配，故 tariff-stack.pages.dev 连不上、只有 *.workers.dev 在线属正常）。
-#   本项目就是 Cloudflare Pages 项目，部署命令用 `wrangler pages deploy --project-name tariff-stack`；
-#   账号的 API Token 权限列表也只有 "Cloudflare Pages"（无 "Cloudflare Workers"），故 token 用 Pages:Edit。
 #
-# 需要在仓库 Settings → Secrets and variables → Actions 配置：
-#   CLOUDFLARE_API_TOKEN  （权限：Account.Cloudflare Pages: Edit  + Zone 可选）
-#   CLOUDFLARE_ACCOUNT_ID （Cloudflare 控制台 Workers & Pages 页右侧的 "Account ID"，32 位十六进制）
-#   CLOUDFLARE_ACCOUNT_ID （Cloudflare 控制面板右下角 "Account ID"）
+# 项目类型（以 wrangler CLI 报错为铁证）：本项目是 Cloudflare Worker（wrangler.toml 用 [assets]
+#   directory="./dist" 发布静态资源，缺 pages_build_output_dir），不是 Pages。CLI 实测明确提示
+#   "Pages project 'tariff-stack' does not exist ... Did you mean to run `wrangler deploy`?"。
+#   部署命令用 `npx wrangler deploy`。
+#   （曾两次误判：先以为 *.pages.dev 是 Pages 项目，再以为"账号只有 Pages 权限所以是 Pages"。
+#    实际账号 Token 权限下拉无 Workers 选项是因为从未启用 Worker 权限项，而项目本身确为 Worker。）
+#
+# 鉴权（My Profile → API Keys → Global API Key，绕开 API Token 权限下拉无 Workers 选项的死结）：
+#   CLOUDFLARE_API_KEY    Cloudflare 全局 API Key（账户全权限，CI 用足够；泄露可滚）
+#   CLOUDFLARE_EMAIL      Cloudflare 登录邮箱
 on:
   schedule:
     # 19:00 UTC = 次日 03:00 北京时间 (UTC+8)
@@ -90,13 +92,16 @@ jobs:
       - name: Build static site
         run: npm run build
 
-      - name: Deploy to Cloudflare Pages
-        # 线上 tariff-stack.zmarkz123zxc.workers.dev 是 Cloudflare Pages 项目（新样式，跑在 Workers 运行时、
-        # 用 *.workers.dev 域名）。用 `wrangler pages deploy` 更新它；--project-name 指向既有 Pages 项目。
-        # 账号 token 权限只有 Cloudflare Pages（无 Workers），故必须 pages deploy + Pages:Edit。
-        run: npx wrangler pages deploy ./dist --project-name tariff-stack
+      - name: Deploy to Cloudflare Worker (Static Assets)
+        # 线上 tariff-stack.zmarkz123zxc.workers.dev 是一个 Cloudflare Worker（wrangler.toml 用
+        # [assets] directory="./dist" 服务静态资源）。CI 报错 wrangler CLI 已明确指出：
+        #   "Pages project 'tariff-stack' does not exist. ... wrangler.toml does not appear to be
+        #    for a Pages project (missing pages_build_output_dir). Did you mean `wrangler deploy`?"
+        # 故必须用 `wrangler deploy` 而非 `wrangler pages deploy`。
+        # 鉴权：账号 API Token 权限下拉无 "Cloudflare Workers" 项（只有 Pages），改用 Cloudflare
+        # 全局 API Key（CLOUDFLARE_API_KEY + CLOUDFLARE_EMAIL），绕开 token 权限不可选的死结。
+        run: npx wrangler deploy
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        # 注：若 CLOUDFLARE_API_TOKEN 未配置，wrangler 会因缺少鉴权而失败并使本 run 变红，
-        # 从而暴露「未部署」而非再次伪刷新。
+          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+        # 注：若未配置上述任一变量，wrangler 会因缺鉴权使本 run 变红，暴露"未部署"。
