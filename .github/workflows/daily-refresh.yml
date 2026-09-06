@@ -120,6 +120,28 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         # 注：若 CLOUDFLARE_API_TOKEN 未配置/权限不对，wrangler 会因缺鉴权使本 run 变红，暴露"未部署"。
 
+      # ===== 部署后自检：确认数据真的到达 Cloudflare 且页面真正刷新 =====
+      # 不依赖"步骤退出码=0"就判成功。直接拉线上首页，断言 Hero 徽章的"已验证日期"
+      # = 今日(北京)。5 次重试仍拿不到 → 说明 刷新/构建/部署/CDN 任一环断链，
+      # 本 run 直接变红告警，杜绝"步骤绿了但页面其实没刷新"的伪成功。
+      - name: Verify live page reflects today (post-deploy self-check)
+        env:
+          LIVE_URL: https://tariff-stack.zmarkz123zxc.workers.dev/
+        run: |
+          TODAY_BJ=$(TZ='Asia/Shanghai' date +'%Y-%m-%d')
+          echo "Expecting today's Beijing date on live page: $TODAY_BJ"
+          for i in $(seq 1 5); do
+            HTML=$(curl -sL --max-time 30 "$LIVE_URL" -A "Mozilla/5.0")
+            if printf '%s' "$HTML" | grep -q "$TODAY_BJ"; then
+              echo "OK: live page serves $TODAY_BJ — full chain (refresh -> build -> deploy -> Cloudflare) verified."
+              exit 0
+            fi
+            echo "Attempt $i: today's date not on live page yet (deploy/CDN propagation delay). Retrying in 20s..."
+            sleep 20
+          done
+          echo "FAIL: live page does not show $TODAY_BJ after 5 attempts. Chain broken (refresh/build/deploy/Cloudflare)."
+          exit 1
+
       # ===== 定时清理旧数据（铁律：防止审计日志/临时锁文件无限累积） =====
       # 每日刷新跑完即清理：删除超过 30 天的 FRESHNESS_REPORT、以及 *.tmp / *.pending.json 锁残留。
       # 真实税率数据（tariff_full*.json / policy_overlay.json / news_feed.json / origins.json）受脚本保护，绝不删除。

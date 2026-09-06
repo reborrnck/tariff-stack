@@ -606,7 +606,9 @@ def maybe_deploy(dirty):
                 add_list.append(extra)
         for p in add_list:
             subprocess.run(["git", "add", p], cwd=PLATFORM_DIR, capture_output=True)
-        msg = f"data refresh {datetime.now(timezone.utc).strftime('%Y-%m-%d')}"
+        # 用北京日期，与 last_checked(页面展示的"已验证日期")保持一致，
+        # 避免 commit message 写 UTC 日期而页面显示北京日期造成"到底刷没刷"的混淆。
+        msg = f"data refresh {(datetime.now(timezone.utc) + timedelta(hours=8)).strftime('%Y-%m-%d')}"
         subprocess.run(["git", "commit", "-m", msg], cwd=PLATFORM_DIR, capture_output=True)
         last_err = ""
         for _ in range(3):
