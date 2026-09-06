@@ -2,72 +2,44 @@
   "generated_at": "2026-09-06",
   "items": [
     {
-      "key": "news_2026_09_06_china301",
+      "key": "news_usitc",
       "tag": "US",
-      "date": "2026-09-06",
-      "text": {
-        "en": "U.S. Section 301 exclusions list updated: certain subheadings restored to additional duties.",
-        "zh": "对华 301 排除清单更新，部分子目恢复加征。",
-        "zh-TW": "對中 301 排除清單更新，部分子目恢復加徵。",
-        "ja": "対中 301 除外リスト更新：一部のサブヘディングが追加関税に復帰。",
-        "ko": "대중국 301 면제 목록 업데이트: 일부 서브헤딩이 추가 관세로 복원.",
-        "es": "Lista de exclusiones del artículo 301 sobre China actualizada: ciertas subpartidas vuelven a aranceles adicionales.",
-        "fr": "Liste des exclusions de l'article 301 sur la Chine mise à jour : certaines sous-positions rétablies aux droits additionnels.",
-        "de": "Ausschlussliste zu Section 301 (China) aktualisiert: bestimmte Unterpositionen unterliegen wieder Zusatzzöllen.",
-        "pt": "Lista de exclusões do artigo 301 sobre a China atualizada: certas subposições voltam a direitos adicionais.",
-        "it": "Lista delle esclusioni dell'articolo 301 sulla Cina aggiornata: alcune sottovoci tornano ai dazi aggiuntivi."
-      }
+      "date": "2026-08-24"
     },
     {
-      "key": "news_2026_09_04_sec232_pharma",
+      "key": "news_sec232_steel",
       "tag": "US",
-      "date": "2026-09-04",
-      "text": {
-        "en": "Section 232: 100% tariff proposed on imported pharmaceuticals (pending effective date).",
-        "zh": "232 条款：药品进口拟加征 100%（待生效）。",
-        "zh-TW": "232 條款：藥品進口擬加徵 100%（待生效）。",
-        "ja": "232 条：医薬品輸入に 100% 関税を提案（発効待ち）。",
-        "ko": "232조: 의약품 수입에 100% 관세 제안(발효 대기 중).",
-        "es": "Artículo 232: arancel del 100% propuesto a productos farmacéuticos importados (pendiente de entrada en vigor).",
-        "fr": "Article 232 : droit de 100 % proposé sur les produits pharmaceutiques importés (en attente d'entrée en vigueur).",
-        "de": "Section 232: 100 % Zoll auf importierte Pharmazeutika vorgeschlagen (Inkrafttreten ausstehend).",
-        "pt": "Artigo 232: tarifa de 100% proposta sobre produtos farmacêuticos importados (pendente de vigência).",
-        "it": "Articolo 232: dazio del 100% proposto sui prodotti farmaceutici importati (in attesa di entrata in vigore)."
-      }
+      "date": "2026"
     },
     {
-      "key": "news_2026_09_01_cn_tariff_2026",
-      "tag": "CN",
-      "date": "2026-09-01",
-      "text": {
-        "en": "China 2026 Import & Export Tariff Schedule: provisional rates take effect.",
-        "zh": "《进出口税则》2026 版暂定税率生效。",
-        "zh-TW": "《進出口稅則》2026 版暫定稅率生效。",
-        "ja": "中国 2026 年輸出入税則：暫定税率が発効。",
-        "ko": "중국 2026년 수출입 관세율표: 잠정 세율 발효.",
-        "es": "Arancel de Importación y Exportación de China 2026: entran en vigor los aranceles provisionales.",
-        "fr": "Tarif douanier d'import-export de la Chine 2026 : les taux provisoires entrent en vigueur.",
-        "de": "Chinas Ein- und Ausfuhrtarif 2026: vorläufige Zollsätze treten in Kraft.",
-        "pt": "Tarifa de Importação e Exportação da China 2026: taxas provisórias entram em vigor.",
-        "it": "Tariffa di importazione ed esportazione della Cina 2026: entrano in vigore le aliquote provvisorie."
-      }
+      "key": "news_sec232_autos",
+      "tag": "US",
+      "date": "2026"
     },
     {
-      "key": "news_2026_08_28_mpf_hmf",
+      "key": "news_sec232_pharma",
       "tag": "US",
-      "date": "2026-08-28",
-      "text": {
-        "en": "CBP adjusts MPF and HMF fee rates: now calculated as a percentage of dutiable value.",
-        "zh": "MPF/HMF 费率微调，按完税价比例计征。",
-        "zh-TW": "MPF/HMF 費率微調，按完稅價比例計徵。",
-        "ja": "CBP が MPF/HMF 料率を調整：完税価格に対する割合で計算。",
-        "ko": "CBP가 MPF/HMF 요율 조정: 과세 가격의 비율로 계산.",
-        "es": "CBP ajusta las tasas de MPF y HMF: ahora se calculan como porcentaje del valor en aduana.",
-        "fr": "CBP ajuste les taux de MPF et HMF : désormais calculés en pourcentage de la valeur en douane.",
-        "de": "CBP passt MPF- und HMF-Gebührensätze an: nun prozentual auf Basis des Zollwerts berechnet.",
-        "pt": "CBP ajusta as taxas de MPF e HMF: agora calculadas como porcentagem do valor aduaneiro.",
-        "it": "CBP adegua le aliquote MPF e HMF: ora calcolate come percentuale del valore in dogana."
-      }
+      "date": "2026-09-29"
+    },
+    {
+      "key": "news_sec232_drones",
+      "tag": "US",
+      "date": "2026-09-03"
+    },
+    {
+      "key": "news_eu_cap",
+      "tag": "EU",
+      "date": "2026"
+    },
+    {
+      "key": "news_uk_cap",
+      "tag": "UK",
+      "date": "2026"
+    },
+    {
+      "key": "news_uflpa",
+      "tag": "US",
+      "date": "2026-07-24"
     }
   ]
 }
