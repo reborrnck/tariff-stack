@@ -160,6 +160,7 @@ const en: Dict = {
   footer_legal: 'Legal',
   footer_calc: 'Calculator',
   footer_contact_biz: 'Business inquiries',
+  footer_right_tag: 'Authoritative customs data · for reference only · defer to official notice',
   // ---- transport mode (record-only) + batch auto-pending ----
   calc_mode: 'Transport mode (record only)',
   mode_none: 'Unspecified',
@@ -319,6 +320,7 @@ const zh: Dict = {
   footer_legal: '法律',
   footer_calc: '计算器',
   footer_contact_biz: '商务合作',
+  footer_right_tag: '权威海关数据 · 仅供参考 · 请以官方公告为准',
   // ---- 运输方式（仅记录）+ 批量自动待算 ----
   calc_mode: '运输方式（仅记录）',
   mode_none: '未指定',

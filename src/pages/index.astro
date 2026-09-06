@@ -95,13 +95,16 @@ const effClass = (e: number) => (e > 0.3 ? 'bad' : e > 0.15 ? 'warn' : 'good');
     .brand .logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#7aa7ff);display:grid;place-items:center;color:#fff;font-size:15px;box-shadow:0 4px 12px rgba(47,109,240,.35)}
     .spacer{flex:1}
     .lang-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-    .hbtn{display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--border);
-      background:var(--card);color:var(--text);font-size:14px;cursor:pointer;transition:.15s;white-space:nowrap;text-decoration:none;}
+    .hbtn{display:inline-flex !important;align-items:center;gap:7px;height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--border);
+      background:var(--card);color:var(--text);font-size:14px;cursor:pointer;transition:.15s;white-space:nowrap;text-decoration:none;visibility:visible !important;}
     .hbtn:hover{box-shadow:0 1px 2px rgba(20,30,60,.06),0 8px 24px rgba(20,30,60,.07);transform:translateY(-1px);}
     .hbtn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
     .hbtn.icon{width:40px;padding:0;justify-content:center;}
     .hsep{width:1px;height:24px;background:var(--border);margin:0 2px;}
     select#lang{height:40px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);padding:0 12px;font-size:14px;cursor:pointer;}
+    @media (max-width:1280px){.hbtn{padding:0 12px;font-size:13.5px;}}
+    @media (max-width:1100px){.hbtn{padding:0 10px;font-size:13px;}select#lang{padding:0 8px;font-size:13px;}}
+    @media (max-width:900px){.hd-inner{gap:8px;padding:0 16px;}}
 
     /* ===== layout ===== */
     main{max-width:1180px;margin:0 auto;padding:24px 24px 40px;}
@@ -490,7 +493,7 @@ const effClass = (e: number) => (e > 0.3 ? 'bad' : e > 0.15 ? 'warn' : 'good');
     </div>
     <div class="footer-bottom">
       <span>© 2026 TariffStack · USITC / 中国海关总署</span>
-      <span><a href="/guides" data-i18n="guides_btn">关税指南</a></span>
+      <span data-i18n="footer_right_tag">权威海关数据 · 仅供参考 · 请以官方公告为准</span>
     </div>
   </footer>
 

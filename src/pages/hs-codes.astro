@@ -44,12 +44,15 @@ const jsonLd = JSON.stringify({
     .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:.2px;color:var(--text)}
     .brand .logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#7aa7ff);display:grid;place-items:center;color:#fff;font-size:15px;box-shadow:0 4px 12px rgba(47,109,240,.35)}
     .spacer{flex:1}
-    .hbtn{display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:14px;cursor:pointer;transition:.15s;white-space:nowrap}
+    .hbtn{display:inline-flex !important;align-items:center;gap:7px;height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:14px;cursor:pointer;transition:.15s;white-space:nowrap;text-decoration:none;visibility:visible !important}
     .hbtn:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
     .hbtn.active{background:var(--accent);border-color:var(--accent);color:#fff}
     .hsep{width:1px;height:24px;background:var(--border);margin:0 2px}
     .hbtn.icon{width:40px;padding:0;justify-content:center}
     select#lang{height:40px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);padding:0 12px;font-size:14px;cursor:pointer}
+    @media (max-width:1280px){.hbtn{padding:0 12px;font-size:13.5px}}
+    @media (max-width:1100px){.hbtn{padding:0 10px;font-size:13px}select#lang{padding:0 8px;font-size:13px}}
+    @media (max-width:900px){.site-header .wrap{gap:8px;padding:0 16px}}
     /* ===== Hero ===== */
     .hero{padding:40px 0 8px}
     .hero h1{font-size:32px;margin:0 0 10px;line-height:1.15}
@@ -73,18 +76,19 @@ const jsonLd = JSON.stringify({
     .results::-webkit-scrollbar{width:10px}
     .results::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;border:2px solid var(--bg)}
     .results::-webkit-scrollbar-track{background:transparent}
-    table{width:100%;border-collapse:collapse;font-size:14px}
+    table{width:100%;border-collapse:collapse;font-size:14px;table-layout:auto}
     thead th{position:sticky;top:0;background:var(--card);z-index:2;box-shadow:inset 0 -1px 0 var(--border);text-align:left;padding:12px 14px;color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
     tbody td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:top}
     tbody tr:last-child td{border-bottom:none}
     tbody tr:hover{background:var(--accent-soft)}
-    .code{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;color:var(--accent);font-size:14px;white-space:nowrap}
-    .desc{color:var(--text)}
-    .rate{font-family:ui-monospace,Menlo,Consolas,monospace;text-align:right;white-space:nowrap;font-weight:600}
+    .code{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;color:var(--accent);font-size:14px;white-space:nowrap;width:120px}
+    .desc{color:var(--text);min-width:340px;max-width:560px;white-space:normal;word-break:break-word;line-height:1.5}
+    .rate{font-family:ui-monospace,Menlo,Consolas,monospace;text-align:right;white-space:nowrap;font-weight:600;width:120px}
     .rate.free{color:var(--good)}
-    .use{text-align:right;white-space:nowrap}
+    .use{text-align:right;white-space:nowrap;width:130px}
     .use a{font-size:13px;font-weight:600;border:1px solid var(--border);border-radius:8px;padding:5px 10px;display:inline-block}
     .use a:hover{background:var(--accent-soft);border-color:var(--accent)}
+    .desc .ch{display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11.5px;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:1px 7px;margin-right:8px;font-weight:600;letter-spacing:.5px;vertical-align:1px}
     .empty{padding:40px 14px;text-align:center;color:var(--muted);font-size:14px}
     .note{margin:16px 0 0;font-size:13px;color:var(--muted);line-height:1.6;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
     .note b{color:var(--text)}
@@ -266,8 +270,10 @@ const jsonLd = JSON.stringify({
           return `<tr><td class="code">${k}</td><td class="desc">${rec.desc || ''}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
         } else {
           const r = pct(rec.mfn);
-          const ex = rec.ex ? ' <span style="color:var(--muted)">(' + t(LANG,'hs_enc_ex') + ')</span>' : '';
-          return `<tr><td class="code">${k}</td><td class="desc">${rec.name || ''}${ex}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
+          // CN data: name is a short dash-prefixed description relative to its parent heading
+          // (e.g. "-棉制", "--改良种用", "---其他"). Show it as-is and add a chapter badge for context.
+          const chapter = k.slice(0, 4);
+          return `<tr><td class="code">${k}</td><td class="desc"><span class="ch">${chapter}</span>${rec.name || ''}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
         }
       }).join('');
       if (!shown.length) {
