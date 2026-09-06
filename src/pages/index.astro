@@ -88,7 +88,7 @@ const clkLondon     = fmtClk('Europe/London');
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>TariffStack — Import Duty &amp; Landed-Cost Calculator</title>
-  <meta name="description" content={`Free import duty and landed-cost calculator with multi-language UI and product-to-HS classification. U.S. full official stacked tariff (USITC HTS, subheading-level) is live; China destination official 2026 tariff schedule (State Council Tariff Commission, effective 2026-01-01) is live with REAL rates. Verified ${verifiedDate}.`} />
+  <meta name="description" content={`Free import duty and landed-cost calculator with multi-language UI and product-to-HS classification. U.S. full official stacked tariff (USITC HTS, subheading-level) is live; China destination official 2026 tariff schedule (State Council Tariff Commission, effective 2026-01-01) is live with REAL rates. Verified ${verifiedDate} (Beijing time).`} />
   <script type="application/ld+json" set:html={jsonLd}></script>
   <style is:global>
     :root{
@@ -469,7 +469,7 @@ const clkLondon     = fmtClk('Europe/London');
       <div class="brand">
         <h1 data-i18n="app_name">TariffStack</h1>
         <div class="tag" data-i18n="tagline">Import Duty &amp; Landed-Cost Calculator — U.S. + China</div>
-        <div class="badge"><span data-i18n="badge_pre">✓ Rates verified against official USITC data on</span> {verifiedDate}</div>
+        <div class="badge"><span data-i18n="badge_pre">✓ Rates verified against official USITC data on</span> {verifiedDate} <span data-i18n="badge_tz"> (Beijing time)</span></div>
         <div class="lang-row">
           <label for="lang" data-i18n="lang_label">Language</label>
           <select id="lang">
