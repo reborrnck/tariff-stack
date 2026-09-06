@@ -313,7 +313,10 @@ def fetch_news():
 # ---------- 正确数据判定 ----------
 def reconcile(usitc_rev, usitc_date, fr_docs, news_items, overlay, provisioned_rev=None):
     findings = []
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    # 用北京时间（项目面向中国用户，页面 verified 日期 = 北京时区的今日）。
+    # 修复：此前用 UTC，北京 03:00 cron 跑出的 today 与远端 last_checked 字面相同 →
+    # git 无 diff → commit 静默 nothing-to-commit → 假绿（伪刷新）。改北京时区后每日必有 diff。
+    today = (datetime.now(timezone.utc) + timedelta(hours=8)).strftime("%Y-%m-%d")
     # 当前已记录的基础表修订号：优先读专属字段 base_hts_revision（首次探测后写入），
     # 旧部署可能把版本号藏在 as_of 文案里，做一次兼容回退。
     asof_rev = None
