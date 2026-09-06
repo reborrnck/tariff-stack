@@ -20,8 +20,13 @@ name: Daily Tariff Data Refresh
 #   （曾尝试 Global API Key / Pages:Edit 均不适用：本项目是 Worker 不是 Pages，且账号默认隐藏全局 Key。）
 on:
   schedule:
-    # 19:00 UTC = 次日 03:00 北京时间 (UTC+8)
-    - cron: '0 19 * * *'
+    # 19:17 UTC = 次日 03:17 北京时间 (UTC+8)。
+    # ⚠️ 不用整点(:00)/半点(:30)：GitHub Actions 的 cron 在整点/半点因全局调度高峰
+    # 常延迟 5-30 分钟、极端时直接被丢弃（官方文档明示 "may be delayed / in the worst
+    # case may not run"）。业界共识：把分钟挪到 17/23/37/43 这类非高峰档，调度可靠性
+    # 显著提升。本项目 2026-09-07 实测：设在 :00 的 03:00 定时 run 当天未产生任何提交
+    # （GitHub 在高峰把该次调度丢掉），挪到 :17 后规避此坑。
+    - cron: '17 19 * * *'
   workflow_dispatch: {}   # 允许在 Actions 标签页手动触发（调试/立即生效用）
 
 # 防止定时触发与手动触发重叠导致两个 run 同时向 main 推送（非快进冲突）
@@ -41,6 +46,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Schedule heartbeat（确认 cron 真的触发了）
+        # 整点 cron 常被 GitHub 静默丢弃且不报错；此步把触发时间与 schedule 打到日志，
+        # 用户能在 Actions → 该 run → 此步 直接看到"今天到底有没有触发"，避免再次误判为伪刷新。
+        run: echo "Schedule fired: ${{ github.event.schedule }} at $(date -u)  (runner UTC)"
 
       - name: Set up Python
         uses: actions/setup-python@v5
