@@ -7,7 +7,7 @@ import cnFullJson from '../data/tariff_full_cn.json';
 import { computeStack, type Rate } from '../lib/calc.ts';
 import { destLabel } from '../lib/destinations.ts';
 import { ORIGINS, destOptionsFor, US_EMBARGOED } from '../lib/origins.ts';
-import { t, originLabel, productName, PRODUCTS } from '../lib/i18n.ts';
+import { t, originLabel, productName, PRODUCTS, LANGS } from '../lib/i18n.ts';
 import newsFeed from '../data/news_feed.json';
 import CookieConsent from '../components/CookieConsent.astro';
 
@@ -15,35 +15,23 @@ const rates = sample.rates;
 const fixed = sample.fixed;
 
 const COMPARE_ORIGINS = ['US','CN','MX','CA','DE','FR','IT','ES','NL','IE','PL','SE','BE','AT','PT','FI','DK','GR','GB','JP','KR','IN','VN','TH','TW','MY','ID','PH','SG','BD','PK','BR','AR','AU','NZ','CH','TR','ZA','SA','AE','IL'];
-// For the U.S.-destination by-origin table, exclude US itself (domestic trade is
-// not an import). China-destination table keeps US (US→CN is a real flow).
 const COMPARE_ORIGINS_US = COMPARE_ORIGINS.filter(o => o !== 'US');
-// Origin dropdown ordering per user 2026-09-04 iron rule: pinned (US, CN) at top,
-// then "popular" high-traffic origins, then the rest in the file's existing order.
 const PINNED_ORIGINS = ['US', 'CN'];
 const POPULAR_ORIGINS = COMPARE_ORIGINS.filter(o => o !== 'US' && o !== 'CN');
 const _popularSet = new Set(POPULAR_ORIGINS);
 const _restOrigins = ORIGINS.filter(o => !_popularSet.has(o.iso2) && !PINNED_ORIGINS.includes(o.iso2));
-// Destination options for the DEFAULT origin (CN) — CN origin → only US is valid
-// (CN destination excluded by self-rule; OFAC embargo not in play for CN).
 const destOpts = destOptionsFor('CN');
 
-// SSR worked example (zero-JS, AI-crawler readable) — base pulled from the
-// freshly-rebuilt full set so the GEO-cited number tracks the latest USITC rev.
 const DEMO_HTS = '6109.10.00';
 const fullRates = (full && typeof full === 'object') ? (full as Record<string, Rate>) : {};
 const demoRates = fullRates[DEMO_HTS] ? fullRates : (rates as Record<string, Rate>);
 
-// Product dropdown + HTS datalist are driven by the CURATED, fully-translated
-// PRODUCTS catalog (real USITC HTS codes). Live calc still looks the code up in
-// the full dataset (fetched client-side), so any code typed in the HTS box computes.
 const products = PRODUCTS;
 const newsItems = (newsFeed && (newsFeed as { items?: any[] }).items) ? (newsFeed as { items: any[] }).items : [];
 const DEFAULT_DEST = 'US';
 const worked = computeStack(DEFAULT_DEST, DEMO_HTS, 'CN', 1000, demoRates, fixed, overlay)!;
 const compare = COMPARE_ORIGINS_US.map(o => computeStack('US', DEMO_HTS, o, 1000, demoRates, fixed, overlay)!);
 
-// China destination real comparison table (8-digit HS 6109.10; CN origin excluded — domestic).
 const cnFullRates = (cnFullJson && (cnFullJson as any).by_hs8) ? (cnFullJson as any).by_hs8 : (cnFullJson as any);
 const COMPARE_ORIGINS_CN = COMPARE_ORIGINS.filter(o => o !== 'CN');
 const compare_cn = COMPARE_ORIGINS_CN.map(o => computeStack('CN', '6109.10', o, 1000, demoRates, fixed, overlay, cnFullRates)!);
@@ -58,30 +46,14 @@ const jsonLd = JSON.stringify({
   "operatingSystem": "Any",
   "inLanguage": ["en", "zh", "zh-TW", "ja", "ko", "es", "fr", "pt", "de", "it"],
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "description": "Free import duty and landed-cost calculator with multi-language UI and product-to-HS classification. U.S. full official stacked tariff (USITC HTS, subheading-level) is live; China destination official 2026 tariff schedule (State Council Tariff Commission, effective 2026-01-01) is live with REAL rates (最惠国/MFN + 暂定/provisional). Full stacked U.S. tariff: base MFN + Section 301 + forced-labour duty + MPF/HMF.",
+  "description": "Free import duty and landed-cost calculator with multi-language UI and product-to-HS classification. U.S. full official stacked tariff (USITC HTS, subheading-level) is live; China destination official 2026 tariff schedule (State Council Tariff Commission, effective 2026-01-01) is live with REAL rates (最惠国/MFN + 暂定/provisional).",
   "dateModified": verifiedDate
 });
 
 const pct = (x: number) => (x * 100).toFixed(2) + '%';
 const usd = (x: number) => '$' + x.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const effClass = (e: number) => (e > 0.3 ? 'bad' : e > 0.15 ? 'warn' : 'good');
-
-// SSR-baked initial timestamps for the 6 time-zone clocks (so zero-JS first
-// paint and crawlers see real numbers; client-side JS then re-ticks every second
-// using the same Intl.DateTimeFormat / IANA tz).
-const _now = new Date();
-const fmtClk = (tz: string) => ({
-  t: new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: tz }).format(_now),
-  d: new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: '2-digit', month: 'short', timeZone: tz }).format(_now),
-});
-const clkBeijing    = fmtClk('Asia/Shanghai');
-const clkTokyo      = fmtClk('Asia/Tokyo');
-const clkDC         = fmtClk('America/New_York');
-const clkLA         = fmtClk('America/Los_Angeles');
-const clkBrussels   = fmtClk('Europe/Brussels');
-const clkLondon     = fmtClk('Europe/London');
 ---
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -90,493 +62,242 @@ const clkLondon     = fmtClk('Europe/London');
   <title>TariffStack — Import Duty &amp; Landed-Cost Calculator</title>
   <meta name="description" content={`Free import duty and landed-cost calculator with multi-language UI and product-to-HS classification. U.S. full official stacked tariff (USITC HTS, subheading-level) is live; China destination official 2026 tariff schedule (State Council Tariff Commission, effective 2026-01-01) is live with REAL rates. Verified ${verifiedDate} (Beijing time).`} />
   <script type="application/ld+json" set:html={jsonLd}></script>
+  <SeoHead />
   <style is:global>
     :root{
-      --bg:#f4f6fa; --card:#ffffff; --ink:#0f172a; --ink-deep:#0b1220; --content:#334155;
-      --mut:#94a3b8; --line:#e6eaf1; --line2:#d7dde8;
-      --accent:#1d4ed8; --accent-soft:#eef3ff;
-      --good:#15803d; --warn:#b45309; --bad:#b91c1c;
+      --bg:#f4f6fb; --card:#fff; --text:#1a2233; --muted:#5b6678; --content:#334155;
+      --accent:#2f6df0; --accent-soft:#e8f0ff; --border:#e2e8f2; --line:#e6eaf1; --line2:#d7dde8;
+      --good:#10b981; --warn:#f59e0b; --bad:#ef4444; --ink:#0f172a; --ink-deep:#0b1220;
       --scroll-thumb:#c8d0dd; --scroll-thumb-hover:#a8b3c5; --scroll-track:transparent;
     }
-    /* ---------- global scrollbar styling (lighter, theme-aware) ---------- */
-    *{scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) var(--scroll-track);}
+    [data-theme="dark"]{
+      --bg:#0e1320; --card:#161e30; --text:#e6ebf5; --muted:#9aa6bd; --content:#c4cedb;
+      --accent:#8aa7d8; --accent-soft:#1a2740; --border:#243049; --line:#1e2a3e; --line2:#2b3a52;
+      --good:#6fbf9c; --warn:#d8a866; --bad:#d88686; --ink:#e8edf6; --ink-deep:#f4f8fd;
+      --scroll-thumb:#2b3a52; --scroll-thumb-hover:#3d5070;
+    }
+    *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) var(--scroll-track);}
     *::-webkit-scrollbar{width:10px;height:10px;}
     *::-webkit-scrollbar-track{background:var(--scroll-track);}
     *::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:10px;border:2px solid transparent;background-clip:padding-box;}
-    *::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover);background-clip:padding-box;border:2px solid transparent;}
+    *::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover);background-clip:padding-box;}
     *::-webkit-scrollbar-corner{background:transparent;}
-    /* ---------- dark theme (toggled via [data-theme="dark"] on <html>) ---------- */
-    [data-theme="dark"]{
-      --bg:#0b1120; --card:#121a2b; --ink:#e8edf6; --ink-deep:#f4f8fd; --content:#c4cedb;
-      --mut:#8b99ad; --line:#1e2a3e; --line2:#2b3a52;
-      --accent:#8aa7d8; --accent-soft:#1a2740;
-      --good:#6fbf9c; --warn:#d8a866; --bad:#d88686;
-      --scroll-thumb:#2b3a52; --scroll-thumb-hover:#3d5070;
-    }
-    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
-    [data-theme="dark"] .clock-card,
-    [data-theme="dark"] .lang-block .meta,
-    [data-theme="dark"] .cls-hint,
-    [data-theme="dark"] .ad-slot,
-    [data-theme="dark"] .match{background:#16223a;border-color:var(--line2);}
-    [data-theme="dark"] input,
-    [data-theme="dark"] select{background:#0f1828;color:var(--ink);border-color:var(--line2);}
-    [data-theme="dark"] .brand .badge,
-    [data-theme="dark"] .lang-block .badge{background:#0f2a1c;border-color:#1c5238;color:#6fbf9c;}
-    [data-theme="dark"] .pending-panel{background:#2a1c0f;border-color:#5a3a14;}
-    [data-theme="dark"] .news-item{border-color:var(--line);}
-    [data-theme="dark"] .news-tag{color:#a8c0e0;background:#1a2740;}
-    [data-theme="dark"] .export button:hover{border-color:var(--accent);color:var(--accent);background:#1a2740;}
-    [data-theme="dark"] .theme-toggle:hover{background:#1a2740;border-color:var(--accent);color:var(--accent);}
-    [data-theme="dark"] .cookie{background:var(--card);border-color:var(--line2);}
-    [data-theme="dark"] .exp-box,
-    [data-theme="dark"] pre,
-    [data-theme="dark"] code{background:#0f1828;border-color:var(--line2);color:var(--ink);}
-    [data-theme="dark"] .hero{background:#16223a;border-color:var(--line2);}
-    /* ---------- result-area + leftover light boxes: full dark unification ---------- */
-    [data-theme="dark"] th{background:var(--card);}
-    [data-theme="dark"] .real{background:#0f2a1c;border-color:#1c5238;color:#6fbf9c;}
-    [data-theme="dark"] .indic{background:#2a1c0f;border-color:#5a3a14;color:#d8a866;}
-    [data-theme="dark"] .banner{background:#16223a;border-color:var(--line2);color:var(--content);box-shadow:none;}
-    [data-theme="dark"] .banner .b-source{color:#d8a866;}
-    [data-theme="dark"] .banner .b-disclaim{color:var(--mut);}
-    [data-theme="dark"] .ad-slot{background:#16223a;border-color:var(--line2);color:var(--mut);}
-    [data-theme="dark"] .ad-label{background:#0f1828;color:var(--mut);}
-    [data-theme="dark"] .cls-translate-hint{background:#16223a;border-color:var(--line2);color:var(--content);}
-    [data-theme="dark"] .cls-hint-remind{background:#2a1c0f;border-color:#5a3a14;color:#d8a866;}
-    *{box-sizing:border-box;}
-    body{margin:0;font:19px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
+    body{margin:0;font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
       background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
     a{color:var(--accent);}
+    .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;}
 
-    /* ---------- header (3-column: brand | live time-zone clocks | lang-block) ----------
-       On wide screens the empty middle is filled with a live clock grid showing the
-       current time in 6 customs-relevant time zones (Beijing/Tokyo/US-East/US-West/
-       Brussels/London). On narrower screens the clocks collapse below the brand. */
-    /* ====================================================================
-       Responsive header — 4-stage breakpoints so the 3-column layout
-       (brand | live clock grid | lang-block) collapses GRACEFULLY through
-       every window size without crowding/clipping.
-       ==================================================================== */
-    header{background:var(--card);border-bottom:1px solid var(--line);}
-    /* WIDE: ≥1280 — 3-column with EXPLICIT 1:2:1 proportions (用户确认这版三列比例正确).
-       Brand/Right 用 minmax(min,1fr) 上限固定为 1fr，Middle 用 2fr 拿双倍空间。
-       中间列 2fr 在 1280 视口下约 550px，足够放下 3×2 时钟（3×185px）不挤、无空白。 */
-    .hd-inner{max-width:1700px;margin:0 auto;padding:24px 56px;
-      display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,2fr) minmax(300px,1fr);align-items:start;gap:28px;}
+    /* ===== 页头：纤细、整条底边带弧、吸顶 ===== */
+    header{background:var(--card);border-radius:0 0 30px 30px;box-shadow:0 1px 2px rgba(20,30,60,.06),0 8px 24px rgba(20,30,60,.07);
+      position:sticky;top:0;z-index:30;border-bottom:1px solid var(--border);}
+    .hd-inner{max-width:1180px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:14px;height:64px;}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:var(--ink);letter-spacing:.2px;text-decoration:none;}
+    .brand .logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#7aa7ff);display:grid;place-items:center;color:#fff;font-size:15px;box-shadow:0 4px 12px rgba(47,109,240,.35)}
+    .spacer{flex:1}
+    .lang-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .hbtn{display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--border);
+      background:var(--card);color:var(--text);font-size:14px;cursor:pointer;transition:.15s;white-space:nowrap;text-decoration:none;}
+    .hbtn:hover{box-shadow:0 1px 2px rgba(20,30,60,.06),0 8px 24px rgba(20,30,60,.07);transform:translateY(-1px);}
+    .hbtn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+    .hbtn.icon{width:40px;padding:0;justify-content:center;}
+    .hsep{width:1px;height:24px;background:var(--border);margin:0 2px;}
+    select#lang{height:40px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);padding:0 12px;font-size:14px;cursor:pointer;}
 
-    /* MID-WIDE: 1100–1279 — 收紧比例到 1:1.5:1（1100–1280 必单独处理）。 */
-    @media (max-width:1279px){
-      .hd-inner{padding:22px 36px;gap:20px;
-        grid-template-columns:minmax(220px,1fr) minmax(0,1.5fr) minmax(260px,1fr);}
-      .clock-bar{gap:8px;}
-      .clock-card{padding:8px 10px;}
-      .clock-card .clk-city{font-size:11px;letter-spacing:.04em;}
-      .clock-card .clk-time{font-size:16px;}
-      .clock-card .clk-date{font-size:10.5px;}
-      .clock-card .clk-off{font-size:10.5px;}
-      .lang-block .tag{font-size:16.5px;}
-      .lang-block .tag2{font-size:13.5px;}
-      .lang-block .meta{font-size:12.5px;padding:9px 12px;gap:4px;}
-      .lang-block .meta .row .k{font-size:10.5px;}
-    }
+    /* ===== layout ===== */
+    main{max-width:1180px;margin:0 auto;padding:24px 24px 40px;}
+    .cols{display:grid;grid-template-columns:1.12fr .88fr;gap:22px;align-items:start;}
+    @media(max-width:900px){.cols{grid-template-columns:1fr;}}
+    h2.sec{margin:0 0 14px;font-size:21px;font-weight:700;color:var(--ink);letter-spacing:-.01em;}
+    .sec-sub{font-size:14px;color:var(--muted);margin:0 0 14px;line-height:1.5;}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;box-shadow:0 1px 2px rgba(20,30,60,.04);}
+    .card .pad{padding:22px;}
 
-    /* NARROW-DESKTOP: 900–1099 — drop the clock to 2 columns
-       (brand | lang-block); 6 clocks + lang-block in the same row would
-       force everything to <90px and clip city names. */
-    @media (max-width:1099px){
-      .hd-inner{grid-template-columns:minmax(0,min-content) minmax(0,1fr);
-        gap:18px;padding:18px 24px;}
-      .clock-bar{display:none;}
-    }
+    /* ===== hero ===== */
+    .hero{padding:30px 0 6px;}
+    .hero h1{font-size:32px;margin:0 0 10px;line-height:1.15;color:var(--ink);}
+    .hero .sub{color:var(--muted);max-width:660px;margin:0 0 16px;}
+    .verified{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:6px 14px;box-shadow:0 1px 2px rgba(20,30,60,.06);}
+    .verified .dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 0 4px color-mix(in srgb,var(--good) 22%,transparent);}
+    /* 变动预警横幅（匿名，免登录） */
+    .alerts{margin:18px 0 0;display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:14px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 30%,var(--border));font-size:14px;color:var(--content);}
+    .alerts .pulse{width:10px;height:10px;border-radius:50%;background:var(--warn);position:relative;flex:none;}
+    .alerts .pulse::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--warn);animation:pulse 1.8s ease-out infinite;opacity:0;}
+    @keyframes pulse{0%{transform:scale(.6);opacity:.7}100%{transform:scale(1.6);opacity:0}}
 
-    /* TABLET: ≤900 — single column; clocks come back as a 3-col grid
-       underneath brand/lang-block. */
-    @media (max-width:900px){
-      .hd-inner{padding:16px 20px;grid-template-columns:1fr;gap:14px;}
-      /* mobile: 3×2 grid 紧凑排版，不强制 6 列（屏幕不够） */
-      .clock-bar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:100%;justify-self:stretch;gap:10px;}
-      .clock-card .clk-city{font-size:11.5px;}
-      .clock-card .clk-time{font-size:18px;}
-      .lang-block{align-items:flex-start;text-align:left;max-width:100%;}
-      .lang-block .meta{align-items:flex-start;text-align:left;padding:10px 12px;}
-      .lang-block .meta .row{justify-content:flex-start;}
-      .lang-block .badge{align-self:flex-start;}
-      .lang-block .tag{font-size:17px;}
-      .lang-block .tag2{font-size:14px;}
-    }
-
-    /* MOBILE: ≤560 — clocks drop to 2 columns + tighter padding so they
-       don't crowd on a 360-wide viewport. */
-    @media (max-width:560px){
-      .clock-bar{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
-      .clock-card{padding:7px 10px;}
-      .clock-card .clk-city{font-size:10.5px;letter-spacing:.04em;}
-      .clock-card .clk-time{font-size:16px;}
-      .clock-card .clk-date{font-size:10px;}
-      .clock-card .clk-off{font-size:10px;}
-      .lang-block .meta{font-size:12.5px;padding:9px 11px;}
-      .lang-block .meta .row .k{font-size:10.5px;}
-    }
-
-    .brand{display:flex;flex-direction:column;align-items:flex-start;min-width:0;}
-    .brand h1{margin:0;font-size:clamp(28px,2.6vw,40px);line-height:1.05;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
-    .brand .tag{margin-top:10px;font-size:clamp(15px,1.4vw,19px);color:var(--ink);font-weight:600;line-height:1.4;}
-    .brand .badge{display:inline-block;margin-top:12px;font-size:14px;color:var(--good);background:#ecfdf3;border:1px solid #c8f0d4;border-radius:999px;padding:6px 16px;font-weight:600;}
-    .brand .lang-row{margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-    .brand .lang-row label{flex-shrink:0;font-size:11px;letter-spacing:.06em;color:var(--ink);opacity:.78;}
-    .brand .lang-row select{
-      /* 强制固定 110px——Chrome 默认按最长 option（Português/Français/Deutsch/Italiano）撑宽到 ~150px，
-         中文版被同步压缩。固定宽度让 select 不抢 label+Dark+Guides 的空间。 */
-      flex:0 0 110px;width:110px;min-width:110px;max-width:110px;
-      padding:6px 8px;font-size:13px;height:32px;
-    }
-    /* Dark + Guides 按钮：跟 Language 同一行（用户 2026-09-05 钉死"放在语言旁边"）。
-       flex-shrink:0 保证按钮文字永远完整不被压窄；select 用 flex:1 可压缩吸收空间。
-       空间不够时 flex-wrap 让按钮自动换到下一行，绝不挤压。 */
-
-    /* MIDDLE: clock bar (real-time, updated every second by JS).
-       用户要求：一排 3 个时钟、共 2 排（3×2）。用 repeat(3,minmax(0,1fr)) 写死 3 列——
-       永远 3 列 2 行、不换行、中间列 2fr 宽度下每格约 185px 不挤。
-       minmax(0,1fr) 下限 0：窄屏格子自动收缩，不撑大父容器。
-       justify-self:stretch 让它撑满中间列宽（无列间空白）。 */
-    .clock-bar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;
-      align-self:start;justify-self:stretch;max-width:100%;min-width:0;}
-    .clock-card{background:#fafbfd;border:1px solid var(--line);border-radius:9px;
-      padding:9px 12px;display:flex;flex-direction:column;gap:1px;min-width:0;
-      transition:border-color .2s ease;}
-    .clock-card:hover{border-color:#d6e2ff;}
-    .clock-card .clk-city{font-size:11.5px;color:var(--mut);text-transform:uppercase;
-      letter-spacing:.05em;font-weight:700;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .clock-card .clk-time{font-size:clamp(18px,1.5vw,21px);font-weight:800;color:var(--ink-deep);
-      font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:1.15;
-      font-family:"SF Mono","Cascadia Mono","Consolas",ui-monospace,monospace;}
-    .clock-card .clk-date{font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums;line-height:1.3;}
-    .clock-card .clk-off{color:var(--accent);font-weight:700;}
-
-    /* RIGHT column: tagline + meta + badge + language selector — right-aligned */
-    .lang-block{display:flex;flex-direction:column;align-items:flex-end;text-align:right;gap:9px;max-width:560px;min-width:0;overflow-wrap:break-word;}
-    .lang-block .tag{font-size:18px;color:var(--ink);font-weight:700;line-height:1.4;letter-spacing:-.005em;overflow-wrap:anywhere;max-width:100%;}
-    .lang-block .tag2{font-size:14.5px;color:var(--content);font-weight:500;line-height:1.5;overflow-wrap:anywhere;word-break:normal;max-width:100%;}
-    .lang-block .tag2 b{color:var(--accent);font-weight:700;}
-    /* meta panel: structured key/value, monospaced values, divider between rows, only on the right column */
-    .lang-block .meta{display:flex;flex-direction:column;gap:5px;font-size:13.5px;color:var(--ink);line-height:1.45;
-      background:#fafbfd;border:1px solid var(--line);border-radius:9px;padding:10px 14px;text-align:right;}
-    .lang-block .meta b{color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums;}
-    .lang-block .meta .row{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;align-items:baseline;}
-    .lang-block .meta .row .k{color:var(--mut);text-transform:uppercase;letter-spacing:.04em;font-size:11.5px;font-weight:600;flex:0 0 auto;}
-    .lang-block .meta .row .v{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums;flex:0 0 auto;}
-    .lang-block .badge{display:inline-block;font-size:13.5px;color:var(--good);background:#ecfdf3;border:1px solid #c8f0d4;border-radius:999px;padding:6px 16px;font-weight:600;align-self:flex-end;}
-    .lang-row{display:flex;align-items:center;gap:10px;}
-    .lang-row label{margin:0;font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;font-weight:600;}
-    .lang-row select{font-size:14.5px;color:var(--ink);background:var(--card);border:1px solid var(--line2);border-radius:9px;padding:8px 12px;cursor:pointer;width:auto;}
-    .theme-toggle{display:inline-flex;align-items:center;gap:5px;font-size:13.5px;font-weight:600;color:var(--ink);background:var(--card);border:1px solid var(--line2);border-radius:9px;padding:6px 10px;cursor:pointer;line-height:1;white-space:nowrap;flex-shrink:0;}
-    .theme-toggle:hover{border-color:var(--accent);color:var(--accent);}
-    .theme-toggle .tt-ico{font-size:14px;line-height:1;}
-    [data-theme="dark"] .theme-toggle{background:#0f1828;color:var(--ink);border-color:var(--line2);}
-    @media (max-width:900px){
-      .lang-block{align-items:flex-start;text-align:left;max-width:100%;}
-      .lang-block .meta{align-items:flex-start;text-align:left;padding:10px 12px;}
-      .lang-block .meta .row{justify-content:flex-start;}
-      .lang-block .badge{align-self:flex-start;}
-      .lang-block .tag{font-size:17px;}
-      .lang-block .tag2{font-size:14px;}
-    }
-    /* on the smallest mobile screens the meta panel still looks tidy */
-    @media (max-width:560px){
-      .lang-block .meta{font-size:13px;padding:9px 11px;}
-      .lang-block .meta .row .k{font-size:11px;}
-    }
-
-    /* ---------- main, with side gutters reserved for future ads ---------- */
-    /* container widened to 1700px so right column (live result) has room for the big hero + table */
-    main{max-width:1700px;margin:0 auto;padding:28px 56px 48px;}
-    @media (max-width:900px){main{padding:18px 20px 32px;}}
-
-    /* ---------- desktop two-column layout ----------
-       left:  form / classifier / worked example / by-origin / ad slot  (all stacked)
-       right: LIVE RESULT (big hero + table + note + export) — sticky-aligned */
-    .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:36px;align-items:start;}
-    @media (max-width:900px){.cols{grid-template-columns:1fr;gap:18px;}}
-
-    /* ---------- section titles (distinct from body) ---------- */
-    h2.sec{margin:0 0 14px;font-size:23px;font-weight:700;color:var(--ink);letter-spacing:-.01em;}
-    .sec-sub{font-size:14.5px;color:var(--mut);margin:0 0 14px;line-height:1.5;}
-
-    /* ---------- cards ---------- */
-    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 1px 2px rgba(15,23,42,.04);}
-
-    /* ---------- calculator form ---------- */
-    .calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;align-items:end;}
-    .entry{display:flex;flex-direction:column;gap:8px;min-width:0;}
-    label.fld{font-size:13.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;font-weight:600;}
-    .fld-hint{font-size:12px;color:var(--mut);opacity:.85;line-height:1.35;margin-top:-3px;word-break:break-word;}
-    input,select{background:#fff;color:var(--ink);border:1px solid var(--line2);border-radius:9px;padding:12px 13px;font-size:16px;width:100%;max-width:100%;min-width:0;}
+    /* ===== calculator form ===== */
+    .calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;align-items:end;}
+    .entry{display:flex;flex-direction:column;gap:7px;min-width:0;}
+    label.fld{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600;}
+    input,select{background:var(--card);color:var(--text);border:1px solid var(--line2);border-radius:10px;padding:11px 12px;font-size:15px;width:100%;max-width:100%;min-width:0;}
     input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
-    button.btn{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:13px 20px;font-size:16px;font-weight:700;cursor:pointer;text-align:center;}
-    /* Calculate button: full width of its grid cell, text centered (scoped to .calc so the
-       Find HS codes button inside .cls-row stays content-width). */
-    .calc button.btn{width:100%;display:flex;align-items:center;justify-content:center;}
+    button.btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;text-align:center;width:100%;}
     button.btn:hover{filter:brightness(1.06);}
+    .note{font-size:13.5px;color:var(--muted);margin-top:10px;line-height:1.6;}
 
-    /* ---------- classifier ---------- */
-    .cls-head{font-size:19px;font-weight:700;color:var(--ink);margin:0 0 6px;line-height:1.35;}
+    /* HS 自动补全下拉（可输入也可点选） */
+    .hs-wrap{position:relative;}
+    .hs-list{position:absolute;top:46px;left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:0 2px 4px rgba(20,30,60,.08),0 14px 40px rgba(20,30,60,.12);max-height:248px;overflow-y:auto;z-index:25;display:none;}
+    .hs-list.show{display:block;}
+    .hs-list .opt{display:flex;gap:10px;padding:9px 12px;cursor:pointer;font-size:13px;align-items:baseline;}
+    .hs-list .opt:hover,.hs-list .opt.active{background:var(--accent-soft);}
+    .hs-list .opt .c{font-family:ui-monospace,Menlo,monospace;color:var(--accent);font-weight:700;min-width:90px;flex:none;}
+    .hs-list .opt .d{color:var(--muted);}
+    .hs-list .opt.none{color:var(--muted);cursor:default;}
+
+    /* ===== 结果区：限高 + 滑轮 + 关税合计标识 ===== */
+    .result{max-height:380px;overflow-y:auto;margin-top:16px;border-top:1px dashed var(--border);padding-top:14px;}
+    .result::-webkit-scrollbar{width:10px;}
+    .result::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;border:2px solid var(--bg);}
+    .result::-webkit-scrollbar-track{background:transparent;}
+    .total-box{display:flex;align-items:baseline;gap:12px;padding:14px 16px;border-radius:12px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 35%,var(--border));margin-bottom:14px;}
+    .total-box .lbl{font-size:13px;color:var(--muted);font-weight:600;}
+    .total-box .amt{font-family:ui-monospace,Menlo,monospace;font-size:28px;font-weight:800;color:var(--accent);letter-spacing:-.5px;}
+    .total-box .sub{font-size:12px;color:var(--muted);margin-left:auto;}
+    .res-hero{display:flex;flex-direction:row;align-items:baseline;gap:40px;flex-wrap:wrap;margin:0 0 6px;padding:14px 18px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 22%,var(--border));border-radius:14px;}
+    .res-hero .h-label{font-size:15px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700;}
+    .res-hero .h-num{font-size:40px;line-height:1;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;}
+    .res-hero .h-num.good{color:var(--good);} .res-hero .h-num.warn{color:var(--warn);} .res-hero .h-num.bad{color:var(--bad);}
+    .res-hero .h-total-label{font-size:16px;color:var(--content);font-weight:700;}
+    .res-hero .h-total-num{font-size:40px;line-height:1;font-weight:800;color:var(--ink-deep);font-variant-numeric:tabular-nums;letter-spacing:-.01em;margin-left:auto;}
+    .empty{color:var(--muted);font-style:italic;font-size:14px;padding:8px 0;}
+
+    /* ===== classifier ===== */
+    .cls-head{font-size:18px;font-weight:700;color:var(--ink);margin:0 0 6px;}
     .cls-sub{font-size:14px;color:var(--content);margin:0 0 14px;line-height:1.55;}
-    .cls-translate-hint{margin-top:10px;font-size:13px;line-height:1.5;color:var(--mut);background:#fffaf0;border:1px solid #f3e3bd;border-radius:8px;padding:9px 12px;}
-    .cls-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;}
-    .matches{margin-top:18px;display:flex;flex-direction:column;gap:10px;width:100%;max-width:100%;box-sizing:border-box;overflow:hidden;}
-    .match{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;width:100%;max-width:100%;box-sizing:border-box;text-align:left;
-      background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px 15px;cursor:pointer;}
+    .cls-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;margin-top:16px;}
+    .matches{margin-top:16px;display:flex;flex-direction:column;gap:10px;width:100%;box-sizing:border-box;}
+    .match{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;width:100%;box-sizing:border-box;text-align:left;
+      background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 15px;cursor:pointer;}
     .match:hover{border-color:var(--accent);background:var(--accent-soft);}
-    .match .m-hts{flex:0 0 auto;font-weight:700;color:var(--accent);font-size:16px;font-variant-numeric:tabular-nums;min-width:0;}
-    .match .m-desc{color:var(--content);font-size:15px;flex:1 1 auto;min-width:0;padding:0 14px;white-space:normal;overflow-wrap:break-word;word-break:break-word;}
-    .match .m-rate{flex:0 0 auto;font-size:14px;color:var(--mut);white-space:nowrap;min-width:0;}
-    /* mobile: stack + full wrap so long descriptions never stretch the page */
-    @media (max-width:560px){
-      .match{flex-direction:column;align-items:flex-start;gap:6px;padding:12px 14px;}
-      .match .m-desc{padding:0;width:100%;}
-      .match .m-rate{align-self:flex-start;}
-    }
+    .match .m-hts{flex:0 0 auto;font-weight:700;color:var(--accent);font-size:15px;font-variant-numeric:tabular-nums;}
+    .match .m-desc{color:var(--content);font-size:14px;flex:1 1 auto;padding:0 14px;}
+    .match .m-rate{flex:0 0 auto;font-size:13px;color:var(--muted);white-space:nowrap;}
 
-    /* classifier hints: ALWAYS VISIBLE (no collapse) — contains tip + post-selection reminder */
-    .cls-hint{margin-top:18px;padding:14px 16px;background:#fafbfd;border:1px solid var(--line);
-      border-radius:10px;}
-    .cls-hint-title{font-size:14px;font-weight:700;color:var(--ink);margin:0 0 6px;line-height:1.4;}
-    .cls-hint-tip{font-size:14px;color:var(--content);margin:0 0 4px;line-height:1.55;}
-    .cls-hint-none{font-size:13.5px;color:var(--mut);margin:0 0 4px;line-height:1.5;font-style:italic;}
-    .cls-hint-remind{margin-top:10px;padding:10px 12px;background:#fff7e8;border:1px solid #f6d78a;border-radius:8px;
-      color:#7a4f00;font-size:13.5px;line-height:1.5;font-weight:600;}
-
-    /* ---------- tables ---------- */
-    table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
-    th,td{text-align:left;padding:13px 15px;border-bottom:1px solid var(--line);font-size:16px;color:var(--content);}
-    th{color:var(--mut);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.05em;background:var(--bg);}
+    /* ===== tables ===== */
+    table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+    th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--border);font-size:14.5px;color:var(--content);}
+    th{color:var(--muted);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;background:var(--bg);}
+    [data-theme="dark"] th{background:var(--card);}
     tr:last-child td{border-bottom:0;}
     td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
-    .total td{font-weight:800;color:var(--ink);border-top:2px solid var(--line2);font-size:16px;}
-    .bad{color:var(--bad);font-weight:700;}
-    .good{color:var(--good);font-weight:700;}
-    .warn{color:var(--warn);font-weight:700;}
+    .total td{font-weight:800;color:var(--ink);border-top:2px solid var(--line2);}
+    .bad{color:var(--bad);font-weight:700;} .good{color:var(--good);font-weight:700;} .warn{color:var(--warn);font-weight:700;}
+    .by-origin-scroll{max-height:340px;overflow-y:auto;margin-top:4px;border:1px solid var(--border);border-radius:12px;background:var(--card);}
+    .by-origin-scroll table{border:0;border-radius:0;}
+    .by-origin-scroll thead th{position:sticky;top:0;background:var(--bg);z-index:2;box-shadow:inset 0 -1px 0 var(--border);}
 
-    /* ---------- by-origin comparison: scrollable so the section height never changes ---------- */
-    .by-origin-scroll{max-height:360px;overflow-y:auto;margin-top:4px;border:1px solid var(--line);border-radius:12px;background:var(--card);}
-    .by-origin-scroll table{border:0;border-radius:0;background:transparent;}
-    .by-origin-scroll thead th{position:-webkit-sticky;position:sticky;top:0;background:var(--bg);z-index:2;box-shadow:inset 0 -1px 0 var(--line);}
-    [data-theme="dark"] .by-origin-scroll thead th{background:var(--card);}
+    /* ===== export ===== */
+    .export{margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;}
+    .export button{background:var(--card);color:var(--text);border:1px solid var(--line2);border-radius:9px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;}
+    .export button:hover{border-color:var(--accent);color:var(--accent);}
 
-    /* ---------- RESULT hierarchy: side-by-side hero ----------
-       LEFT column : "Effective rate [BIG-COLORED-NUMBER]"   (label + big number, baseline)
-       RIGHT column: "Total duty + fees:  [BIG-DEEP-BLACK-NUMBER]"  (margin-left:auto, sticks to right edge)
-       Inside each row, label and number stay on ONE line (flex-direction:row baseline),
-       so the ":" never falls onto its own line. */
-    .hero{display:flex;flex-direction:row;align-items:center;gap:40px;flex-wrap:wrap;
-      margin:16px 0 6px;padding:20px 26px;
-      background:var(--accent-soft);border:1px solid #d6e2ff;border-radius:14px;}
-    .hero-row1{display:flex;flex-direction:row;align-items:baseline;gap:16px;flex-wrap:wrap;}
-    .hero-row2{display:flex;flex-direction:row;align-items:baseline;gap:10px;flex-wrap:wrap;margin-left:auto;}
-    .h-label{font-size:15px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;font-weight:700;}
-    .h-num{font-size:48px;line-height:1;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;}
-    .h-num.good{color:var(--good);} .h-num.warn{color:var(--warn);} .h-num.bad{color:var(--bad);}
-    .h-total-label{font-size:16px;color:var(--content);font-weight:700;}
-    .h-total-num{font-size:48px;line-height:1;font-weight:800;color:var(--ink-deep);font-variant-numeric:tabular-nums;letter-spacing:-.01em;}
+    /* ===== 近期变动 时间线（唯一政策呈现） ===== */
+    .timeline{margin-top:8px;}
+    .tl{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);}
+    .tl:last-child{border-bottom:none;}
+    .tl .date{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted);min-width:78px;}
+    .tl .body{font-size:14px;color:var(--content);}
+    .tl .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);margin-right:8px;font-weight:700;}
 
-    .note{font-size:14px;color:var(--mut);margin-top:10px;line-height:1.6;}
-    .indic{font-size:13.5px;color:#7a4f00;margin-top:12px;padding:10px 13px;background:#fff7e8;border:1px solid #f6d78a;border-radius:9px;line-height:1.55;}
-    .real{font-size:13.5px;color:#146c43;margin-top:12px;padding:10px 13px;background:#ecfdf3;border:1px solid #abefc6;border-radius:9px;line-height:1.55;}
-    /* header banner: aligned width with header/main (max-width:1700px), prominent, appears under site header */
-    .banner-wrap{max-width:1700px;margin:18px auto 0;padding:0 56px;}
-    .banner{display:flex;align-items:flex-start;gap:12px;font-size:14px;line-height:1.6;color:#7a4f00;
-      background:linear-gradient(180deg,#fffdf3 0%,#fff7e8 100%);border:1px solid #f6d78a;border-left:4px solid var(--warn);border-radius:10px;
-      padding:14px 18px;margin:0;font-weight:500;box-shadow:0 1px 2px rgba(180,83,9,.04);}
-    .banner .b-ico{font-size:18px;line-height:1.4;flex:0 0 auto;}
+    /* ===== 批量：自动待算行 ===== */
+    .batch{margin-top:24px;}
+    .binput{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr .9fr;gap:10px;align-items:end;}
+    @media(max-width:820px){.binput{grid-template-columns:1fr 1fr;}}
+    .binput .grow{grid-column:1/-1;}
+    .pending{margin:12px 0 4px;display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;}
+    .pending::-webkit-scrollbar{width:10px;}
+    .pending::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;border:2px solid var(--bg);}
+    .area-head{display:flex;align-items:center;justify-content:space-between;margin:4px 0 8px;}
+    .area-head .t{font-size:13px;color:var(--muted);font-weight:600;}
+    .clear-btn{height:30px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:12.5px;cursor:pointer;}
+    .clear-btn:hover{color:var(--bad);border-color:var(--bad);}
+    .prow{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr .9fr 30px;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:13px;}
+    [data-theme="dark"] .prow{background:var(--card);}
+    .prow select,.prow input{height:34px;padding:0 8px;font-size:13px;border-radius:8px;}
+    @media(max-width:820px){.prow{grid-template-columns:1fr 1fr 30px;}.prow .hide-sm{display:none;}}
+    .prow .x{border:none;background:transparent;color:var(--bad);cursor:pointer;font-size:18px;line-height:1;justify-self:center;}
+    .batch-out{max-height:380px;overflow-y:auto;margin-top:12px;border-top:1px dashed var(--border);padding-top:12px;}
+    .batch-out::-webkit-scrollbar{width:10px;}
+    .batch-out::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;border:2px solid var(--bg);}
+    .batch-actions{display:flex;gap:12px;align-items:center;margin-top:6px;flex-wrap:wrap;}
+
+    /* ===== 关注清单（匿名 localStorage，免登录） ===== */
+    .watch{margin-top:28px;}
+    .watch-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:12px;}
+    .watch-bar input{background:var(--card);color:var(--text);border:1px solid var(--line2);border-radius:10px;padding:10px 12px;font-size:14px;width:260px;font-family:ui-monospace,Menlo,monospace;}
+    .watch-bar .btn{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;width:auto;}
+    .watch-bar .btn:hover{opacity:.92;}
+    .watch-bar .btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line2);font-weight:600;}
+    .watch-table{margin-top:14px;width:100%;border-collapse:collapse;font-size:14.5px;max-width:820px;}
+    .watch-table th,.watch-table td{padding:10px 14px;border-bottom:1px solid var(--line2);text-align:left;}
+    .watch-table th{color:var(--muted);font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;}
+    .watch-table .num{text-align:right;}
+    .watch-table .rm{color:var(--bad);background:none;border:none;cursor:pointer;font-weight:600;font-size:13.5px;}
+
+    /* ===== 数据来源横幅 ===== */
+    .banner-wrap{max-width:1180px;margin:18px auto 0;padding:0 24px;}
+    .banner{display:flex;align-items:flex-start;gap:12px;font-size:13.5px;line-height:1.6;color:#7a4f00;
+      background:linear-gradient(180deg,#fffdf3 0%,#fff7e8 100%);border:1px solid #f6d78a;border-left:4px solid var(--warn);border-radius:10px;padding:14px 18px;font-weight:500;}
     .banner .b-source{font-weight:800;color:#92400e;margin-right:4px;}
     .banner .b-disclaim{color:#7a4f00;}
-    @media (max-width:900px){.banner-wrap{padding:0 20px;margin-top:14px;}}
-    @media (max-width:560px){
-      .banner{font-size:13px;padding:11px 13px;gap:10px;}
-      .banner .b-ico{font-size:16px;}
-}
-    .export{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;}
-    .export button{background:var(--card);color:var(--ink);border:1px solid var(--line2);border-radius:9px;padding:11px 18px;font-size:15px;font-weight:600;cursor:pointer;}
-    .export button:hover{border-color:var(--accent);color:var(--accent);}
-    /* ---------- alerts banner ---------- */
-    .alerts-banner{margin:0 auto 16px;max-width:1700px;padding:11px 16px;border-radius:11px;font-size:14.5px;font-weight:600;display:flex;gap:10px;align-items:center;}
-    .alerts-banner.is-new{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;}
-    .alerts-banner.is-ok{background:#ecfdf3;border:1px solid #c8f0d4;color:#1a7f4b;}
-    [data-theme="dark"] .alerts-banner.is-new{background:#3a2410;border-color:#5c3a17;color:#f0b27a;}
-    [data-theme="dark"] .alerts-banner.is-ok{background:#0f2a1c;border-color:#1c5238;color:#6fbf9c;}
-    /* ---------- batch calculator ---------- */
-    .batch{margin-top:26px;}
-    .batch .batch-bar{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;margin-top:12px;}
-    .batch .batch-bar .fld{display:block;font-size:13px;color:var(--mut);font-weight:600;margin-bottom:6px;}
-    .batch textarea{width:100%;min-height:120px;margin-top:12px;background:var(--card);color:var(--ink);border:1px solid var(--line2);border-radius:9px;padding:12px 14px;font-size:14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;resize:vertical;}
-    .batch select,.batch input.goods{background:var(--card);color:var(--ink);border:1px solid var(--line2);border-radius:9px;padding:10px 12px;font-size:14px;}
-    .batch .batch-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;align-items:center;}
-    .batch .batch-actions .btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:11px 20px;font-size:15px;font-weight:700;cursor:pointer;}
-    .batch .batch-actions .btn:hover{opacity:.92;}
-    .batch .batch-count{font-size:13.5px;color:var(--mut);font-weight:600;}
-    .batch .batch-table{margin-top:14px;width:100%;border-collapse:collapse;font-size:14px;}
-    .batch .batch-table th,.batch .batch-table td{padding:9px 12px;border-bottom:1px solid var(--line2);text-align:left;}
-    .batch .batch-table th.num,.batch .batch-table td.num{text-align:right;}
-    .batch .batch-table th{color:var(--mut);font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;}
-    .batch .batch-table tr.total td{font-weight:800;border-top:2px solid var(--line2);}
-    .batch .empty{color:var(--mut);font-size:14px;margin-top:12px;}
-    /* ---------- watchlist & alerts ---------- */
-    .watch{max-width:1700px;margin:34px auto 0;padding:0 56px;}
-    .watch .watch-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:12px;}
-    .watch .watch-bar input{background:var(--card);color:var(--ink);border:1px solid var(--line2);border-radius:9px;padding:10px 12px;font-size:14px;width:260px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;}
-    .watch .watch-bar .btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;}
-    .watch .watch-bar .btn:hover{opacity:.92;}
-    .watch .watch-bar .btn.ghost{background:transparent;color:var(--mut);border:1px solid var(--line2);font-weight:600;}
-    .watch .watch-table{margin-top:14px;width:100%;border-collapse:collapse;font-size:14.5px;max-width:760px;}
-    .watch .watch-table th,.watch .watch-table td{padding:10px 14px;border-bottom:1px solid var(--line2);text-align:left;}
-    .watch .watch-table th{color:var(--mut);font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;}
-    .watch .watch-table .num{text-align:right;}
-    .watch .watch-table .rm{color:var(--bad);background:none;border:none;cursor:pointer;font-weight:600;font-size:13.5px;}
-    .watch .empty{color:var(--mut);font-size:14px;margin-top:10px;}
-    .watch .recent{margin-top:26px;}
-    .watch .recent ul{list-style:none;padding:0;margin:10px 0 0;}
-    .watch .recent li{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--line2);font-size:14px;}
-    .watch .recent .r-tag{font-weight:700;color:var(--accent);min-width:46px;}
-    .watch .recent .r-date{color:var(--mut);font-size:13px;min-width:96px;}
-    /* ---------- footer ---------- */
-    .site-footer{margin:40px auto 0;max-width:1700px;padding:30px 56px 36px;
-      color:var(--mut);font-size:15px;line-height:1.6;
-      display:flex;flex-wrap:wrap;gap:18px 28px;justify-content:space-between;align-items:flex-start;}
-    .site-footer .ft-brand{font-weight:800;color:var(--ink);font-size:15px;letter-spacing:-.005em;}
-    .site-footer .ft-links{display:flex;flex-direction:column;gap:5px;}
-    .site-footer .ft-right{display:flex;gap:48px;align-items:flex-start;}
-    .site-footer .ft-links a{color:var(--ink);font-weight:600;text-decoration:none;font-size:15px;}
-    .site-footer .ft-links a:hover{color:var(--accent);}
-    .site-footer .ft-meta{font-size:15px;color:var(--mut);max-width:680px;}
-    .site-footer .ft-contact{display:grid;grid-template-columns:auto 1fr;column-gap:8px;row-gap:2px;align-items:baseline;min-width:0;}
-    .site-footer .ft-label{font-weight:700;color:var(--ink);font-size:15px;line-height:1.7;white-space:nowrap;}
-    .site-footer .ft-label::after{content:":";}
-    .site-footer .ft-spacer{content:"";}
-    .site-footer .ft-email-line{display:block;white-space:nowrap;color:var(--ink);font-weight:500;text-decoration:none;font-size:15px;line-height:1.7;}
-    .site-footer .ft-email-line:hover{color:var(--accent);}
-    .site-footer .ft-note{color:var(--mut);font-weight:400;margin-left:4px;}
-    @media (max-width:900px){.site-footer .ft-contact{align-items:flex-start;}}
+    [data-theme="dark"] .banner{background:#16223a;border-color:var(--line2);color:var(--content);box-shadow:none;}
+    [data-theme="dark"] .banner .b-source{color:#a8c0e0;}
+    [data-theme="dark"] .banner .b-disclaim{color:var(--muted);}
 
-    /* full-width footer divider (spans the viewport, not the 1700px container) */
-    .site-divider{width:100%;height:0;border-top:1px solid var(--line);}
-
-    /* news ticker: vertical auto-scroll of daily real tariff-policy headlines */
-    .news-ticker{margin-top:10px;width:100%;max-width:560px;}
-    .news-head{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);margin-bottom:7px;}
-    .news-viewport{position:relative;height:104px;overflow:hidden;border:1px solid var(--line2);border-radius:9px;background:var(--card);}
-    .news-track{list-style:none;margin:0;padding:0;animation:newsScroll 22s linear infinite;}
-    .news-viewport:hover .news-track{animation-play-state:paused;}
-    .news-item{display:flex;gap:10px;align-items:baseline;padding:10px 14px;font-size:14.5px;line-height:1.5;color:var(--ink);}
-    .news-tag{flex:0 0 auto;font-size:11px;font-weight:800;letter-spacing:.04em;color:var(--accent);background:var(--accent-soft);border-radius:5px;padding:2px 7px;}
-    .news-text{flex:1 1 auto;overflow-wrap:anywhere;}
-    @keyframes newsScroll{from{transform:translateY(0);}to{transform:translateY(-50%);}}
-    @media (prefers-reduced-motion: reduce){.news-track{animation:none;}}
-    @media (max-width:900px){.news-ticker{max-width:100%;}}
-
-    .empty{color:var(--mut);font-style:italic;font-size:15px;}
-    .pending-panel{margin-top:12px;padding:14px 16px;background:#fff7ed;border:1px solid #fed7aa;border-radius:11px;}
-    .pending-panel .pending{font-size:14.5px;color:#9a3412;line-height:1.6;margin:0;}
-    .pending-panel .note{margin-top:8px;color:var(--mut);}
-
-    /* ---------- ad placeholder (right-rail reserved for future AdSense) ---------- */
-    .ad-slot{margin-top:26px;border:1px dashed var(--line2);border-radius:12px;padding:22px;background:#fafbfd;
-      display:flex;align-items:center;gap:14px;min-height:140px;color:var(--mut);font-size:14px;line-height:1.6;}
-    .ad-slot .ad-label{flex:0 0 auto;background:#eef1f6;color:var(--mut);font-weight:700;font-size:12px;
-      letter-spacing:.08em;padding:5px 10px;border-radius:6px;}
-
-    /* small-screen responsive tweaks */
-    @media (max-width:900px){
-      .hero .h-num{font-size:40px;}
-      .hero .h-total-num{font-size:40px;}
-      .brand h1{font-size:32px;}
-      /* Single column on tablet/mobile so labels & inputs stack vertically
-         (avoid the 2-col auto-fit crushing labels into adjacent columns). */
-      .calc{grid-template-columns:1fr;}
-    }
-    @media (max-width:560px){
-      .hero{flex-direction:column;gap:14px;align-items:flex-start;padding:14px 16px;}
-      .hero .h-num{font-size:36px;}
-      .hero .h-total-num{font-size:36px;}
-      .brand h1{font-size:28px;}
-    }
+    /* ===== 页尾（四栏同宽） ===== */
+    .site-footer{margin-top:48px;background:var(--card);border-top:1px solid var(--border);}
+    .footer-inner{max-width:1180px;margin:0 auto;padding:34px 24px 20px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px;}
+    @media(max-width:820px){.footer-inner{grid-template-columns:1fr 1fr;}}
+    .site-footer h4{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:0 0 12px;}
+    .site-footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;}
+    .site-footer a{color:var(--text);text-decoration:none;font-size:14px;}
+    .site-footer a:hover{color:var(--accent);}
+    .site-footer .brand-blurb{color:var(--muted);font-size:13px;max-width:280px;margin:10px 0 0;}
+    .footer-bottom{max-width:1180px;margin:0 auto;padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12.5px;}
+    .footer-bottom a{color:var(--muted);}
+    @media(max-width:560px){.hero h1{font-size:26px;}.res-hero{flex-direction:column;gap:10px;align-items:flex-start;}.res-hero .h-total-num{margin-left:0;}.res-hero .h-num,.res-hero .h-total-num{font-size:34px;}.total-box .amt{font-size:24px;}.hd-inner{height:auto;padding:12px 16px;flex-wrap:wrap;}.cols{grid-template-columns:1fr;}}
   </style>
   <SeoHead />
 </head>
 <body>
   <header>
     <div class="hd-inner">
-      <div class="brand">
-        <h1 data-i18n="app_name">TariffStack</h1>
-        <div class="tag" data-i18n="tagline">Import Duty &amp; Landed-Cost Calculator — U.S. + China</div>
-        <div class="badge"><span data-i18n="badge_pre">✓ Rates verified against official USITC data on</span> {verifiedDate} <span data-i18n="badge_tz"> (Beijing time)</span></div>
-        <div class="lang-row">
-          <label for="lang" data-i18n="lang_label">Language</label>
-          <select id="lang">
-            <option value="en">English</option>
-            <option value="zh">中文（简体）</option>
-            <option value="zh-TW">中文（繁體）</option>
-            <option value="ja">日本語</option>
-            <option value="ko">한국어</option>
-            <option value="es">Español</option>
-            <option value="fr">Français</option>
-            <option value="pt">Português</option>
-            <option value="de">Deutsch</option>
-            <option value="it">Italiano</option>
-          </select>
-          <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="切换深色 / 浅色">
-            <span class="tt-ico">🌙</span><span class="tt-txt" data-i18n="theme_dark">深色</span>
-          </button>
-          <a id="guides-btn" class="theme-toggle" href="/guides" aria-label="Tariff guides and explainers" title="关税科普与指南">
-            <span class="tt-ico">📖</span><span class="tt-txt" data-i18n="guides_btn">关税指南</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- ===== MIDDLE: real-time clock grid (customs-relevant time zones) =====
-           SSR fills an initial server-side timestamp so the first paint (and any
-           zero-JS crawler) still sees real numbers; client-side JS then updates
-           every second via Intl.DateTimeFormat with the IANA tz from data-tz. -->
-      <div class="clock-bar" id="clock-bar" data-i18n-aria="clock_aria" aria-label="Live clocks for major customs jurisdictions">
-        <div class="clock-card" data-tz="Asia/Shanghai"><span class="clk-city" data-i18n="clk_beijing">Beijing</span><span class="clk-time">{clkBeijing.t}</span><span class="clk-date">{clkBeijing.d}</span><span class="clk-off">UTC+8</span></div>
-        <div class="clock-card" data-tz="Asia/Tokyo"><span class="clk-city" data-i18n="clk_tokyo">Tokyo</span><span class="clk-time">{clkTokyo.t}</span><span class="clk-date">{clkTokyo.d}</span><span class="clk-off">UTC+9</span></div>
-        <div class="clock-card" data-tz="America/New_York"><span class="clk-city" data-i18n="clk_dc">Washington DC</span><span class="clk-time">{clkDC.t}</span><span class="clk-date">{clkDC.d}</span><span class="clk-off">EST/EDT</span></div>
-        <div class="clock-card" data-tz="America/Los_Angeles"><span class="clk-city" data-i18n="clk_la">Los Angeles</span><span class="clk-time">{clkLA.t}</span><span class="clk-date">{clkLA.d}</span><span class="clk-off">PST/PDT</span></div>
-        <div class="clock-card" data-tz="Europe/Brussels"><span class="clk-city" data-i18n="clk_brussels">Brussels (EU)</span><span class="clk-time">{clkBrussels.t}</span><span class="clk-date">{clkBrussels.d}</span><span class="clk-off">CET/CEST</span></div>
-        <div class="clock-card" data-tz="Europe/London"><span class="clk-city" data-i18n="clk_london">London</span><span class="clk-time">{clkLondon.t}</span><span class="clk-date">{clkLondon.d}</span><span class="clk-off">GMT/BST</span></div>
-      </div>
-
-      <div class="lang-block">
-        <div class="tag2"><b data-i18n="tagline2_pre">U.S. full official stacked tariff</b> · <span data-i18n="tagline2_post">China (official 2026 tariff schedule - live, real rates)</span></div>
-        <div class="news-ticker">
-          <div class="news-head" data-i18n="news_title">Live tariff-policy updates</div>
-          <div class="news-viewport" role="list" aria-live="polite">
-            <ul class="news-track">
-              {newsItems.concat(newsItems).map(n => (
-                <li class="news-item" role="listitem"><span class="news-tag" data-i18n-dest={n.tag}>{destLabel(n.tag, 'en')}</span><span class="news-text" data-i18n={n.key}>{t('en', n.key).replace('{rev}', String(overlay.base_hts_revision ?? '')).replace('{date}', overlay.base_hts_date || overlay.as_of || '')}</span></li>
-              ))}
-            </ul>
-          </div>
-        </div>
+      <a class="brand" href="/"><span class="logo">⬢</span> TariffStack</a>
+      <div class="spacer"></div>
+      <div class="lang-row">
+        <a class="hbtn" href="/hs-codes" data-i18n="hs_enc_btn">HS 编码百科</a>
+        <a class="hbtn" href="/guides" data-i18n="guides_btn">关税指南</a>
+        <span class="hsep"></span>
+        <select id="lang" aria-label="Language">
+          {LANGS.map(l => <option value={l.code}>{l.label}</option>)}
+        </select>
+        <button class="hbtn icon" id="theme-toggle" title="切换主题" aria-label="Toggle dark mode"><span class="tt-ico">🌙</span><span class="tt-txt" data-i18n="theme_dark">深色</span></button>
       </div>
     </div>
   </header>
 
-  <!-- ===== top-of-page legal banner: data provenance + standard "not filing advice" disclaimer ===== -->
+  <section class="hero">
+    <div class="wrap" style="max-width:1180px;margin:0 auto;padding:0 24px;">
+      <h1 data-i18n="tagline">Import Duty &amp; Landed-Cost Calculator — U.S. + China</h1>
+      <p class="sub" data-i18n="hero_sub">Real official tariff stacks for importers, compliance and customs brokers: MFN / 301 / 232 / forced-labour / MPF / HMF — every layer broken down, fully sourced.</p>
+      <span class="verified"><span class="dot"></span> <span data-i18n="badge_pre">✓ Rates verified against official customs data on</span> {verifiedDate} <span data-i18n="badge_tz"> (Beijing time)</span></span>
+      <div class="alerts" id="alerts-banner" role="status"></div>
+    </div>
+  </section>
+
   <div class="banner-wrap">
-    <div class="banner" data-i18n-html="banner_header"><span class="b-ico">📚</span><span><span class="b-source">Data aggregated from authoritative open-data feeds</span> · USITC HTS · Federal Register · USTR · CBP CROSS · U.S. Census Bureau · UN Comtrade (cross-verified nightly). <span class="b-disclaim">Before filing any entry, return or refund, always confirm with the destination country's official customs authority or a licensed customs broker.</span></span></div>
+    <div class="banner" data-i18n-html="banner_header"><span class="b-source">Data aggregated from authoritative open-data feeds</span> · USITC HTS · Federal Register · USTR · CBP CROSS · U.S. Census Bureau · UN Comtrade (cross-verified nightly). <span class="b-disclaim">Before filing any entry, return or refund, always confirm with the destination country's official customs authority or a licensed customs broker.</span></div>
   </div>
 
   <main>
-    <div id="alerts-banner" class="alerts-banner" role="status"></div>
     <div class="cols">
-      <!-- ===== LEFT: calculator + classifier (input side) ===== -->
+      <!-- ===== 左：单票计算器（核心） ===== -->
       <div class="col-left">
         <h2 class="sec" data-i18n="section_calc">Quick calculator</h2>
         <section class="card calc">
           <div class="entry">
             <label class="fld" for="hts" data-i18n="calc_hts">HTS code</label>
-            <input id="hts" placeholder="e.g. 6109.10.00" autocomplete="off" value={DEMO_HTS} />
+            <div class="hs-wrap"><input id="hts" class="mono" placeholder="e.g. 6109.10.00" autocomplete="off" value={DEMO_HTS} /><div class="hs-list" id="hsList"></div></div>
           </div>
           <div class="entry">
             <label class="fld" for="product" data-i18n="calc_product">…or pick a product</label>
@@ -607,42 +328,36 @@ const clkLondon     = fmtClk('Europe/London');
             <select id="dest">{destOpts.map(d => <option value={d} selected={d === 'US'} data-i18n-dest={d}>{destLabel(d, 'en')}</option>)}</select>
           </div>
           <div class="entry">
-            <button class="btn" id="calc" data-i18n="calc_btn">Calculate</button>
+            <label class="fld" for="mode" data-i18n="calc_mode">Transport mode (record only)</label>
+            <select id="mode">
+              <option value="" data-i18n="mode_none">Unspecified</option>
+              <option value="sea" data-i18n="mode_sea">Sea</option>
+              <option value="air" data-i18n="mode_air">Air</option>
+              <option value="rail" data-i18n="mode_rail">Rail</option>
+              <option value="truck" data-i18n="mode_truck">Truck</option>
+            </select>
           </div>
+          <div class="entry"><button class="btn" id="calc" data-i18n="calc_btn">Calculate</button></div>
         </section>
+        <p class="note" data-i18n="calc_mode_note">Duty is assessed on goods value (FOB); transport mode is recorded only and does not change the rate (USITC / HTSUS).</p>
 
         <section class="card" style="margin-top:18px;">
           <div class="cls-head" data-i18n="classify_title">Don't know the HS code? Describe the product</div>
-          <div class="cls-sub" data-i18n="classify_sub">We match your words against 25,903 U.S. HTS records and suggest the closest codes.</div>
+          <div class="cls-sub" data-i18n="classify_sub">We match your words against the official U.S. HTS schedule (25,903 subheadings) to find the HS code, then compute the real rate for your chosen U.S. or China destination.</div>
           <div class="cls-row">
             <input id="desc" data-i18n-ph="classify_ph" placeholder="e.g. stainless steel water bottle / 不锈钢保温杯" autocomplete="off" />
-            <button class="btn" id="cls-btn" data-i18n="classify_btn">Find HS codes</button>
+            <button class="btn" id="cls-btn" data-i18n="classify_btn" style="width:auto">Find HS codes</button>
           </div>
-          <div class="cls-translate-hint" data-i18n="classify_translate_hint">Search results are shown in English by default. To read them in your language, use your browser's built-in translate (right-click → Translate). Mainland China users: we recommend Edge or Firefox for translation.</div>
           <div class="matches" id="matches"></div>
-          <!-- classifier hints: ALWAYS VISIBLE (no collapse) — contains tip + post-selection reminder -->
-          <div class="cls-hint" id="cls-hint">
-            <strong class="cls-hint-title" data-i18n="classify_hints_title">How matching works</strong>
-            <div class="cls-hint-tip" data-i18n="classify_hint">Top matches (keyword match, English works best).</div>
-            <div class="cls-hint-none" data-i18n="classify_none">No match. Try different keywords (English works best).</div>
-            <div class="cls-hint-remind" data-i18n="classify_reminder">After you pick a product from the list, don’t forget to set the goods value and origin country above and press Calculate.</div>
-          </div>
         </section>
 
-        <!-- ===== LIVE RESULT — sits directly under the classifier =====
-             SSR-baked default (so zero-JS crawlers + first paint see a real result);
-             JS re-renders this on every Calculate / input change. -->
-        <section id="result" style="margin-top:18px;">
+        <!-- ===== 单票结果（固定 + 限高 + 清空） ===== -->
+        <section id="result" class="card" style="margin-top:18px;padding:22px;">
           <h2 class="sec"><span data-i18n="section_result">Calculation result</span> — HTS {worked.hts} · <span data-i18n-dest={worked.dest}>{destLabel(worked.dest, 'en')}</span> · <span data-i18n-origin={worked.origin}>{originLabel(worked.origin, 'en')}</span> · {usd(worked.goods)}</h2>
-          <div class="hero">
-            <div class="hero-row1">
-              <span class="h-label" data-i18n="eff_row">Effective rate</span>
-              <span class={`h-num ${effClass(worked.effective)}`}>{pct(worked.effective)}</span>
-            </div>
-            <div class="hero-row2">
-              <span class="h-total-label" data-i18n="total_row">Total duty + fees</span><span class="h-total-label">:</span>
-              <span class="h-total-num">{usd(worked.total)}</span>
-            </div>
+          <div class="total-box"><span class="lbl" data-i18n="total_row">Total duty + fees</span><span class="amt">{usd(worked.total)}</span><span class="sub">{destLabel(worked.dest,'en')} · {usd(worked.goods)}</span></div>
+          <div class="res-hero">
+            <div class="hero-row1"><span class="h-label" data-i18n="eff_row">Effective rate</span><span class={`h-num ${effClass(worked.effective)}`}>{pct(worked.effective)}</span></div>
+            <div class="hero-row2"><span class="h-total-label" data-i18n="total_row">Total duty + fees</span><span class="h-total-label">:</span><span class="h-total-num">{usd(worked.total)}</span></div>
           </div>
           <table>
             <thead><tr><th data-i18n="col_layer">Layer</th><th class="num" data-i18n="col_rate">Rate</th><th class="num" data-i18n="col_amount">Amount</th></tr></thead>
@@ -654,38 +369,49 @@ const clkLondon     = fmtClk('Europe/London');
             </tbody>
           </table>
           <p class="note">{worked.note}</p>
-        </section>
-        <div class="export">
-          <button id="exp-json" data-i18n="exp_json">Export JSON</button>
-          <button id="exp-csv" data-i18n="exp_csv">Export CSV</button>
-        </div>
-
-        <!-- ===== BATCH CALCULATOR — many HS codes at once ===== -->
-        <section class="batch" id="batch">
-          <h2 class="sec" data-i18n="section_batch">Batch calculator</h2>
-          <p class="note" data-i18n="batch_sub">Paste one HS code per line. Or use rows: HTS,origin,dest,goods.</p>
-          <div class="batch-bar">
-            <div><label class="fld" for="batch-origin" data-i18n="batch_origin">Origin (shared)</label>
-              <select id="batch-origin"></select></div>
-            <div><label class="fld" for="batch-dest" data-i18n="batch_dest">Market (shared)</label>
-              <select id="batch-dest">{destOpts.map(d => <option value={d} selected={d === 'US'} data-i18n-dest={d}>{destLabel(d, 'en')}</option>)}</select></div>
-            <div><label class="fld" for="batch-goods" data-i18n="batch_goods">Goods value USD (shared)</label>
-              <input class="goods" id="batch-goods" type="number" value="1000" min="0" step="1" /></div>
+          <div class="export">
+            <button id="exp-json" data-i18n="exp_json">Export JSON</button>
+            <button id="exp-csv" data-i18n="exp_csv">Export CSV</button>
+            <button id="single-clear" class="clear-btn" data-i18n="single_clear" style="margin-left:auto">Clear result</button>
           </div>
-          <textarea id="batch-input" data-i18n-ph="batch_ph" placeholder="6109.10.00&#10;8703.23.00&#10;9403.20.00"></textarea>
+        </section>
+
+        <!-- ===== 批量计算器（自动待算行） ===== -->
+        <section class="batch card" id="batch" style="margin-top:24px;">
+          <h2 class="sec" data-i18n="section_batch">Batch calculator</h2>
+          <p class="note" data-i18n="batch_sub2">Type or pick an HS code — a pending row is added automatically. Each row can set its own origin / market / transport / value; otherwise the shared defaults apply. Then run the batch.</p>
+          <div class="binput">
+            <div class="grow"><label data-i18n="batch_hs_label">HS code (type or pick — auto-adds a row)</label>
+              <div class="hs-wrap"><input id="b-hs" class="mono" autocomplete="off" data-i18n-ph="batch_ph" placeholder="e.g. 6109.10.00" /><div class="hs-list" id="b-hsList"></div></div>
+            </div>
+            <div><label data-i18n="batch_origin">Origin (shared)</label><select id="batch-origin"></select></div>
+            <div><label data-i18n="batch_dest">Market (shared)</label><select id="batch-dest">{destOpts.map(d => <option value={d} selected={d === 'US'} data-i18n-dest={d}>{destLabel(d, 'en')}</option>)}</select></div>
+            <div><label data-i18n="batch_mode">Transport (shared)</label><select id="batch-mode"><option value="" data-i18n="mode_none">Unspecified</option><option value="sea" data-i18n="mode_sea">Sea</option><option value="air" data-i18n="mode_air">Air</option><option value="rail" data-i18n="mode_rail">Rail</option><option value="truck" data-i18n="mode_truck">Truck</option></select></div>
+            <div><label data-i18n="batch_goods">Goods USD (shared)</label><input id="batch-goods" type="number" value="1000" min="0" step="1" /></div>
+          </div>
+          <div class="area-head"><span class="t"><span data-i18n="batch_pending_label">Pending rows</span> (<span id="bcount">0</span>)</span><button class="clear-btn" id="clearPending" data-i18n="batch_clear_pending">Clear pending</button></div>
+          <div class="pending" id="pending"></div>
           <div class="batch-actions">
-            <button class="btn" id="batch-run" data-i18n="batch_btn">Calculate batch</button>
-            <button class="btn" id="batch-dl" data-i18n="batch_dl" style="display:none;">Download CSV</button>
+            <button class="btn" id="batch-run" data-i18n="batch_btn" style="width:auto">Run batch</button>
+            <button class="btn" id="batch-dl" data-i18n="batch_dl" style="display:none;width:auto;background:var(--card);color:var(--text);border:1px solid var(--line2)">Download CSV</button>
             <span class="batch-count" id="batch-count"></span>
           </div>
-          <div id="batch-out"></div>
+          <div class="area-head" style="margin-top:16px"><span class="t" data-i18n="batch_result_label">Results</span><button class="clear-btn" id="clearBatchOut" data-i18n="batch_clear_out">Clear results</button></div>
+          <div class="batch-out" id="batch-out"></div>
         </section>
       </div>
 
-      <!-- ===== RIGHT: worked example + by-origin + ad slot ===== -->
+      <!-- ===== 右：近期变动 + 各国对比 ===== -->
       <div class="col-right">
-        <!-- ===== side-by-side by origin: UNITED STATES ===== -->
-        <section style="margin-top:24px;">
+        <section class="card" id="changes">
+          <div class="pad">
+            <h2 class="sec" data-i18n="news_title">Live tariff-policy updates</h2>
+            <p class="note" data-i18n="news_title_sub">Official sources — the only policy feed on this site (no duplicate scrollers).</p>
+            <div class="timeline" id="timeline"></div>
+          </div>
+        </section>
+
+        <section class="card" style="margin-top:22px;">
           <h2 class="sec" data-i18n="section_byorigin_us">Import duty to the United States — by origin country</h2>
           <div class="sec-sub" data-i18n="sec_sub">HTS 6109.10.00 · $1,000 goods</div>
           <div class="by-origin-scroll">
@@ -693,11 +419,7 @@ const clkLondon     = fmtClk('Europe/London');
             <thead><tr><th data-i18n="col_origin">Origin</th><th class="num" data-i18n="col_eff">Effective rate</th><th class="num" data-i18n="col_total">Total</th></tr></thead>
             <tbody>
               {compare.map(c => (
-                <tr>
-                  <td data-i18n-origin={c.origin}>{originLabel(c.origin, 'en')}</td>
-                  <td class={`num ${effClass(c.effective)}`}>{pct(c.effective)}</td>
-                  <td class="num">{usd(c.total)}</td>
-                </tr>
+                <tr><td data-i18n-origin={c.origin}>{originLabel(c.origin, 'en')}</td><td class={`num ${effClass(c.effective)}`}>{pct(c.effective)}</td><td class="num">{usd(c.total)}</td></tr>
               ))}
             </tbody>
           </table>
@@ -705,8 +427,7 @@ const clkLondon     = fmtClk('Europe/London');
           <p class="note" data-i18n="note_byorigin_us">U.S. stacking: base MFN + Section 301 (List 4A, China only) + forced-labour 12.5% + MPF/HMF. USMCA partners MX/CA and other FTA countries get MFN waived. Real rate estimates — confirm with CBP or a licensed broker.</p>
         </section>
 
-        <!-- ===== side-by-side by origin: CHINA ===== -->
-        <section style="margin-top:24px;">
+        <section class="card" style="margin-top:22px;">
           <h2 class="sec" data-i18n="section_byorigin_cn">Import duty to China — by origin country</h2>
           <div class="sec-sub">HS 6109.10 · ¥7,200 goods (≈ $1,000)</div>
           <div class="by-origin-scroll">
@@ -714,65 +435,62 @@ const clkLondon     = fmtClk('Europe/London');
             <thead><tr><th data-i18n="col_origin">Origin</th><th class="num" data-i18n="col_eff">Effective rate</th><th class="num" data-i18n="col_total">Total</th></tr></thead>
             <tbody>
               {compare_cn.map(c => (
-                <tr>
-                  <td data-i18n-origin={c.origin}>{originLabel(c.origin, 'en')}</td>
-                  <td class={`num ${effClass(c.effective)}`}>{pct(c.effective)}</td>
-                  <td class="num">{usd(c.total)}</td>
-                </tr>
+                <tr><td data-i18n-origin={c.origin}>{originLabel(c.origin, 'en')}</td><td class={`num ${effClass(c.effective)}`}>{pct(c.effective)}</td><td class="num">{usd(c.total)}</td></tr>
               ))}
             </tbody>
           </table>
           </div>
-          <p class="note" data-i18n="note_byorigin_cn">China applies the official 2026 Import & Export Tariff (State Council Tariff Commission, effective 2026-01-01). Applied duty = provisional rate (暂定税率) when lower, otherwise MFN (最惠国税率). Real published rates, not estimates.</p>
+          <p class="note" data-i18n="note_byorigin_cn">China applies the official 2026 Import &amp; Export Tariff (State Council Tariff Commission, effective 2026-01-01). Applied duty = provisional rate (暂定税率) when lower, otherwise MFN (最惠国税率). Real published rates, not estimates.</p>
         </section>
-
-        <!-- ad placeholder: right column bottom — reserved side rail for future Google AdSense -->
-        <aside class="ad-slot" aria-label="advertisement placeholder">
-          <span class="ad-label">AD</span>
-          <span data-i18n="ad_placeholder">Sponsored slot — reserved for future Google AdSense.</span>
-        </aside>
       </div>
     </div>
 
+    <!-- ===== 关注清单（匿名 localStorage，免登录免 DB） ===== -->
+    <section class="watch card" id="watch" style="margin-top:28px;">
+      <h2 class="sec" data-i18n="section_watch">Watchlist &amp; change alerts</h2>
+      <p class="note" data-i18n="watch_sub">Save the HS codes you track. We flag official-data updates released after your last visit, and show each watched code’s live effective rate.</p>
+      <div class="watch-bar">
+        <input id="watch-input" data-i18n-ph="watch_ph" placeholder="e.g. 6109.10.00" autocomplete="off" />
+        <button class="btn" id="watch-add" data-i18n="watch_add">Add to watchlist</button>
+        <button class="btn ghost" id="watch-clear" data-i18n="watch_clear">Clear all</button>
+      </div>
+      <div id="watch-list"></div>
+    </section>
   </main>
 
-  <!-- ===== WATCHLIST & CHANGE ALERTS (stickiness) ===== -->
-  <section class="watch" id="watch">
-    <h2 class="sec" data-i18n="section_watch">Watchlist &amp; change alerts</h2>
-    <p class="note" data-i18n="watch_sub">Save the HS codes you track.</p>
-    <div class="watch-bar">
-      <input id="watch-input" data-i18n-ph="watch_ph" placeholder="e.g. 6109.10.00" autocomplete="off" />
-      <button class="btn" id="watch-add" data-i18n="watch_add">Add to watchlist</button>
-      <button class="btn ghost" id="watch-clear" data-i18n="watch_clear">Clear all</button>
-    </div>
-    <div id="watch-list"></div>
-    <div class="recent">
-      <h3 class="sec" data-i18n="alerts_recent">Recent policy changes</h3>
-      <ul id="recent-list"></ul>
-    </div>
-  </section>
-
-  <!-- ===== full-width divider ===== -->
-  <div class="site-divider"></div>
-
-  <!-- ===== site footer (brand left, legal + contact clustered right) ===== -->
   <footer class="site-footer">
-    <div>
-      <div class="ft-brand">TariffStack</div>
-      <div class="ft-meta" data-i18n="footer_tagline">Free import-duty & landed-cost calculator — U.S. + China</div>
+    <div class="footer-inner">
+      <div>
+        <div class="brand"><span class="logo">⬢</span> TariffStack</div>
+        <p class="brand-blurb" data-i18n="footer_tagline">Free import-duty & landed-cost calculator — U.S. + China</p>
+      </div>
+      <div>
+        <h4 data-i18n="footer_product">Product</h4>
+        <ul>
+          <li><a href="/" data-i18n="footer_calc">Calculator</a></li>
+          <li><a href="/hs-codes" data-i18n="hs_enc_btn">HS 编码百科</a></li>
+          <li><a href="/guides" data-i18n="guides_btn">关税指南</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="footer_legal">Legal</h4>
+        <ul>
+          <li><a href="/privacy" data-i18n="footer_privacy">Advertising & Privacy</a></li>
+          <li><a href="/terms" data-i18n="footer_terms">Terms of Service & Disclaimer</a></li>
+          <li><a href="/about" data-i18n="footer_about">About TariffStack</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="footer_contact">Contact</h4>
+        <ul>
+          <li><a href="mailto:TariffStack@outlook.com">TariffStack@outlook.com</a></li>
+          <li><a href="mailto:zmarkz123zxc@gmail.com" data-i18n="footer_contact_biz">Business inquiries</a></li>
+        </ul>
+      </div>
     </div>
-    <div class="ft-right">
-      <div class="ft-links">
-        <a href="/about" data-i18n="footer_about">About TariffStack</a>
-        <a href="/terms" data-i18n="footer_terms">Terms of Service & Disclaimer</a>
-        <a href="/privacy" data-i18n="footer_privacy">Advertising & Privacy</a>
-      </div>
-      <div class="ft-contact">
-        <span class="ft-label" data-i18n="footer_contact">联系我们</span>
-        <a class="ft-email-line" href="mailto:TariffStack@outlook.com">TariffStack@outlook.com<span class="ft-note" data-i18n="footer_contact_note1">（团队官方邮箱）</span></a>
-        <span class="ft-spacer"></span>
-        <a class="ft-email-line" href="mailto:zmarkz123zxc@gmail.com">zmarkz123zxc@gmail.com<span class="ft-note" data-i18n="footer_contact_biz_note">（商务合作）</span></a>
-      </div>
+    <div class="footer-bottom">
+      <span>© 2026 TariffStack · USITC / 中国海关总署</span>
+      <span><a href="/guides" data-i18n="guides_btn">关税指南</a></span>
     </div>
   </footer>
 
@@ -784,7 +502,7 @@ const clkLondon     = fmtClk('Europe/London');
     import { computeStack } from '../lib/calc.ts';
     import { destLabel } from '../lib/destinations.ts';
     import { destOptionsFor } from '../lib/origins.ts';
-    import { t, layerName, originLabel, productName, descLabel, type Lang } from '../lib/i18n.ts';
+    import { t, layerName, originLabel, productName, descLabel, LANGS, type Lang } from '../lib/i18n.ts';
     import newsFeed from '../data/news_feed.json';
 
     const fixed = sample.fixed;
@@ -796,9 +514,9 @@ const clkLondon     = fmtClk('Europe/London');
     const effClass = (e) => (e > 0.3 ? 'bad' : e > 0.15 ? 'warn' : 'good');
 
     let LANG = (localStorage.getItem('ts-lang') || 'en');
-    if (!['en','zh','zh-TW','ja','ko','es','fr','pt','de','it'].includes(LANG)) LANG = 'en';
+    if (!LANGS.some(l => l.code === LANG)) LANG = 'en';
 
-    // ---- theme (dark/light) persisted toggle ----
+    // ---- theme ----
     (function initTheme(){
       try {
         const saved = localStorage.getItem('ts-theme') || 'light';
@@ -812,36 +530,20 @@ const clkLondon     = fmtClk('Europe/London');
       } catch (e) {}
     })();
 
-    // ---- zh -> en glossary so Chinese sellers can search by describing in Chinese ----
     const ZH2EN = {
-      '手机':'mobile phone','移动电话':'mobile phone','电脑':'computer','笔记本':'laptop computer','平板':'tablet',
-      '电视':'television','显示器':'monitor','相机':'camera','耳机':'headphone','耳麦':'headphone','音响':'speaker',
-      '衣服':'clothing','服装':'apparel clothing','衬衫':'shirt','裤子':'trousers','袜':'sock','鞋':'footwear shoe','靴':'boot',
-      '玩具':'toy','婴儿':'baby','手表':'watch','包':'bag','背包':'backpack','箱':'luggage case','眼镜':'spectacles','帽':'hat cap',
-      '钢铁':'steel','钢':'steel','铁':'iron','铝':'aluminum','铜':'copper','不锈钢':'stainless steel','金属':'metal',
-      '塑料':'plastic','橡胶':'rubber','木':'wood','木材':'wood','竹':'bamboo','纸':'paper','棉':'cotton','丝':'silk','麻':'linen',
-      '玻璃':'glass','陶瓷':'ceramic','石':'stone','大理石':'marble','水泥':'cement',
-      '家具':'furniture','椅':'chair','桌':'table','床':'bed','沙发':'sofa','灯':'lamp lighting','灯具':'lamp lighting',
-      '自行车':'bicycle','汽车':'motor vehicle automobile','摩托车':'motorcycle','轮胎':'tyre tire','电池':'battery',
-      '机器':'machine','电机':'electric motor','发动机':'engine','泵':'pump','阀门':'valve','轴承':'bearing','螺丝':'screw','钉':'nail','工具':'tool',
-      '食品':'food','米':'rice','糖':'sugar','茶':'tea','咖啡':'coffee','酒':'wine','饮料':'beverage','油':'oil','奶制品':'dairy','肉':'meat','鱼':'fish',
-      '药':'pharmaceutical','药品':'pharmaceutical','化妆品':'cosmetic','香水':'perfume','洗涤':'detergent','肥':'soap',
-      '医疗':'medical','口罩':'mask','注射器':'syringe','试剂':'reagent','疫苗':'vaccine',
-      '建材':'building material','管':'pipe tube','板':'plate sheet','纺织':'textile','布料':'fabric','地毯':'carpet','窗帘':'curtain','毛巾':'towel',
-      '电子':'electronic','电缆':'cable','电线':'wire','插头':'plug','开关':'switch','芯片':'semiconductor chip','电路':'circuit','太阳能':'solar',
-      '水壶':'bottle','保温杯':'stainless steel bottle','杯':'cup','碗':'bowl','刀':'knife','锅':'pot pan','叉':'fork','匙':'spoon','瓶':'bottle','保温':'insulated',
+      '手机':'mobile phone','电脑':'computer','笔记本':'laptop computer','平板':'tablet','电视':'television','显示器':'monitor','相机':'camera','耳机':'headphone','音响':'speaker',
+      '衣服':'clothing','衬衫':'shirt','裤子':'trousers','袜':'sock','鞋':'footwear shoe','靴':'boot','玩具':'toy','婴儿':'baby','手表':'watch','包':'bag','背包':'backpack','箱':'luggage case','眼镜':'spectacles','帽':'hat cap',
+      '钢铁':'steel','钢':'steel','铁':'iron','铝':'aluminum','铜':'copper','不锈钢':'stainless steel','塑料':'plastic','橡胶':'rubber','木':'wood','竹':'bamboo','纸':'paper','棉':'cotton','丝':'silk','麻':'linen','玻璃':'glass','陶瓷':'ceramic','石':'stone','水泥':'cement',
+      '家具':'furniture','椅':'chair','桌':'table','床':'bed','沙发':'sofa','灯':'lamp lighting','自行车':'bicycle','汽车':'motor vehicle automobile','摩托车':'motorcycle','轮胎':'tyre tire','电池':'battery','机器':'machine','电机':'electric motor','发动机':'engine','泵':'pump','阀门':'valve','轴承':'bearing','螺丝':'screw','钉':'nail','工具':'tool',
+      '食品':'food','米':'rice','糖':'sugar','茶':'tea','咖啡':'coffee','酒':'wine','饮料':'beverage','油':'oil','奶制品':'dairy','肉':'meat','鱼':'fish','药':'pharmaceutical','化妆品':'cosmetic','香水':'perfume','医疗':'medical','口罩':'mask','注射器':'syringe','试剂':'reagent','疫苗':'vaccine',
+      '建材':'building material','管':'pipe tube','板':'plate sheet','纺织':'textile','布料':'fabric','地毯':'carpet','窗帘':'curtain','毛巾':'towel','电子':'electronic','电缆':'cable','电线':'wire','插头':'plug','开关':'switch','芯片':'semiconductor chip','电路':'circuit','太阳能':'solar','水壶':'bottle','保温杯':'stainless steel bottle','杯':'cup','碗':'bowl','刀':'knife','锅':'pot pan','叉':'fork','匙':'spoon','瓶':'bottle',
     };
-    function expandQuery(q) {
-      let out = q;
-      for (const [zh, en] of Object.entries(ZH2EN)) out = out.replace(new RegExp(zh, 'g'), ' ' + en + ' ');
-      return out;
-    }
+    function expandQuery(q){let out=q;for(const [zh,en] of Object.entries(ZH2EN)) out=out.replace(new RegExp(zh,'g'),' '+en+' ');return out;}
 
     function classify(descRaw) {
       const isCn = (currentDest === 'CN');
       const ds = isCn ? (cnFull || {}) : (FULL || {});
       if (!ds || !Object.keys(ds).length) return [];
-      // English-expanded tokens match U.S. `desc`; raw Chinese runs match China `name`.
       const enQ = expandQuery(descRaw.toLowerCase()).split(/[^a-z0-9]+/).filter(w => w.length > 2);
       const zhRaw = (descRaw.toLowerCase().match(/[\u4e00-\u9fff]+/g) || []);
       if (!enQ.length && !zhRaw.length) return [];
@@ -853,26 +555,10 @@ const clkLondon     = fmtClk('Europe/London');
         let score = 0;
         for (const w of enQ) if (text.includes(w)) score++;
         for (const w of zhRaw) if (desc.includes(w)) score++;
-        if (score > 0) {
-          const rate = (rec.base !== undefined) ? rec.base : (rec.mfn || 0);
-          scored.push({ hts, score, desc: desc, desc_i18n: rec.desc_i18n, rate: rate });
-        }
+        if (score > 0) { const rate = (rec.base !== undefined) ? rec.base : (rec.mfn || 0); scored.push({ hts, score, desc, rate }); }
       }
       scored.sort((a, b) => b.score - a.score || b.rate - a.rate);
       return scored.slice(0, 6);
-    }
-
-    function bestDesc(m, lang) {
-      // 1) baked full translation (from translate_data.mjs) — highest quality, works behind GFW
-      if (m.desc_i18n && m.desc_i18n[lang]) return m.desc_i18n[lang];
-      // 2) curated product: use the hand-checked localized name
-      const curated = productName(m.hts, lang);
-      if (curated && curated !== m.hts) return curated;
-      // 3) word-level dictionary substitution
-      const d = descLabel(m.desc, lang, m.hts);
-      if (d && d !== m.desc) return d;
-      // 4) English source
-      return m.desc;
     }
 
     function renderMatches() {
@@ -890,57 +576,37 @@ const clkLondon     = fmtClk('Europe/London');
         document.getElementById('hts').value = hts;
         const prod = document.getElementById('product');
         if ([...prod.options].some(o => o.value === hts)) prod.value = hts;
-        // Do NOT auto-calculate — let the user set goods value & origin, then press Calculate.
-        const calcCard = document.querySelector('.calc');
-        if (calcCard) {
-          calcCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          calcCard.style.transition = 'box-shadow .3s ease';
-          calcCard.style.boxShadow = '0 0 0 3px var(--accent-soft)';
-          setTimeout(() => { calcCard.style.boxShadow = ''; }, 1600);
-        }
+        doCalc();
+        const card = document.getElementById('result');
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }));
     }
 
     function renderResult(res, targetId) {
       const el = document.getElementById(targetId || 'result');
       if (!res) {
-        const sec = document.createElement('div');
-        el.innerHTML = '';
-        const h = document.createElement('h2'); h.className = 'sec';
-        h.setAttribute('data-i18n', 'section_result'); h.textContent = t(LANG, 'section_result');
-        const p = document.createElement('p'); p.className = 'empty';
-        p.setAttribute('data-i18n', 'empty'); p.textContent = t(LANG, 'empty');
-        el.appendChild(h); el.appendChild(p);
+        el.innerHTML = `<h2 class="sec" data-i18n="section_result">${t(LANG,'section_result')}</h2><p class="empty" data-i18n="empty">${t(LANG,'empty')}</p>`;
         return;
       }
       if (res.pending) {
-        el.innerHTML = `
-        <h2 class="sec"><span data-i18n="section_result">${t(LANG,'section_result')}</span> — HTS ${res.hts} · ${destLabel(res.dest, LANG)} · ${originLabel(res.origin, LANG)} · ${usd(res.goods)}</h2>
-        <div class="pending-panel">
-          <p class="pending" data-i18n="cn_pending">${t(LANG,'cn_pending')}</p>
-          <p class="note">${res.note}</p>
-        </div>`;
+        el.innerHTML = `<h2 class="sec" data-i18n="section_result">${t(LANG,'section_result')}</h2><div class="total-box" style="background:#fff7ed;border-color:#fed7aa"><span class="lbl" data-i18n="cn_pending">${t(LANG,'cn_pending')}</span></div>`;
         return;
       }
       const rows = res.layers.map(l => `<tr><td data-i18n-layer="${l.name}">${layerName(l.name, LANG)}</td><td class="num">${l.rate?pct(l.rate):'—'}</td><td class="num">${usd(l.amt)}</td></tr>`).join('');
       el.innerHTML = `
         <h2 class="sec"><span data-i18n="section_result">${t(LANG,'section_result')}</span> — HTS ${res.hts} · ${destLabel(res.dest, LANG)} · ${originLabel(res.origin, LANG)} · ${usd(res.goods)}</h2>
-        <div class="hero">
-          <div class="hero-row1">
-            <span class="h-label" data-i18n="eff_row">${t(LANG,'eff_row')}</span>
-            <span class="h-num ${effClass(res.effective)}">${pct(res.effective)}</span>
-          </div>
-          <div class="hero-row2">
-            <span class="h-total-label" data-i18n="total_row">${t(LANG,'total_row')}</span><span class="h-total-label">:</span>
-            <span class="h-total-num">${usd(res.total)}</span>
-          </div>
+        <div class="total-box"><span class="lbl" data-i18n="total_row">${t(LANG,'total_row')}</span><span class="amt">${usd(res.total)}</span><span class="sub">${destLabel(res.dest, LANG)} · ${usd(res.goods)}</span></div>
+        <div class="res-hero">
+          <div class="hero-row1"><span class="h-label" data-i18n="eff_row">${t(LANG,'eff_row')}</span><span class="h-num ${effClass(res.effective)}">${pct(res.effective)}</span></div>
+          <div class="hero-row2"><span class="h-total-label" data-i18n="total_row">${t(LANG,'total_row')}</span><span class="h-total-label">:</span><span class="h-total-num">${usd(res.total)}</span></div>
         </div>
-        <table><thead><tr><th data-i18n="col_layer">${t(LANG,'col_layer')}</th><th class="num" data-i18n="col_rate">${t(LANG,'col_rate')}</th><th class="num" data-i18n="col_amount">${t(LANG,'col_amount')}</th></tr></thead>
-        <tbody>${rows}
+        <table><thead><tr><th data-i18n="col_layer">${t(LANG,'col_layer')}</th><th class="num" data-i18n="col_rate">${t(LANG,'col_rate')}</th><th class="num" data-i18n="col_amount">${t(LANG,'col_amount')}</th></tr></thead><tbody>${rows}
           <tr class="total"><td data-i18n="total_row">${t(LANG,'total_row')}</td><td></td><td class="num">${usd(res.total)}</td></tr>
         </tbody></table>
-        ${!res.indicative && res.dest !== 'US' ? `<p class="real" data-i18n="dest_real">${t(LANG,'dest_real')}</p>` : ''}
-        <p class="note">${res.note}</p>`;
+        ${!res.indicative && res.dest !== 'US' ? `<p class="note" data-i18n="dest_real">${t(LANG,'dest_real')}</p>` : ''}
+        <p class="note">${res.note}</p>
+        <div class="export"><button id="exp-json" data-i18n="exp_json">${t(LANG,'exp_json')}</button><button id="exp-csv" data-i18n="exp_csv">${t(LANG,'exp_csv')}</button><button id="single-clear" class="clear-btn" data-i18n="single_clear" style="margin-left:auto">${t(LANG,'single_clear')}</button></div>`;
+      bindExport();
     }
 
     let currentDest = 'US';
@@ -950,42 +616,24 @@ const clkLondon     = fmtClk('Europe/London');
       const goods = parseFloat(document.getElementById('goods').value) || 0;
       const dest = document.getElementById('dest').value;
       let res = null;
-      if (dest === 'CN') {
-        // China: REAL official 2026 tariff schedule (parsed from published PDF).
-        res = computeStack(dest, hts, origin, goods, sampleRates, fixed, overlay, cnFull);
-      } else {
-        const rates = FULL || sampleRates;
-        res = rates[hts] ? computeStack(dest, hts, origin, goods, rates, fixed, overlay) : null;
-      }
-      window.__last = res;
-      currentDest = dest;
-      renderResult(res);
+      if (dest === 'CN') res = computeStack(dest, hts, origin, goods, sampleRates, fixed, overlay, cnFull);
+      else { const rates = FULL || sampleRates; res = rates[hts] ? computeStack(dest, hts, origin, goods, rates, fixed, overlay) : null; }
+      window.__last = res; currentDest = dest; renderResult(res);
     }
 
-    // destination-aware field hints: US = 10-digit HTS + USD; CN = 8-digit HS + CNY-assessed
     function updateFieldHints() {
-      const destEl = document.getElementById('dest');
-      const dest = destEl ? destEl.value : 'US';
-      const hsHint = document.getElementById('hsHint');
+      const dest = document.getElementById('dest').value;
       const htsInput = document.getElementById('hts');
-      const goodsLabel = document.getElementById('goodsLabel');
-      if (hsHint) hsHint.textContent = t(LANG, dest === 'CN' ? 'hs_hint_cn' : 'hs_hint_us');
       if (htsInput) htsInput.placeholder = dest === 'CN' ? 'e.g. 6109.10' : 'e.g. 6109.10.00';
+      const goodsLabel = document.getElementById('goodsLabel');
       if (goodsLabel) goodsLabel.textContent = t(LANG, dest === 'CN' ? 'goods_label_cn' : 'calc_goods');
     }
 
     function applyLang(lang) {
-      LANG = lang;
-      localStorage.setItem('ts-lang', lang);
-      document.documentElement.lang = lang;
+      LANG = lang; localStorage.setItem('ts-lang', lang); document.documentElement.lang = lang;
       document.getElementById('lang').value = lang;
-      document.querySelectorAll('[data-i18n]').forEach(e => {
-        let s = t(lang, e.getAttribute('data-i18n'));
-        if (s && s.indexOf('{rev}') >= 0) s = s.replace(/\{rev\}/g, String(overlay.base_hts_revision ?? '')).replace(/\{date\}/g, overlay.base_hts_date || overlay.as_of || '');
-        e.textContent = s;
-      });
-      document.querySelectorAll('[data-i18n-aria]').forEach(e => { e.setAttribute('aria-label', t(lang, e.getAttribute('data-i18n-aria'))); });
-    document.querySelectorAll('[data-i18n-html]').forEach(e => { e.innerHTML = t(lang, e.getAttribute('data-i18n-html')); });
+      document.querySelectorAll('[data-i18n]').forEach(e => { let s = t(lang, e.getAttribute('data-i18n')); if (s) e.textContent = s; });
+      document.querySelectorAll('[data-i18n-html]').forEach(e => { e.innerHTML = t(lang, e.getAttribute('data-i18n-html')); });
       document.querySelectorAll('[data-i18n-ph]').forEach(e => { const k = e.getAttribute('data-i18n-ph'); if (k) e.placeholder = t(lang, k); });
       document.querySelectorAll('[data-i18n-layer]').forEach(e => { e.textContent = layerName(e.getAttribute('data-i18n-layer'), lang); });
       document.querySelectorAll('[data-i18n-origin]').forEach(e => { e.textContent = originLabel(e.getAttribute('data-i18n-origin'), lang); });
@@ -994,17 +642,9 @@ const clkLondon     = fmtClk('Europe/London');
       updateFieldHints();
       if (window.__last) renderResult(window.__last);
       if (window.__matches && window.__matches.length) renderMatches();
-      renderBatch();
-      renderWatch();
-      renderRecent();
-      renderAlerts();
+      renderBatch(); renderPending(); renderWatch(); renderTimeline(); renderAlerts();
     }
 
-    // ---- classifier hints: ALWAYS VISIBLE (no collapse) ----
-    // (cls-toggle button has been removed; cls-hint renders open by default in markup)
-
-    // origin → destination linkage: only show destinations that trade with the selected origin
-    // (e.g. U.S.-embargoed CU/IR/KP/SY hide "US" and show only "CN").
     function renderDestOptions(origin) {
       const sel = document.getElementById('dest');
       const opts = destOptionsFor(origin);
@@ -1013,16 +653,52 @@ const clkLondon     = fmtClk('Europe/London');
       updateFieldHints();
     }
 
-    // events
-    document.getElementById('origin').addEventListener('change', e => {
-      renderDestOptions(e.target.value);
-      doCalc();
-    });
-    document.getElementById('calc').addEventListener('click', () => {
-      doCalc();
-      const resEl = document.getElementById('result');
-      if (resEl) resEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    // ===== HS 自动补全（可输入也可点选；真实全量数据） =====
+    function hsSuggest(q) {
+      const isCn = (document.getElementById('dest').value === 'CN');
+      const ds = isCn ? (cnFull || {}) : (FULL || {});
+      if (!ds || !Object.keys(ds).length) return [];
+      const nq = (q||'').trim().toLowerCase().replace(/[\s.]/g,'');
+      const out = [];
+      for (const [code, rec] of Object.entries(ds)) {
+        const desc = (rec && (rec.desc || rec.name)) || '';
+        if (!nq || code.replace(/\./g,'').includes(nq) || (nq.length > 1 && desc.toLowerCase().includes(nq))) {
+          out.push({ code, desc });
+          if (out.length >= 12) break;
+        }
+      }
+      return out;
+    }
+    function setupHs(inputId, listId, onPick) {
+      const inp = document.getElementById(inputId), list = document.getElementById(listId);
+      if (!inp || !list) return;
+      function render(q) {
+        const items = hsSuggest(q);
+        list.innerHTML = items.length ? items.map(it => `<div class="opt" data-c="${it.code}"><span class="c">${it.code}</span><span class="d">${it.desc}</span></div>`).join('') : '<div class="opt none" data-i18n="classify_none">'+t(LANG,'classify_none')+'</div>';
+        list.classList.add('show');
+        list.querySelectorAll('.opt[data-c]').forEach(o => {
+          o.addEventListener('mousedown', e => e.preventDefault());
+          o.onclick = () => { inp.value = o.dataset.c; list.classList.remove('show'); if (onPick) onPick(o.dataset.c); };
+        });
+      }
+      inp.addEventListener('focus', () => render(inp.value));
+      inp.addEventListener('input', () => render(inp.value));
+      inp.addEventListener('blur', () => setTimeout(() => list.classList.remove('show'), 150));
+      inp.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const first = list.querySelector('.opt[data-c]');
+          if (first) { inp.value = first.dataset.c; list.classList.remove('show'); if (onPick) onPick(first.dataset.c); }
+          else if (inp.value.trim()) { list.classList.remove('show'); if (onPick) onPick(inp.value.trim()); }
+        }
+      });
+    }
+    setupHs('hts','hsList', (c) => doCalc());
+    setupHs('b-hs','b-hsList', (c) => addRow());
+
+    // ===== events =====
+    document.getElementById('origin').addEventListener('change', e => { renderDestOptions(e.target.value); doCalc(); });
+    document.getElementById('calc').addEventListener('click', () => { doCalc(); document.getElementById('result').scrollIntoView({ behavior:'smooth', block:'start' }); });
     document.getElementById('product').addEventListener('change', e => { document.getElementById('hts').value = e.target.value; });
     document.getElementById('hts').addEventListener('change', doCalc);
     document.getElementById('dest').addEventListener('change', () => { doCalc(); updateFieldHints(); });
@@ -1030,200 +706,174 @@ const clkLondon     = fmtClk('Europe/London');
     document.getElementById('theme-toggle').addEventListener('click', () => {
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       const next = isDark ? 'light' : 'dark';
-      if (next === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
-      else document.documentElement.removeAttribute('data-theme');
+      if (next === 'dark') document.documentElement.setAttribute('data-theme', 'dark'); else document.documentElement.removeAttribute('data-theme');
       try { localStorage.setItem('ts-theme', next); } catch (e) {}
-      const ico = document.querySelector('#theme-toggle .tt-ico');
-      const txt = document.querySelector('#theme-toggle .tt-txt');
-      if (ico && txt) {
-        ico.textContent = next === 'dark' ? '☀️' : '🌙';
-        txt.textContent = t(LANG, next === 'dark' ? 'theme_light' : 'theme_dark');
-      }
+      const ico = document.querySelector('#theme-toggle .tt-ico'); const txt = document.querySelector('#theme-toggle .tt-txt');
+      if (ico && txt) { ico.textContent = next === 'dark' ? '☀️' : '🌙'; txt.textContent = t(LANG, next === 'dark' ? 'theme_light' : 'theme_dark'); }
     });
     document.getElementById('cls-btn').addEventListener('click', () => {
-      const q = document.getElementById('desc').value;
-      window.__matches = classify(q);
-      renderMatches();
-      if (!window.__matches.length) {
-        const el = document.getElementById('matches');
-        el.innerHTML = `<p class="empty" data-i18n="classify_none">${t(LANG,'classify_none')}</p>`;
-      }
+      window.__matches = classify(document.getElementById('desc').value); renderMatches();
+      if (!window.__matches.length) document.getElementById('matches').innerHTML = `<p class="empty" data-i18n="classify_none">${t(LANG,'classify_none')}</p>`;
     });
     document.getElementById('desc').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('cls-btn').click(); });
 
     function download(name, text, type) {
-      const b = new Blob([text], { type });
-      const u = URL.createObjectURL(b);
-      const a = document.createElement('a'); a.href = u; a.download = name; a.click();
-      URL.revokeObjectURL(u);
+      const b = new Blob([text], { type }); const u = URL.createObjectURL(b);
+      const a = document.createElement('a'); a.href = u; a.download = name; a.click(); URL.revokeObjectURL(u);
     }
-    document.getElementById('exp-json').addEventListener('click', () => {
-      if (!window.__last) return;
-      const payload = {
-        meta: { tool: 'TariffStack', generated_at: new Date().toISOString(), data_as_of: overlay.as_of, data_last_checked: overlay.last_checked, destination: window.__last.dest },
-        result: window.__last,
+    function bindExport() {
+      const ej = document.getElementById('exp-json'); if (ej) ej.onclick = () => {
+        if (!window.__last) return;
+        const payload = { meta:{ tool:'TariffStack', generated_at:new Date().toISOString(), data_as_of:overlay.as_of, data_last_checked:overlay.last_checked, destination:window.__last.dest },
+          result: window.__last };
+        download('tariffstack-result.json', JSON.stringify(payload, null, 2), 'application/json');
       };
-      download('tariffstack-result.json', JSON.stringify(payload, null, 2), 'application/json');
-    });
-    document.getElementById('exp-csv').addEventListener('click', () => {
-      const r = window.__last; if (!r) return;
-      const head = `# TariffStack audit export\n# data_as_of,${overlay.as_of}\n# last_checked,${overlay.last_checked}\n# generated_at,${new Date().toISOString()}\nlayer,rate,amount\n`;
-      const body = r.layers.map(l => `"${layerName(l.name, LANG)}",${l.rate},${l.amt.toFixed(2)}`).join('\n');
-      download('tariffstack-result.csv', head + body, 'text/csv');
-    });
+      const ec = document.getElementById('exp-csv'); if (ec) ec.onclick = () => {
+        const r = window.__last; if (!r) return;
+        const head = `# TariffStack audit export\n# data_as_of,${overlay.as_of}\n# last_checked,${overlay.last_checked}\n# generated_at,${new Date().toISOString()}\nlayer,rate,amount\n`;
+        const body = r.layers.map(l => `"${layerName(l.name, LANG)}",${l.rate},${l.amt.toFixed(2)}`).join('\n');
+        download('tariffstack-result.csv', head + body, 'text/csv');
+      };
+      const sc = document.getElementById('single-clear'); if (sc) sc.onclick = () => {
+        document.getElementById('result').innerHTML = `<h2 class="sec" data-i18n="section_result">${t(LANG,'section_result')}</h2><p class="empty" data-i18n="empty">${t(LANG,'empty')}</p>`;
+      };
+    }
+    bindExport();
 
-    // ===================== BATCH / WATCHLIST / ALERTS =====================
-    // ---- batch calculator ----
+    // ===== BATCH（自动待算行） =====
     const batchOriginSel = document.getElementById('batch-origin');
     if (batchOriginSel) batchOriginSel.innerHTML = document.getElementById('origin').innerHTML;
-    window.__batch = [];
+    const pending = [];
+    function modesOptions(sel) {
+      const modes = [['','mode_none'],['sea','mode_sea'],['air','mode_air'],['rail','mode_rail'],['truck','mode_truck']];
+      return modes.map(([v,k]) => `<option value="${v}" ${v===sel?'selected':''}>${t(LANG,k)}</option>`).join('');
+    }
+    function addRow() {
+      const hs = document.getElementById('b-hs').value.trim();
+      if (!hs) return;
+      pending.push({ hs, origin: document.getElementById('batch-origin').value, dest: document.getElementById('batch-dest').value, mode: document.getElementById('batch-mode').value, goods: document.getElementById('batch-goods').value || '1000' });
+      document.getElementById('b-hs').value = '';
+      renderPending();
+    }
+    function renderPending() {
+      const el = document.getElementById('pending'); const cnt = document.getElementById('bcount');
+      if (!el) return;
+      cnt.textContent = pending.length;
+      if (!pending.length) { el.innerHTML = `<div class="empty" data-i18n="watch_empty">${t(LANG,'batch_empty_pending')}</div>`; return; }
+      const originOpts = document.getElementById('origin').innerHTML;
+      const destOpts = document.getElementById('dest').innerHTML;
+      el.innerHTML = pending.map((r,i) => `
+        <div class="prow">
+          <span class="mono">${r.hs}</span>
+          <select class="p-origin hide-sm" data-i="${i}">${originOpts.replace('value="'+r.origin+'"','value="'+r.origin+'" selected')}</select>
+          <select class="p-dest hide-sm" data-i="${i}">${destOpts.replace('value="'+r.dest+'"','value="'+r.dest+'" selected')}</select>
+          <select class="p-mode hide-sm" data-i="${i}">${modesOptions(r.mode)}</select>
+          <input class="p-goods mono" data-i="${i}" value="${r.goods}" />
+          <button class="x" data-i="${i}">×</button>
+        </div>`).join('');
+      el.querySelectorAll('.p-origin').forEach(s => s.onchange = e => { pending[+s.dataset.i].origin = e.target.value; });
+      el.querySelectorAll('.p-dest').forEach(s => s.onchange = e => { pending[+s.dataset.i].dest = e.target.value; });
+      el.querySelectorAll('.p-mode').forEach(s => s.onchange = e => { pending[+s.dataset.i].mode = e.target.value; });
+      el.querySelectorAll('.p-goods').forEach(s => s.oninput = e => { pending[+s.dataset.i].goods = e.target.value; });
+      el.querySelectorAll('.x').forEach(b => b.onclick = () => { pending.splice(+b.dataset.i, 1); renderPending(); });
+    }
     function batchCompute(hts, origin, dest, goods) {
       if (dest === 'CN') return computeStack(dest, hts, origin, goods, sampleRates, fixed, overlay, cnFull);
       const rates = FULL || sampleRates;
       return rates[hts] ? computeStack(dest, hts, origin, goods, rates, fixed, overlay) : null;
     }
     function doBatch() {
-      const defOrigin = (document.getElementById('batch-origin').value || 'CN').toUpperCase();
-      const defDest = (document.getElementById('batch-dest').value || 'US').toUpperCase();
-      const defGoods = parseFloat(document.getElementById('batch-goods').value) || 0;
-      const lines = (document.getElementById('batch-input').value || '').split('\n').map(s => s.trim()).filter(Boolean);
-      const rows = [];
-      for (const line of lines) {
-        const p = line.split(',').map(s => s.trim());
-        const hts = p[0] || '';
-        const origin = (p[1] || defOrigin).toUpperCase();
-        const dest = (p[2] || defDest).toUpperCase();
-        const goods = (p[3] !== undefined && p[3] !== '') ? (parseFloat(p[3]) || defGoods) : defGoods;
-        rows.push({ hts, origin, dest, goods, res: batchCompute(hts, origin, dest, goods) });
-      }
-      window.__batch = rows;
-      renderBatch();
+      if (!pending.length) { document.getElementById('batch-out').innerHTML = `<div class="empty" data-i18n="batch_empty">${t(LANG,'batch_empty')}</div>`; return; }
+      const rows = pending.map(r => ({ ...r, res: batchCompute(r.hs, (r.origin||'CN').toUpperCase(), (r.dest||'US').toUpperCase(), parseFloat(r.goods) || 0) }));
+      window.__batch = rows; renderBatch();
     }
     function renderBatch() {
-      const out = document.getElementById('batch-out');
-      const dl = document.getElementById('batch-dl');
-      const cnt = document.getElementById('batch-count');
+      const out = document.getElementById('batch-out'); const dl = document.getElementById('batch-dl'); const cnt = document.getElementById('batch-count');
       if (!out) return;
       const rows = window.__batch || [];
       if (!rows.length) { out.innerHTML = ''; if (dl) dl.style.display = 'none'; if (cnt) cnt.textContent = ''; return; }
       const body = rows.map(r => {
-        if (!r.res) return `<tr><td>${r.hts}</td><td>${originLabel(r.origin, LANG)}</td><td>${destLabel(r.dest, LANG)}</td><td class="num">${usd(r.goods)}</td><td class="num">—</td><td class="num">—</td></tr>`;
-        return `<tr><td>${r.hts}</td><td>${originLabel(r.origin, LANG)}</td><td>${destLabel(r.dest, LANG)}</td><td class="num">${usd(r.goods)}</td><td class="num ${effClass(r.res.effective)}">${pct(r.res.effective)}</td><td class="num">${usd(r.res.total)}</td></tr>`;
+        if (!r.res) return `<tr><td>${r.hs}</td><td>${originLabel(r.origin, LANG)}</td><td>${destLabel(r.dest, LANG)}</td><td class="num">${usd(r.goods)}</td><td class="num">—</td><td class="num">—</td></tr>`;
+        return `<tr><td class="mono">${r.hs}</td><td>${originLabel(r.origin, LANG)}</td><td>${destLabel(r.dest, LANG)}</td><td class="num">${usd(r.goods)}</td><td class="num ${effClass(r.res.effective)}">${pct(r.res.effective)}</td><td class="num">${usd(r.res.total)}</td></tr>`;
       }).join('');
-      out.innerHTML = `<table class="batch-table"><thead><tr>
-        <th>${t(LANG,'batch_col_hts')}</th><th>${t(LANG,'batch_col_origin')}</th><th>${t(LANG,'batch_col_dest')}</th>
-        <th class="num">${t(LANG,'batch_col_goods')}</th><th class="num">${t(LANG,'batch_col_eff')}</th><th class="num">${t(LANG,'batch_col_total')}</th></tr></thead><tbody>${body}</tbody></table>`;
+      out.innerHTML = `<table><thead><tr><th>${t(LANG,'batch_col_hts')}</th><th>${t(LANG,'batch_col_origin')}</th><th>${t(LANG,'batch_col_dest')}</th><th class="num">${t(LANG,'batch_col_goods')}</th><th class="num">${t(LANG,'batch_col_eff')}</th><th class="num">${t(LANG,'batch_col_total')}</th></tr></thead><tbody>${body}</tbody></table>`;
       if (dl) dl.style.display = '';
       if (cnt) cnt.textContent = t(LANG,'batch_count').replace('{n}', String(rows.length));
     }
     function downloadBatchCSV() {
-      const rows = window.__batch || [];
-      if (!rows.length) return;
+      const rows = window.__batch || []; if (!rows.length) return;
       const esc = s => `"${String(s).replace(/"/g,'""')}"`;
-      const head = `hts,origin,dest,goods,effective_rate,total_duty\n`;
-      const body = rows.map(r => `${esc(r.hts)},${esc(r.origin)},${esc(r.dest)},${r.goods},${(r.res ? pct(r.res.effective) : '—')},${r.res ? r.res.total.toFixed(2) : ''}`).join('\n');
+      const head = `hts,origin,dest,mode,goods,effective_rate,total_duty\n`;
+      const body = rows.map(r => `${esc(r.hs)},${esc(r.origin)},${esc(r.dest)},${esc(r.mode)},${r.goods},${(r.res?pct(r.res.effective):'—')},${r.res?r.res.total.toFixed(2):''}`).join('\n');
       download('tariffstack-batch.csv', head + body, 'text/csv');
     }
+    document.getElementById('batch-run').addEventListener('click', doBatch);
+    document.getElementById('batch-dl').addEventListener('click', downloadBatchCSV);
+    document.getElementById('clearPending').addEventListener('click', () => { pending.length = 0; renderPending(); document.getElementById('batch-dl').style.display = 'none'; });
+    document.getElementById('clearBatchOut').addEventListener('click', () => { window.__batch = []; renderBatch(); document.getElementById('batch-dl').style.display = 'none'; });
 
-    // ---- watchlist (localStorage) ----
+    // ===== WATCHLIST（匿名 localStorage） =====
     const WKEY = 'ts-watch';
     function loadWatch() { try { return JSON.parse(localStorage.getItem(WKEY) || '[]'); } catch (e) { return []; } }
     function saveWatch(list) { try { localStorage.setItem(WKEY, JSON.stringify(list)); } catch (e) {} }
     function renderWatch() {
-      const el = document.getElementById('watch-list');
-      if (!el) return;
+      const el = document.getElementById('watch-list'); if (!el) return;
       const list = loadWatch();
       if (!list.length) { el.innerHTML = `<p class="empty" data-i18n="watch_empty">${t(LANG,'watch_empty')}</p>`; return; }
       const body = list.map((w, i) => {
         const res = batchCompute(w.hts, (w.origin || 'CN').toUpperCase(), (w.dest || 'US').toUpperCase(), 1000);
         const rate = res ? pct(res.effective) : '—';
         const duty = res ? usd(res.total) : '—';
-        return `<tr><td>${w.hts}</td><td>${originLabel(w.origin || 'CN', LANG)}</td><td>${destLabel(w.dest || 'US', LANG)}</td><td class="num ${res ? effClass(res.effective) : ''}">${rate}</td><td class="num">${duty}</td><td class="num"><button class="rm" data-rm="${i}" data-i18n="watch_remove">${t(LANG,'watch_remove')}</button></td></tr>`;
+        return `<tr><td class="mono">${w.hts}</td><td>${originLabel(w.origin || 'CN', LANG)}</td><td>${destLabel(w.dest || 'US', LANG)}</td><td class="num ${res?effClass(res.effective):''}">${rate}</td><td class="num">${duty}</td><td class="num"><button class="rm" data-rm="${i}" data-i18n="watch_remove">${t(LANG,'watch_remove')}</button></td></tr>`;
       }).join('');
-      el.innerHTML = `<table class="watch-table"><thead><tr>
-        <th>${t(LANG,'watch_col_hts')}</th><th>${t(LANG,'batch_col_origin')}</th><th>${t(LANG,'batch_col_dest')}</th>
-        <th class="num">${t(LANG,'watch_col_rate')}</th><th class="num">${t(LANG,'watch_col_total')}</th><th></th></tr></thead><tbody>${body}</tbody></table>`;
-      el.querySelectorAll('[data-rm]').forEach(b => b.addEventListener('click', () => {
-        const idx = parseInt(b.getAttribute('data-rm'), 10);
-        const list = loadWatch(); list.splice(idx, 1); saveWatch(list); renderWatch();
-      }));
+      el.innerHTML = `<table class="watch-table"><thead><tr><th>${t(LANG,'watch_col_hts')}</th><th>${t(LANG,'batch_col_origin')}</th><th>${t(LANG,'batch_col_dest')}</th><th class="num">${t(LANG,'watch_col_rate')}</th><th class="num">${t(LANG,'watch_col_total')}</th><th></th></tr></thead><tbody>${body}</tbody></table>`;
+      el.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { const idx = parseInt(b.getAttribute('data-rm'),10); const l = loadWatch(); l.splice(idx,1); saveWatch(l); renderWatch(); });
     }
     function addWatch() {
-      const inp = document.getElementById('watch-input');
-      const hts = (inp && inp.value || '').trim();
-      if (!hts) return;
-      const list = loadWatch();
-      if (!list.some(w => w.hts === hts)) list.push({ hts, origin: document.getElementById('origin').value, dest: document.getElementById('dest').value });
-      saveWatch(list);
-      if (inp) inp.value = '';
-      renderWatch();
+      const inp = document.getElementById('watch-input'); const hts = (inp && inp.value || '').trim(); if (!hts) return;
+      const list = loadWatch(); if (!list.some(w => w.hts === hts)) list.push({ hts, origin: document.getElementById('origin').value, dest: document.getElementById('dest').value });
+      saveWatch(list); if (inp) inp.value = ''; renderWatch();
     }
-    function clearWatch() { saveWatch([]); renderWatch(); }
-
-    // ---- change-alert banner (data last_checked vs visitor's last seen) ----
-    function renderAlerts() {
-      const el = document.getElementById('alerts-banner');
-      if (!el) return;
-      const last = (overlay.last_checked || '').slice(0, 10);
-      let seen = '';
-      try { seen = localStorage.getItem('ts_lastvisit') || ''; } catch (e) {}
-      if (last && seen && last > seen) {
-        el.className = 'alerts-banner is-new';
-        el.textContent = t(LANG, 'alerts_new').replace('{date}', last);
-      } else {
-        el.className = 'alerts-banner is-ok';
-        el.textContent = t(LANG, 'alerts_none');
-      }
-      try { if (last) localStorage.setItem('ts_lastvisit', last); } catch (e) {}
-    }
-    function renderRecent() {
-      const ul = document.getElementById('recent-list');
-      if (!ul || !newsFeed || !newsFeed.items) return;
-      ul.innerHTML = newsFeed.items.map(n => {
-        const txt = t(LANG, n.key) || n.key;
-        const tag = destLabel(n.tag || 'US', LANG);
-        return `<li><span class="r-tag">${tag}</span><span class="r-text">${txt}</span><span class="r-date">${n.date || ''}</span></li>`;
-      }).join('');
-    }
-
-    // batch / watch events
-    document.getElementById('batch-run').addEventListener('click', doBatch);
-    document.getElementById('batch-dl').addEventListener('click', downloadBatchCSV);
-    const batchTa = document.getElementById('batch-input');
-    if (batchTa) batchTa.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') doBatch(); });
     document.getElementById('watch-add').addEventListener('click', addWatch);
-    document.getElementById('watch-clear').addEventListener('click', clearWatch);
+    document.getElementById('watch-clear').addEventListener('click', () => { saveWatch([]); renderWatch(); });
     const watchInp = document.getElementById('watch-input');
     if (watchInp) watchInp.addEventListener('keydown', e => { if (e.key === 'Enter') addWatch(); });
 
-    // load full dataset, apply saved language, render
-    fetch('/data/tariff_full.json').then(r => r.json()).then(j => { FULL = j; doCalc(); renderBatch(); renderWatch(); })
+    // ===== 近期变动时间线（唯一政策呈现） =====
+    function renderTimeline() {
+      const el = document.getElementById('timeline'); if (!el || !newsFeed || !newsFeed.items) return;
+      el.innerHTML = newsFeed.items.map(n => {
+        const txt = t(LANG, n.key) || n.key;
+        const tag = destLabel(n.tag || 'US', LANG);
+        const date = (n.date || '').slice(0, 10);
+        return `<div class="tl"><div class="date">${date}</div><div class="body"><span class="tag">${tag}</span>${txt}</div></div>`;
+      }).join('');
+    }
+
+    // ===== 变动预警横幅 =====
+    function renderAlerts() {
+      const el = document.getElementById('alerts-banner'); if (!el) return;
+      const last = (overlay.last_checked || '').slice(0, 10);
+      let seen = ''; try { seen = localStorage.getItem('ts_lastvisit') || ''; } catch (e) {}
+      if (last && seen && last > seen) { el.className = 'alerts'; el.innerHTML = '⚠ ' + t(LANG, 'alerts_new').replace('{date}', last); }
+      else { el.className = 'alerts'; el.innerHTML = '✓ ' + t(LANG, 'alerts_none'); }
+      try { if (last) localStorage.setItem('ts_lastvisit', last); } catch (e) {}
+    }
+
+    // ===== 加载全量数据 + 初始化 =====
+    fetch('/data/tariff_full.json').then(r => r.json()).then(j => { FULL = j; doCalc(); renderPending(); renderWatch(); })
       .catch(() => { FULL = null; doCalc(); });
-    fetch('/data/tariff_full_cn.json').then(r => r.json()).then(j => { cnFull = (j && j.by_hs8) ? j.by_hs8 : j; doCalc(); renderBatch(); renderWatch(); })
+    fetch('/data/tariff_full_cn.json').then(r => r.json()).then(j => { cnFull = (j && j.by_hs8) ? j.by_hs8 : j; doCalc(); renderPending(); renderWatch(); })
       .catch(() => { cnFull = null; doCalc(); });
-    renderRecent();
+    renderTimeline();
     applyLang(LANG);
     renderAlerts();
 
-    // ---- live time-zone clocks (real-time, ticked every second) ----
-    (function tickClocks(){
-      const cards = document.querySelectorAll('.clock-card');
-      if (!cards.length) return;
-      const now = new Date();
-      const dFmtCache = new Map();
-      cards.forEach(c => {
-        const tz = c.dataset.tz;
-        let tFmt = dFmtCache.get('t:'+tz);
-        if (!tFmt) { tFmt = new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,timeZone:tz}); dFmtCache.set('t:'+tz, tFmt); }
-        let dFmt = dFmtCache.get('d:'+tz);
-        if (!dFmt) { dFmt = new Intl.DateTimeFormat('en-GB',{weekday:'short',day:'2-digit',month:'short',timeZone:tz}); dFmtCache.set('d:'+tz, dFmt); }
-        const tEl = c.querySelector('.clk-time');
-        const dEl = c.querySelector('.clk-date');
-        if (tEl) tEl.textContent = tFmt.format(now);
-        if (dEl) dEl.textContent = dFmt.format(now);
-      });
-      setTimeout(tickClocks, 1000);
-    })();
+    // ?hts=CODE 从百科页跳转预填
+    try {
+      const hp = new URLSearchParams(location.search).get('hts');
+      if (hp) { document.getElementById('hts').value = hp; doCalc(); }
+    } catch (e) {}
   </script>
 </body>
 </html>
