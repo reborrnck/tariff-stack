@@ -103,12 +103,6 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     .verified{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:6px 14px;box-shadow:var(--shadow)}
     .verified .dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 0 4px color-mix(in srgb,var(--good) 22%,transparent)}
 
-    /* ===== 变动预警横幅 ===== */
-    .alerts{margin:18px 0 0;display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--radius);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 30%,var(--border));font-size:14px}
-    .alerts .pulse{width:10px;height:10px;border-radius:50%;background:var(--warn);position:relative;flex:none}
-    .alerts .pulse::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--warn);animation:pulse 1.8s ease-out infinite;opacity:0}
-    @keyframes pulse{0%{transform:scale(.6);opacity:.7}100%{transform:scale(1.6);opacity:0}}
-
     /* ===== 卡片 ===== */
     .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);position:relative;overflow:hidden}
     .card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent)}
@@ -116,7 +110,7 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     .card h2{margin:0 0 4px;font-size:18px}
     .card .hint{color:var(--muted);font-size:13px;margin:0 0 16px}
 
-    .grid2{display:grid;grid-template-columns:1fr;gap:22px;margin-top:26px}
+    .grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;margin-top:26px}
     @media(max-width:900px){.grid2{grid-template-columns:1fr}}
 
     label{display:block;font-size:13px;color:var(--muted);margin:0 0 6px}
@@ -236,7 +230,6 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       <h1 data-i18n="tagline">Import Duty &amp; Landed-Cost Calculator — U.S. + China</h1>
       <p class="sub" data-i18n="hero_sub">Real official tariff stacks for importers, compliance and customs brokers: MFN / 301 / 232 / forced-labour / MPF / HMF — every layer broken down, fully sourced.</p>
       <span class="verified"><span class="dot"></span> <span data-i18n="badge_pre">✓ Rates verified against official customs data on</span> {verifiedDate} <span data-i18n="badge_tz"> (Beijing time)</span></span>
-      <div class="alerts" id="alerts-banner" role="status"></div>
     </div>
   </section>
 
@@ -315,6 +308,15 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
               <button id="single-clear" class="clear-btn" data-i18n="single_clear" style="margin-left:auto">Clear result</button>
             </div>
           </div>
+        </div>
+      </section>
+
+      <!-- 右侧：近期关税变动 时间线（唯一呈现） -->
+      <section class="card" id="changes">
+        <div class="pad">
+          <h2 data-i18n="news_title">Live tariff-policy updates</h2>
+          <p class="hint" data-i18n="news_title_sub">Official sources — the only policy feed on this site (no duplicate scrollers).</p>
+          <div class="timeline" id="timeline"></div>
         </div>
       </section>
     </div>
@@ -499,7 +501,7 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       document.querySelectorAll('[data-i18n-dest]').forEach(e => { e.textContent = destLabel(e.getAttribute('data-i18n-dest'), lang); });
       updateFieldHints();
       if (window.__last) renderResult(window.__last);
-      renderBatch(); renderPending(); renderTimeline(); renderAlerts();
+      renderBatch(); renderPending(); renderTimeline();
     }
 
     function renderDestOptions(origin) {
@@ -677,25 +679,13 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       }).join('');
     }
 
-    // ===== 变动预警横幅（对齐本地 v5：警告脉冲 + 自上次访问更新数 + 查看变动链接） =====
-    function renderAlerts() {
-      const el = document.getElementById('alerts-banner'); if (!el) return;
-      const items = (newsFeed && newsFeed.items) ? newsFeed.items : [];
-      const n = items.length;
-      const latest = n ? String(items[0].date || '').slice(0, 10) : '';
-      const txt = t(LANG, 'alerts_updated').replace('{n}', String(n)).replace('{date}', latest);
-      el.className = 'alerts';
-      el.innerHTML = `<span class="pulse"></span><div>⚠ ${txt}</div>`;
-    }
-
-    // ===== 加载全量数据 + 初始化 =====
-    fetch('/data/tariff_full.json').then(r => r.json()).then(j => { FULL = j; doCalc(); renderPending(); })
+  // ===== 加载全量数据 + 初始化 =====
+  fetch('/data/tariff_full.json').then(r => r.json()).then(j => { FULL = j; doCalc(); renderPending(); })
       .catch(() => { FULL = null; doCalc(); });
     fetch('/data/tariff_full_cn.json').then(r => r.json()).then(j => { cnFull = (j && j.by_hs8) ? j.by_hs8 : j; doCalc(); renderPending(); })
       .catch(() => { cnFull = null; doCalc(); });
     renderTimeline();
     applyLang(LANG);
-    renderAlerts();
 
     // ?hts=CODE[&dest=US|CN] 从百科页跳转预填（携带目的地，自动校正 origin 使目的地可选）
     try {
