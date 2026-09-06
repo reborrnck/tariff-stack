@@ -1,7 +1,7 @@
 ---
 import SeoHead from '../components/SeoHead.astro';
 import { t, LANGS } from '../lib/i18n.ts';
-import { overlay } from '../data/policy_overlay.json';
+import overlay from '../data/policy_overlay.json';
 
 const verifiedDate = String(overlay.last_checked || overlay.as_of || '').slice(0, 10);
 const jsonLd = JSON.stringify({
@@ -183,7 +183,6 @@ const jsonLd = JSON.stringify({
 
   <script>
     import { t, LANGS } from '../lib/i18n.ts';
-    import overlay from '../data/policy_overlay.json';
 
     let LANG = (localStorage.getItem('ts-lang') || 'en');
     if (!LANGS.some(l => l.code === LANG)) LANG = 'en';
@@ -268,7 +267,7 @@ const jsonLd = JSON.stringify({
         } else {
           const r = pct(rec.mfn);
           const ex = rec.ex ? ' <span style="color:var(--muted)">(' + t(LANG,'hs_enc_ex') + ')</span>' : '';
-          return `<tr><td class="code">${k}</td><td class="desc">${rec.name || ''}${ex}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></td></tr>`;
+          return `<tr><td class="code">${k}</td><td class="desc">${rec.name || ''}${ex}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
         }
       }).join('');
       if (!shown.length) {
