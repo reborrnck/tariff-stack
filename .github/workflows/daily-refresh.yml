@@ -47,10 +47,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Schedule heartbeat（确认 cron 真的触发了）
-        # 整点 cron 常被 GitHub 静默丢弃且不报错；此步把触发时间与 schedule 打到日志，
-        # 用户能在 Actions → 该 run → 此步 直接看到"今天到底有没有触发"，避免再次误判为伪刷新。
-        run: echo "Schedule fired: ${{ github.event.schedule }} at $(date -u)  (runner UTC)"
+      # 整点 cron 常被 GitHub 静默丢弃且不报错；用块字面量把触发信息打到日志，
+      # 用户能在 Actions -> 该 run -> 此步 直接看到"今天到底有没有触发"，避免再次误判为伪刷新。
+      # 注：必须用 | 块语法而不是单行字符串；否则 YAML 把 echo "Schedule fired: ${{..." 里的
+      # 冒号当 mapping 分隔符解析，直接 syntax error on line 53（2026-09-07 踩坑，已验证修复）。
+      - name: Schedule heartbeat
+        run: |
+          echo "Schedule fired: ${{ github.event.schedule }}"
+          echo "Runner UTC now: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          echo "Beijing time:    $(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M:%S')"
 
       - name: Set up Python
         uses: actions/setup-python@v5
