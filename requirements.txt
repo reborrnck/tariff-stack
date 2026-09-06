@@ -1,0 +1,4 @@
+# Python 依赖钉版本（避免 CI 无锁漂移）
+# 2026-09-07 钉：preprocess_full.py 用 pypdf；build_cn_tariff.py 用 pdfplumber
+pypdf==6.17.0
+pdfplumber==0.11.10

@@ -1,6 +1,6 @@
 name: Daily Tariff Data Refresh
 
-# 每天北京时间 03:00 自动刷新关税数据 → 重新构建 → 重新部署到 Cloudflare Worker (Static Assets)。
+# 每天北京时间 03:17 自动刷新关税数据 → 重新构建 → 重新部署到 Cloudflare Worker (Static Assets)。
 # 运行在 GitHub 服务器（美国），与用户本机开关机无关。
 #
 # ⚠️ 关键修复（2026-09-05）：此前工作流只把数据 commit/push 到 git，但没有任何构建/部署步骤，
@@ -8,25 +8,21 @@ name: Daily Tariff Data Refresh
 #   导致"Actions 在跑、页面数据/日期不变"的伪刷新。现改为刷新后自建自部署，闭环。
 #
 # 项目类型（以 wrangler CLI 报错为铁证）：本项目是 Cloudflare Worker（wrangler.toml 用 [assets]
-#   directory="./dist" 发布静态资源，缺 pages_build_output_dir），不是 Pages。CLI 实测明确提示
-#   "Pages project 'tariff-stack' does not exist ... Did you mean to run `wrangler deploy`?"。
-#   部署命令用 `npx wrangler deploy`。
-#   （曾两次误判：先以为 *.pages.dev 是 Pages 项目，再以为"账号只有 Pages 权限所以是 Pages"。
-#    实际账号 Token 权限下拉无 Workers 选项是因为从未启用 Worker 权限项，而项目本身确为 Worker。）
+#   directory="./dist" 发布静态资源，缺 pages_build_output_dir），不是 Pages。部署命令用 `npx wrangler deploy`。
 #
-# 鉴权（最终态，以 Run #5 成功部署为准）：scoped API Token，权限 = Account.Workers Scripts:Edit
-#   CLOUDFLARE_API_TOKEN  Cloudflare API Token（权限 Workers Scripts:Edit；在 Cloudflare 权限下拉里手输
-#                        "Worker" 搜出 "Workers Scripts" 选项，旧 UI 叫 "Cloudflare Workers" 已改名）。
-#   （曾尝试 Global API Key / Pages:Edit 均不适用：本项目是 Worker 不是 Pages，且账号默认隐藏全局 Key。）
+# 鉴权（以 Run #5 成功部署为准）：scoped API Token，权限 = Account.Workers Scripts:Edit
+#   CLOUDFLARE_API_TOKEN  Cloudflare API Token（权限 Workers Scripts:Edit）。
+
 on:
   schedule:
-    # 19:17 UTC = 次日 03:17 北京时间 (UTC+8)。
+    # 每天北京时间 03:17（用官方 IANA timezone，避免手写 UTC 偏移算错）。
     # ⚠️ 不用整点(:00)/半点(:30)：GitHub Actions 的 cron 在整点/半点因全局调度高峰
     # 常延迟 5-30 分钟、极端时直接被丢弃（官方文档明示 "may be delayed / in the worst
-    # case may not run"）。业界共识：把分钟挪到 17/23/37/43 这类非高峰档，调度可靠性
-    # 显著提升。本项目 2026-09-07 实测：设在 :00 的 03:00 定时 run 当天未产生任何提交
-    # （GitHub 在高峰把该次调度丢掉），挪到 :17 后规避此坑。
-    - cron: '17 19 * * *'
+    # case may not run"）。业界共识：把分钟挪到 17/23/37/43 这类非高峰档，调度可靠性提升。
+    # 本项目 2026-09-07 实测：设在 :00 的 03:00 定时 run 当天未产生任何提交（被高峰丢弃），
+    # 挪到 :17 + timezone 后规避此坑。
+    - cron: '17 3 * * *'
+      timezone: "Asia/Shanghai"
   workflow_dispatch: {}   # 允许在 Actions 标签页手动触发（调试/立即生效用）
 
 # 防止定时触发与手动触发重叠导致两个 run 同时向 main 推送（非快进冲突）
@@ -34,8 +30,15 @@ concurrency:
   group: daily-refresh
   cancel-in-progress: false
 
+# 最小权限：官方要求 workflow 默认只给 read，再按需提升。
+# - contents: write  允许刷新脚本 git commit/push 数据更新
+# - actions: read    允许 upload-artifact 读取 workflow run 信息（@v4 必需，否则 artifact 步骤可能失败）
 permissions:
-  contents: write        # 允许 GITHUB_TOKEN 提交并 push 数据更新
+  contents: write
+  actions: read
+
+# run-name 让 Actions 列表一眼看清每次 run 的性质（官方推荐的可读性实践）
+run-name: Tariff refresh (${{ github.event_name }})
 
 jobs:
   refresh:
@@ -49,8 +52,8 @@ jobs:
 
       # 整点 cron 常被 GitHub 静默丢弃且不报错；用块字面量把触发信息打到日志，
       # 用户能在 Actions -> 该 run -> 此步 直接看到"今天到底有没有触发"，避免再次误判为伪刷新。
-      # 注：必须用 | 块语法而不是单行字符串；否则 YAML 把 echo "Schedule fired: ${{..." 里的
-      # 冒号当 mapping 分隔符解析，直接 syntax error on line 53（2026-09-07 踩坑，已验证修复）。
+      # ⚠️ 必须用 | 块语法而不是单行字符串；否则 YAML 把 echo "Schedule fired: ${{..." 里的
+      # 冒号当 mapping 分隔符解析，直接 syntax error（2026-09-07 b947168 踩坑，已改 5765594）。
       - name: Schedule heartbeat
         run: |
           echo "Schedule fired: ${{ github.event.schedule }}"
@@ -63,9 +66,10 @@ jobs:
           python-version: '3.13'
 
       - name: Configure git identity
+        # 用 --local 只影响本仓库（ephemeral runner 上 --global 亦可，但 --local 更规范）
         run: |
-          git config user.email "TariffStack@outlook.com"
-          git config user.name "TariffStack"
+          git config --local user.email "TariffStack@outlook.com"
+          git config --local user.name "TariffStack"
 
       - name: Fetch sources (US HTS base + China-301 mapping)
         # 全自动铁律：基表升版不再需要人工跑 preprocess。US HTS 从 USITC 官方直链按最新
@@ -76,8 +80,8 @@ jobs:
 
       - name: Install Python deps
         # preprocess_full(pypdf) / build_cn_tariff(pdfplumber) 在重建基表时需要；
-        # 仓库无 requirements.txt，此处显式安装，避免 CI 跑预处理时 ModuleNotFoundError。
-        run: python -m pip install pypdf pdfplumber
+        # 从 requirements.txt 钉版本安装，避免 CI 无锁漂移（2026-09-07 审计后加）。
+        run: python -m pip install -r requirements.txt
 
       - name: Run daily refresh (多源核对 + 写回真值 + 提交推送 git)
         env:
@@ -110,13 +114,8 @@ jobs:
         run: npm run build
 
       - name: Deploy to Cloudflare Worker (Static Assets)
-        # 线上 tariff-stack.zmarkz123zxc.workers.dev 是一个 Cloudflare Worker（wrangler.toml 用
-        # [assets] directory="./dist" 服务静态资源，无 KV/R2/D1 等绑定）。CI 报错 wrangler CLI 已明确指出：
-        #   "Pages project 'tariff-stack' does not exist. ... wrangler.toml does not appear to be
-        #    for a Pages project (missing pages_build_output_dir). Did you mean `wrangler deploy`?"
-        # 故必须用 `wrangler deploy` 而非 `wrangler pages deploy`。
-        # 鉴权：用 scoped API Token（权限 Account.Workers Scripts:Edit），不碰 2FA、不依赖全局 Key。
-        run: npx wrangler deploy
+        # 钉 wrangler 主版本（4.x）避免 npx 拉到未来破坏性大版本导致部署静默失败。
+        run: npx wrangler@4.129.0 deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         # 注：若 CLOUDFLARE_API_TOKEN 未配置/权限不对，wrangler 会因缺鉴权使本 run 变红，暴露"未部署"。
