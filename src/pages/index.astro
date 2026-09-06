@@ -63,173 +63,159 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
   <SeoHead />
   <style is:global>
     :root{
-      --bg:#f4f6fb; --card:#fff; --text:#1a2233; --muted:#5b6678; --content:#334155;
-      --accent:#2f6df0; --accent-soft:#e8f0ff; --border:#e2e8f2; --line:#e6eaf1; --line2:#d7dde8;
-      --good:#10b981; --warn:#f59e0b; --bad:#ef4444; --ink:#0f172a; --ink-deep:#0b1220;
+      --bg:#f4f6fb; --header-bg:#ffffff; --card:#ffffff; --text:#1a2233; --muted:#5b6678;
+      --accent:#2f6df0; --accent-soft:#e8f0ff; --border:#e2e8f2; --good:#10b981; --warn:#f59e0b; --bad:#ef4444;
       --mfn:#3b82f6; --s301:#f59e0b; --s232:#8b5cf6; --forced:#64748b; --mpf:#06b6d4; --hmf:#10b981;
-      --scroll-thumb:#c8d0dd; --scroll-thumb-hover:#a8b3c5; --scroll-track:transparent;
+      --radius:14px; --shadow:0 1px 2px rgba(20,30,60,.06),0 8px 24px rgba(20,30,60,.07);
+      --shadow-hi:0 2px 4px rgba(20,30,60,.08),0 14px 40px rgba(20,30,60,.12);
+      --maxw:1180px;
     }
-    [data-theme="dark"]{
-      --bg:#0e1320; --card:#161e30; --text:#e6ebf5; --muted:#9aa6bd; --content:#c4cedb;
-      --accent:#8aa7d8; --accent-soft:#1a2740; --border:#243049; --line:#1e2a3e; --line2:#2b3a52;
-      --good:#6fbf9c; --warn:#d8a866; --bad:#d88686; --ink:#e8edf6; --ink-deep:#f4f8fd;
+    html[data-theme="dark"]{
+      --bg:#0e1320; --header-bg:#131a2b; --card:#161e30; --text:#e6ebf5; --muted:#9aa6bd;
+      --accent:#8aa7d8; --accent-soft:#1a2740; --border:#243049;
       --mfn:#6b9bff; --s301:#d9a85a; --s232:#a892d8; --forced:#8b97ad; --mpf:#6fc7d8; --hmf:#6fbfa0;
-      --scroll-thumb:#2b3a52; --scroll-thumb-hover:#3d5070;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+      --shadow-hi:0 2px 4px rgba(0,0,0,.35),0 14px 40px rgba(0,0,0,.5);
     }
-    *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) var(--scroll-track);}
-    *::-webkit-scrollbar{width:10px;height:10px;}
-    *::-webkit-scrollbar-track{background:var(--scroll-track);}
-    *::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:10px;border:2px solid transparent;background-clip:padding-box;}
-    *::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover);background-clip:padding-box;}
-    *::-webkit-scrollbar-corner{background:transparent;}
-    body{margin:0;font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;
-      background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
-    a{color:var(--accent);}
-    .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 -apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+    .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
 
-    /* ===== 页头：纤细、整条底边带弧、吸顶 ===== */
-    header{background:var(--card);border-radius:0 0 30px 30px;box-shadow:0 1px 2px rgba(20,30,60,.06),0 8px 24px rgba(20,30,60,.07);
-      position:sticky;top:0;z-index:30;border-bottom:1px solid var(--border);}
-    .hd-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:14px;height:64px;}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:var(--ink);letter-spacing:.2px;text-decoration:none;}
+    /* ===== 页头：整条白色区域底边带弧 ===== */
+    .site-header{background:var(--header-bg);border-radius:0 0 30px 30px;box-shadow:var(--shadow);position:sticky;top:0;z-index:30}
+    .site-header .wrap{display:flex;align-items:center;gap:14px;height:64px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:.2px;text-decoration:none;color:var(--text)}
     .brand .logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#7aa7ff);display:grid;place-items:center;color:#fff;font-size:15px;box-shadow:0 4px 12px rgba(47,109,240,.35)}
     .spacer{flex:1}
-    .lang-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex-shrink:0;}
-    .hbtn{display:inline-flex !important;align-items:center;gap:7px;height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--border);
-      background:var(--card);color:var(--text);font-size:14px;cursor:pointer;transition:.15s;white-space:nowrap;text-decoration:none;visibility:visible !important;flex-shrink:0;flex-grow:0;}
-    .hbtn:hover{box-shadow:0 1px 2px rgba(20,30,60,.06),0 8px 24px rgba(20,30,60,.07);transform:translateY(-1px);}
-    .hbtn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
-    .hbtn.icon{width:40px;padding:0;justify-content:center;}
-    .hsep{width:1px;height:24px;background:var(--border);margin:0 2px;}
-    select#lang{height:40px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);padding:0 12px;font-size:14px;cursor:pointer;width:auto;max-width:170px;flex:0 0 auto;}
-    @media (max-width:1280px){.hbtn{padding:0 12px;font-size:13.5px;}}
-    @media (max-width:1100px){.hbtn{padding:0 10px;font-size:13px;}select#lang{padding:0 8px;font-size:13px;}}
-    @media (max-width:900px){.hd-inner{gap:8px;padding:0 16px;}}
+    .lang-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex-shrink:0}
+    .hbtn{display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:14px;cursor:pointer;transition:.15s;white-space:nowrap;text-decoration:none}
+    .hbtn:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+    .hbtn.accent{background:var(--accent);border-color:var(--accent);color:#fff}
+    .hsep{width:1px;height:24px;background:var(--border);margin:0 2px}
+    select#lang{height:40px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);padding:0 14px;font-size:14px;cursor:pointer;width:auto}
+    @media(max-width:900px){.site-header .wrap{gap:8px;padding:0 16px}.lang-row{gap:6px}}
 
-    /* ===== layout ===== */
-    main{max-width:1400px;margin:0 auto;padding:24px 24px 40px;}
-    .cols{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:start;}
-    @media(max-width:900px){.cols{grid-template-columns:1fr;}}
-    h2.sec{margin:0 0 14px;font-size:21px;font-weight:700;color:var(--ink);letter-spacing:-.01em;}
-    .sec-sub{font-size:14px;color:var(--muted);margin:0 0 14px;line-height:1.5;}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;box-shadow:0 1px 2px rgba(20,30,60,.04);}
-    .card .pad{padding:22px;}
+    /* ===== Hero ===== */
+    .hero{padding:46px 0 14px}
+    .hero h1{font-size:34px;margin:0 0 10px;line-height:1.15}
+    .hero .sub{color:var(--muted);max-width:640px;margin:0 0 18px}
+    .verified{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:6px 14px;box-shadow:var(--shadow)}
+    .verified .dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 0 4px color-mix(in srgb,var(--good) 22%,transparent)}
 
-    /* ===== hero ===== */
-    .hero{padding:30px 0 6px;}
-    .hero h1{font-size:32px;margin:0 0 10px;line-height:1.15;color:var(--ink);}
-    .hero .sub{color:var(--muted);max-width:660px;margin:0 0 16px;}
-    .verified{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:6px 14px;box-shadow:0 1px 2px rgba(20,30,60,.06);}
-    .verified .dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 0 4px color-mix(in srgb,var(--good) 22%,transparent);}
-    /* 变动预警横幅（匿名，免登录） */
-    .alerts{margin:18px 0 0;display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:14px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 30%,var(--border));font-size:14px;color:var(--content);}
-    .alerts .pulse{width:10px;height:10px;border-radius:50%;background:var(--warn);position:relative;flex:none;}
-    .alerts .pulse::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--warn);animation:pulse 1.8s ease-out infinite;opacity:0;}
+    /* ===== 变动预警横幅 ===== */
+    .alerts{margin:18px 0 0;display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--radius);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 30%,var(--border));font-size:14px}
+    .alerts .pulse{width:10px;height:10px;border-radius:50%;background:var(--warn);position:relative;flex:none}
+    .alerts .pulse::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--warn);animation:pulse 1.8s ease-out infinite;opacity:0}
     @keyframes pulse{0%{transform:scale(.6);opacity:.7}100%{transform:scale(1.6);opacity:0}}
 
-    /* ===== calculator form ===== */
-    .calc{display:block;}
-    .row{display:grid;gap:14px;margin-bottom:14px;align-items:end;}
-    .row.c3{grid-template-columns:1fr 1fr 1fr;}
-    .row.c2{grid-template-columns:1fr 1fr;}
-    .row .entry{margin:0;min-width:0;}
-    @media(max-width:620px){.row.c3,.row.c2{grid-template-columns:1fr;}}
-    .entry{display:flex;flex-direction:column;gap:7px;min-width:0;}
-    label.fld{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600;}
-    input,select{background:var(--card);color:var(--text);border:1px solid var(--line2);border-radius:10px;padding:11px 12px;font-size:15px;width:100%;max-width:100%;min-width:0;}
-    input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
-    button.btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;text-align:center;width:100%;}
-    button.btn:hover{filter:brightness(1.06);}
-    .note{font-size:13.5px;color:var(--muted);margin-top:10px;line-height:1.6;}
+    /* ===== 卡片 ===== */
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);position:relative;overflow:hidden}
+    .card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent)}
+    .card .pad{padding:22px}
+    .card h2{margin:0 0 4px;font-size:18px}
+    .card .hint{color:var(--muted);font-size:13px;margin:0 0 16px}
+
+    .grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;margin-top:26px}
+    @media(max-width:900px){.grid2{grid-template-columns:1fr}}
+
+    label{display:block;font-size:13px;color:var(--muted);margin:0 0 6px}
+    .row{display:grid;gap:14px;margin-bottom:14px}
+    .row.c3{grid-template-columns:1fr 1fr 1fr}
+    .row.c2{grid-template-columns:1fr 1fr}
+    @media(max-width:620px){.row.c3,.row.c2{grid-template-columns:1fr}}
+    input,select{width:100%;height:42px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);padding:0 12px;font-size:14px}
+    input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+    .btn{height:44px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:15px;font-weight:600;cursor:pointer;padding:0 20px;transition:.15s}
+    .btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+    .btn.ghost{background:var(--card);color:var(--text);border-color:var(--border)}
+    .note{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.6}
 
     /* HS 自动补全下拉（可输入也可点选） */
-    .hs-wrap{position:relative;}
-    .hs-list{position:absolute;top:46px;left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:0 2px 4px rgba(20,30,60,.08),0 14px 40px rgba(20,30,60,.12);max-height:248px;overflow-y:auto;z-index:25;display:none;}
-    .hs-list.show{display:block;}
-    .hs-list .opt{display:flex;gap:10px;padding:9px 12px;cursor:pointer;font-size:13px;align-items:baseline;}
-    .hs-list .opt:hover,.hs-list .opt.active{background:var(--accent-soft);}
-    .hs-list .opt .c{font-family:ui-monospace,Menlo,monospace;color:var(--accent);font-weight:700;min-width:90px;flex:none;}
-    .hs-list .opt .d{color:var(--muted);}
-    .hs-list .opt.none{color:var(--muted);cursor:default;}
+    .hs-wrap{position:relative}
+    .hs-list{position:absolute;top:44px;left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-hi);max-height:248px;overflow-y:auto;z-index:25;display:none}
+    .hs-list.show{display:block}
+    .hs-list .opt{display:flex;gap:10px;padding:9px 12px;cursor:pointer;font-size:13px;align-items:baseline}
+    .hs-list .opt:hover,.hs-list .opt.active{background:var(--accent-soft)}
+    .hs-list .opt .c{font-family:ui-monospace,Menlo,monospace;color:var(--accent);font-weight:700;min-width:82px;flex:none}
+    .hs-list .opt .d{color:var(--muted)}
+    .hs-list .opt.none{color:var(--muted);cursor:default}
 
-    /* ===== 结果区：限高 + 滑轮 + 关税合计标识 ===== */
-    .result{max-height:380px;overflow-y:auto;margin-top:16px;border-top:1px dashed var(--border);padding-top:14px;}
-    .result::-webkit-scrollbar{width:10px;}
-    .result::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;border:2px solid var(--bg);}
-    .result::-webkit-scrollbar-track{background:transparent;}
-    .total-box{display:flex;align-items:baseline;gap:12px;padding:14px 16px;border-radius:12px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 35%,var(--border));margin-bottom:14px;}
-    .total-box .lbl{font-size:13px;color:var(--muted);font-weight:600;}
-    .total-box .amt{font-family:ui-monospace,Menlo,monospace;font-size:28px;font-weight:800;color:var(--accent);letter-spacing:-.5px;}
-    .total-box .sub{font-size:12px;color:var(--muted);margin-left:auto;}
-    .bar{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:10px 0 4px;background:var(--bg);}
-    .bar i{height:100%;}
-    .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);margin-top:6px;}
-    .legend span{display:inline-flex;align-items:center;}
-    .sw{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:7px;vertical-align:middle;}
-    .empty{color:var(--muted);font-style:italic;font-size:14px;padding:8px 0;}
+    /* ===== 结果区：限高 + 滑轮 ===== */
+    .result{max-height:360px;overflow-y:auto;margin-top:16px;border-top:1px dashed var(--border);padding-top:14px}
+    .result::-webkit-scrollbar{width:10px}
+    .result::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;border:2px solid var(--bg)}
+    .result::-webkit-scrollbar-track{background:transparent}
+    .empty{color:var(--muted);font-size:13px;padding:18px 0;text-align:center}
+    table{width:100%;border-collapse:collapse;font-size:13.5px}
+    th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--border)}
+    th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+    td.num{text-align:right;font-family:ui-monospace,Menlo,monospace}
+    .sw{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:7px;vertical-align:middle}
 
-    /* ===== tables ===== */
-    table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-    th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--border);font-size:14.5px;color:var(--content);}
-    th{color:var(--muted);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;background:var(--bg);}
-    [data-theme="dark"] th{background:var(--card);}
-    tr:last-child td{border-bottom:0;}
-    td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
-    .total td{font-weight:800;color:var(--ink);border-top:2px solid var(--line2);}
-    .bad{color:var(--bad);font-weight:700;} .good{color:var(--good);font-weight:700;} .warn{color:var(--warn);font-weight:700;}
+    /* 层占比条 */
+    .bar{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:10px 0 4px;background:var(--bg)}
+    .bar i{height:100%}
+    .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);margin-top:6px}
+    .legend span{display:inline-flex;align-items:center}
 
-    /* ===== export ===== */
-    .export{margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;}
-    .export button{background:var(--card);color:var(--text);border:1px solid var(--line2);border-radius:9px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;}
-    .export button:hover{border-color:var(--accent);color:var(--accent);}
+    /* 关税合计醒目标识 */
+    .total-box{display:flex;align-items:baseline;gap:12px;padding:14px 16px;border-radius:12px;background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 35%,var(--border));margin-bottom:14px}
+    .total-box .lbl{font-size:13px;color:var(--muted);font-weight:600}
+    .total-box .amt{font-family:ui-monospace,Menlo,monospace;font-size:28px;font-weight:800;color:var(--accent);letter-spacing:-.5px}
+    .total-box .sub{font-size:12px;color:var(--muted);margin-left:auto}
 
-    /* ===== 近期变动 时间线（唯一政策呈现） ===== */
-    .timeline{margin-top:8px;}
-    .tl{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);}
-    .tl:last-child{border-bottom:none;}
-    .tl .date{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted);min-width:78px;}
-    .tl .body{font-size:14px;color:var(--content);}
-    .tl .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);margin-right:8px;font-weight:700;}
-
-    /* ===== 批量：自动待算行 ===== */
-    .batch{margin-top:24px;}
-    .binput{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr .9fr;gap:10px;align-items:end;}
+    /* ===== 批量：输入行 + 自动待算区 ===== */
+    .binput{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr .9fr auto;gap:10px;align-items:end}
     @media(max-width:820px){.binput{grid-template-columns:1fr 1fr;}}
-    .binput .grow{grid-column:1/-1;}
-    .pending{margin:12px 0 4px;display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;}
-    .pending::-webkit-scrollbar{width:10px;}
-    .pending::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;border:2px solid var(--bg);}
-    .area-head{display:flex;align-items:center;justify-content:space-between;margin:4px 0 8px;}
-    .area-head .t{font-size:13px;color:var(--muted);font-weight:600;}
-    .clear-btn{height:30px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:12.5px;cursor:pointer;}
-    .clear-btn:hover{color:var(--bad);border-color:var(--bad);}
-    .prow{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr .9fr 32px;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:13px;}
-    [data-theme="dark"] .prow{background:var(--card);}
-    @media(max-width:820px){.prow{grid-template-columns:1fr 1fr 32px;}.prow .hide-sm{display:none;}}
-    .prow .x{border:none;background:transparent;color:var(--bad);cursor:pointer;font-size:18px;line-height:1;justify-self:center;}
-    .batch-out{max-height:380px;overflow-y:auto;margin-top:12px;border-top:1px dashed var(--border);padding-top:12px;}
-    .batch-out::-webkit-scrollbar{width:10px;}
-    .batch-out::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;border:2px solid var(--bg);}
-    .batch-actions{display:flex;gap:12px;align-items:center;margin-top:6px;flex-wrap:wrap;}
+    .binput .grow{grid-column:1/-1}
+    .pending{margin:14px 0 6px;display:flex;flex-direction:column;gap:8px;max-height:240px;overflow-y:auto}
+    .pending::-webkit-scrollbar{width:10px}
+    .pending::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;border:2px solid var(--bg)}
+    .area-head{display:flex;align-items:center;justify-content:space-between;margin:2px 0 8px}
+    .area-head .t{font-size:13px;color:var(--muted)}
+    .clear-btn{height:30px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:12.5px;cursor:pointer}
+    .clear-btn:hover{color:var(--bad);border-color:var(--bad)}
+    .prow{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr .9fr 32px;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:13px}
+    @media(max-width:820px){.prow{grid-template-columns:1fr 1fr 32px}.prow .hide-sm{display:none}}
+    .prow .x{border:none;background:transparent;color:var(--bad);cursor:pointer;font-size:18px;line-height:1}
+    .batch-out{max-height:380px;overflow-y:auto;margin-top:14px;border-top:1px dashed var(--border);padding-top:12px}
+    .batch-out::-webkit-scrollbar{width:10px}
+    .batch-out::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;border:2px solid var(--bg)}
+    .batch-actions{display:flex;gap:12px;align-items:center;margin-top:6px;flex-wrap:wrap}
 
-    /* ===== 页尾（四栏同宽） ===== */
-    .site-footer{margin-top:48px;background:var(--card);border-top:1px solid var(--border);}
-    .footer-inner{max-width:1400px;margin:0 auto;padding:34px 24px 20px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px;}
-    @media(max-width:820px){.footer-inner{grid-template-columns:1fr 1fr;}}
-    .site-footer h4{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:0 0 12px;}
-    .site-footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;}
-    .site-footer a{color:var(--text);text-decoration:none;font-size:14px;}
-    .site-footer a:hover{color:var(--accent);}
-    .site-footer .brand-blurb{color:var(--muted);font-size:13px;max-width:280px;margin:10px 0 0;}
-    .footer-bottom{max-width:1400px;margin:0 auto;padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12.5px;}
-    .footer-bottom a{color:var(--muted);}
-    @media(max-width:560px){.hero h1{font-size:26px;}.total-box .amt{font-size:24px;}.hd-inner{height:auto;padding:12px 16px;flex-wrap:wrap;}.cols{grid-template-columns:1fr;}}
+    /* ===== 近期关税变动 时间线（唯一呈现，删滚动条） ===== */
+    .timeline{margin-top:8px}
+    .tl{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
+    .tl:last-child{border-bottom:none}
+    .tl .date{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted);min-width:74px}
+    .tl .body{font-size:14px}
+    .tl .tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);margin-right:8px}
+
+    /* ===== 导出 ===== */
+    .export{margin-top:16px;display:flex;gap:12px;flex-wrap:wrap}
+    .export button{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer}
+    .export button:hover{border-color:var(--accent);color:var(--accent)}
+
+    /* ===== 页尾：与正文同宽、左右安全边距 ===== */
+    .site-footer{margin-top:54px;background:var(--header-bg);border-top:1px solid var(--border)}
+    .footer-inner{max-width:var(--maxw);margin:0 auto;padding:40px 24px 22px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px}
+    @media(max-width:820px){.footer-inner{grid-template-columns:1fr 1fr}}
+    .site-footer h4{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:0 0 12px}
+    .site-footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+    .site-footer a{color:var(--text);text-decoration:none;font-size:14px}
+    .site-footer a:hover{color:var(--accent)}
+    .site-footer .brand-blurb{color:var(--muted);font-size:13px;max-width:280px;margin:10px 0 0}
+    .footer-bottom{max-width:var(--maxw);margin:0 auto;padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12.5px}
+    .footer-bottom a{color:var(--muted)}
+    .section-gap{margin-top:26px}
   </style>
   <SeoHead />
 </head>
 <body>
-  <header>
-    <div class="hd-inner">
+  <!-- ===== 页头（整条区域底边带弧） ===== -->
+  <header class="site-header">
+    <div class="wrap">
       <a class="brand" href="/"><span class="logo">⬢</span> TariffStack</a>
       <div class="spacer"></div>
       <div class="lang-row">
@@ -239,13 +225,14 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
         <select id="lang" aria-label="Language">
           {LANGS.map(l => <option value={l.code}>{l.label}</option>)}
         </select>
-        <button class="hbtn icon" id="theme-toggle" title="切换主题" aria-label="Toggle dark mode"><span class="tt-ico">🌙</span><span class="tt-txt" data-i18n="theme_dark">深色</span></button>
+        <button class="hbtn" id="theme-toggle" title="切换主题" aria-label="Toggle dark mode"><span class="tt-ico">🌙</span><span class="tt-txt" data-i18n="theme_dark">深色</span></button>
       </div>
     </div>
   </header>
 
+  <!-- ===== Hero（无滚动条） ===== -->
   <section class="hero">
-    <div class="wrap" style="max-width:1400px;margin:0 auto;padding:0 24px;">
+    <div class="wrap">
       <h1 data-i18n="tagline">Import Duty &amp; Landed-Cost Calculator — U.S. + China</h1>
       <p class="sub" data-i18n="hero_sub">Real official tariff stacks for importers, compliance and customs brokers: MFN / 301 / 232 / forced-labour / MPF / HMF — every layer broken down, fully sourced.</p>
       <span class="verified"><span class="dot"></span> <span data-i18n="badge_pre">✓ Rates verified against official customs data on</span> {verifiedDate} <span data-i18n="badge_tz"> (Beijing time)</span></span>
@@ -253,19 +240,22 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     </div>
   </section>
 
-  <main>
-    <div class="cols">
-      <!-- ===== 左：单票计算器（核心，结果固定在同一卡内） ===== -->
-      <div class="col-left">
-        <section class="card calc">
-          <h2 class="sec" data-i18n="section_calc">Quick calculator</h2>
+  <!-- ===== 主操作区：单票 + 近期变动 ===== -->
+  <div class="wrap">
+    <div class="grid2">
+      <!-- 单票计算器（核心，最显眼） -->
+      <section class="card">
+        <div class="pad">
+          <h2 data-i18n="section_calc">Quick calculator</h2>
+          <p class="hint" data-i18n="calc_hint">Enter an HS code and goods value to see the full tariff stack broken down layer by layer.</p>
+
           <div class="row c3">
-            <div class="entry">
-              <label class="fld" for="hts" data-i18n="calc_hts">HTS code</label>
+            <div>
+              <label for="hts" data-i18n="calc_hts">HTS code</label>
               <div class="hs-wrap"><input id="hts" class="mono" placeholder="e.g. 6109.10.00" autocomplete="off" value={DEMO_HTS} /><div class="hs-list" id="hsList"></div></div>
             </div>
-            <div class="entry">
-              <label class="fld" for="origin" data-i18n="calc_origin">Origin country</label>
+            <div>
+              <label for="origin" data-i18n="calc_origin">Origin country</label>
               <select id="origin">
                 {PINNED_ORIGINS.map(iso2 => {
                   const o = ORIGINS.find(x => x.iso2 === iso2);
@@ -280,18 +270,18 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
                 {_restOrigins.map(o => <option value={o.iso2} data-i18n-origin={o.iso2} title={US_EMBARGOED.includes(o.iso2) ? 'U.S.-embargoed origin — only the China destination is available' : ''}>{originLabel(o.iso2, 'en')}</option>)}
               </select>
             </div>
-            <div class="entry">
-              <label class="fld" for="dest" data-i18n="calc_dest">Destination market</label>
+            <div>
+              <label for="dest" data-i18n="calc_dest">Destination market</label>
               <select id="dest">{destOpts.map(d => <option value={d} selected={d === 'US'} data-i18n-dest={d}>{destLabel(d, 'en')}</option>)}</select>
             </div>
           </div>
           <div class="row c2">
-            <div class="entry">
-              <label class="fld" for="goods" id="goodsLabel" data-i18n="calc_goods">Goods value (USD)</label>
+            <div>
+              <label for="goods" id="goodsLabel" data-i18n="calc_goods">Goods value (USD)</label>
               <input id="goods" type="number" value="1000" min="0" step="1" />
             </div>
-            <div class="entry">
-              <label class="fld" for="mode" data-i18n="calc_mode">Transport mode (record only)</label>
+            <div>
+              <label for="mode" data-i18n="calc_mode">Transport mode (record only)</label>
               <select id="mode">
                 <option value="" data-i18n="mode_none">Unspecified</option>
                 <option value="sea" data-i18n="mode_sea">Sea</option>
@@ -302,9 +292,9 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
             </div>
           </div>
           <p class="note" data-i18n="calc_mode_note">Duty is assessed on goods value (FOB); transport mode is recorded only and does not change the rate (USITC / HTSUS).</p>
-          <div class="row">
-            <div class="entry"><button class="btn" id="calc" data-i18n="calc_btn">Calculate</button></div>
-          </div>
+          <button class="btn" id="calc" data-i18n="calc_btn">Calculate</button>
+
+          <!-- 固定结果区（限高+滑轮） -->
           <div class="result" id="result">
             <div class="total-box"><span class="lbl" data-i18n="total_row">Total duty + fees</span><span class="amt">{usd(worked.total)}</span><span class="sub">{destLabel(worked.dest,'en')} · {usd(worked.goods)}</span></div>
             <div class="bar">{workedBar}</div>
@@ -325,46 +315,51 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
               <button id="single-clear" class="clear-btn" data-i18n="single_clear" style="margin-left:auto">Clear result</button>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
 
-      <!-- ===== 右：近期关税变动 时间线（唯一政策呈现） ===== -->
-      <div class="col-right">
-        <section class="card" id="changes">
-          <div class="pad">
-            <h2 class="sec" data-i18n="news_title">Live tariff-policy updates</h2>
-            <p class="note" data-i18n="news_title_sub">Official sources — the only policy feed on this site (no duplicate scrollers).</p>
-            <div class="timeline" id="timeline"></div>
-          </div>
-        </section>
-      </div>
+      <!-- 右侧：近期关税变动 时间线（唯一呈现） -->
+      <section class="card" id="changes">
+        <div class="pad">
+          <h2 data-i18n="news_title">Live tariff-policy updates</h2>
+          <p class="hint" data-i18n="news_title_sub">Official sources — the only policy feed on this site (no duplicate scrollers).</p>
+          <div class="timeline" id="timeline"></div>
+        </div>
+      </section>
     </div>
 
-    <!-- ===== 批量计算器（自动待算行，置后整宽） ===== -->
-    <section class="batch card" id="batch" style="margin-top:24px;">
-      <h2 class="sec" data-i18n="section_batch">Batch calculator</h2>
-      <p class="note" data-i18n="batch_sub2">Type or pick an HS code — a pending row is added automatically. Each row can set its own origin / market / transport / value; otherwise the shared defaults apply. Then run the batch.</p>
-      <div class="binput">
-        <div class="grow"><label data-i18n="batch_hs_label">HS code (type or pick — auto-adds a row)</label>
-          <div class="hs-wrap"><input id="b-hs" class="mono" autocomplete="off" data-i18n-ph="batch_ph" placeholder="e.g. 6109.10.00" /><div class="hs-list" id="b-hsList"></div></div>
-        </div>
-        <div><label data-i18n="batch_origin">Origin (shared)</label><select id="batch-origin"></select></div>
-        <div><label data-i18n="batch_dest">Market (shared)</label><select id="batch-dest">{destOpts.map(d => <option value={d} selected={d === 'US'} data-i18n-dest={d}>{destLabel(d, 'en')}</option>)}</select></div>
-        <div><label data-i18n="batch_mode">Transport (shared)</label><select id="batch-mode"><option value="" data-i18n="mode_none">Unspecified</option><option value="sea" data-i18n="mode_sea">Sea</option><option value="air" data-i18n="mode_air">Air</option><option value="rail" data-i18n="mode_rail">Rail</option><option value="truck" data-i18n="mode_truck">Truck</option></select></div>
-        <div><label data-i18n="batch_goods">Goods USD (shared)</label><input id="batch-goods" type="number" value="1000" min="0" step="1" /></div>
-      </div>
-      <div class="area-head"><span class="t"><span data-i18n="batch_pending_label">Pending rows</span> (<span id="bcount">0</span>)</span><button class="clear-btn" id="clearPending" data-i18n="batch_clear_pending">Clear pending</button></div>
-      <div class="pending" id="pending"></div>
-      <div class="batch-actions">
-        <button class="btn" id="batch-run" data-i18n="batch_btn" style="width:auto">Run batch</button>
-        <button class="btn" id="batch-dl" data-i18n="batch_dl" style="display:none;width:auto;background:var(--card);color:var(--text);border:1px solid var(--line2)">Download CSV</button>
-        <span class="batch-count" id="batch-count"></span>
-      </div>
-      <div class="area-head" style="margin-top:16px"><span class="t" data-i18n="batch_result_label">Results</span><button class="clear-btn" id="clearBatchOut" data-i18n="batch_clear_out">Clear results</button></div>
-      <div class="batch-out" id="batch-out"></div>
-    </section>
-  </main>
+    <!-- ===== 批量计算器（次要，置后；无"加入"按钮，自动生成待算行） ===== -->
+    <section class="card section-gap">
+      <div class="pad">
+        <h2 data-i18n="section_batch">Batch calculator</h2>
+        <p class="hint" data-i18n="batch_sub2">Type or pick an HS code — a pending row is added automatically. Each row can set its own origin / market / transport / value; otherwise the shared defaults apply. Then run the batch.</p>
 
+        <div class="binput">
+          <div class="grow"><label data-i18n="batch_hs_label">HS code (type or pick — auto-adds a row)</label>
+            <div class="hs-wrap"><input id="b-hs" class="mono" autocomplete="off" data-i18n-ph="batch_ph" placeholder="e.g. 6109.10.00" /><div class="hs-list" id="b-hsList"></div></div>
+          </div>
+          <div><label data-i18n="batch_origin">Origin (shared)</label><select id="batch-origin"></select></div>
+          <div><label data-i18n="batch_dest">Market (shared)</label><select id="batch-dest">{destOpts.map(d => <option value={d} selected={d === 'US'} data-i18n-dest={d}>{destLabel(d, 'en')}</option>)}</select></div>
+          <div><label data-i18n="batch_mode">Transport (shared)</label><select id="batch-mode"><option value="" data-i18n="mode_none">Unspecified</option><option value="sea" data-i18n="mode_sea">Sea</option><option value="air" data-i18n="mode_air">Air</option><option value="rail" data-i18n="mode_rail">Rail</option><option value="truck" data-i18n="mode_truck">Truck</option></select></div>
+          <div><label data-i18n="batch_goods">Goods USD (shared)</label><input id="batch-goods" type="number" value="1000" min="0" step="1" /></div>
+        </div>
+
+        <div class="area-head"><span class="t"><span data-i18n="batch_pending_label">Pending rows</span> (<span id="bcount">0</span>)</span><button class="clear-btn" id="clearPending" data-i18n="batch_clear_pending">Clear pending</button></div>
+        <div class="pending" id="pending"></div>
+
+        <div class="batch-actions">
+          <button class="btn" id="batch-run" data-i18n="batch_btn">Run batch</button>
+          <button class="btn ghost" id="batch-dl" data-i18n="batch_dl" style="display:none">Download CSV</button>
+          <span class="batch-count" id="batch-count"></span>
+        </div>
+
+        <div class="area-head" style="margin-top:16px"><span class="t" data-i18n="batch_result_label">Results</span><button class="clear-btn" id="clearBatchOut" data-i18n="batch_clear_out">Clear results</button></div>
+        <div class="batch-out" id="batch-out"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== 页尾（与正文同宽、左右安全边距） ===== -->
   <footer class="site-footer">
     <div class="footer-inner">
       <div>
