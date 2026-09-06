@@ -116,7 +116,7 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     .card h2{margin:0 0 4px;font-size:18px}
     .card .hint{color:var(--muted);font-size:13px;margin:0 0 16px}
 
-    .grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;margin-top:26px}
+    .grid2{display:grid;grid-template-columns:1fr;gap:22px;margin-top:26px}
     @media(max-width:900px){.grid2{grid-template-columns:1fr}}
 
     label{display:block;font-size:13px;color:var(--muted);margin:0 0 6px}
@@ -174,7 +174,7 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     .pending::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;border:2px solid var(--bg)}
     .area-head{display:flex;align-items:center;justify-content:space-between;margin:2px 0 8px}
     .area-head .t{font-size:13px;color:var(--muted)}
-    .clear-btn{height:30px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:12.5px;cursor:pointer}
+    .clear-btn{height:30px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
     .clear-btn:hover{color:var(--bad);border-color:var(--bad)}
     .prow{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr .9fr 32px;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:13px}
     @media(max-width:820px){.prow{grid-template-columns:1fr 1fr 32px}.prow .hide-sm{display:none}}
@@ -317,15 +317,6 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
           </div>
         </div>
       </section>
-
-      <!-- 右侧：近期关税变动 时间线（唯一呈现） -->
-      <section class="card" id="changes">
-        <div class="pad">
-          <h2 data-i18n="news_title">Live tariff-policy updates</h2>
-          <p class="hint" data-i18n="news_title_sub">Official sources — the only policy feed on this site (no duplicate scrollers).</p>
-          <div class="timeline" id="timeline"></div>
-        </div>
-      </section>
     </div>
 
     <!-- ===== 批量计算器（次要，置后；无"加入"按钮，自动生成待算行） ===== -->
@@ -417,6 +408,25 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     const LAYER_COLOR = {'mfn':'mfn','s301':'s301','s232':'s232','forced':'forced','forced_labor':'forced','mpf':'mpf','hmf':'hmf'};
     const layerColorVar = (n) => 'var(--' + (LAYER_COLOR[n] || 'accent') + ')';
 
+    // 容错查找 HS 键：精确 → 去点/加点变体 → 前缀模糊（解决百科深链/格式不一致导致的"无结果"）
+    function lookupHts(hts, rates) {
+      if (!hts || !rates) return null;
+      if (rates[hts]) return hts;
+      const nd = String(hts).replace(/\./g, '').trim();
+      if (!nd) return null;
+      const variants = new Set();
+      variants.add(nd);
+      if (nd.length >= 4) variants.add(nd.slice(0, 4));
+      if (nd.length >= 6) variants.add(nd.slice(0, 6));
+      if (nd.length >= 8) variants.add(nd.slice(0, 4) + '.' + nd.slice(4, 6) + '.' + nd.slice(6, 8));
+      if (nd.length >= 10) variants.add(nd.slice(0, 4) + '.' + nd.slice(4, 6) + '.' + nd.slice(6, 10));
+      for (const v of variants) if (rates[v]) return v;
+      for (const k of Object.keys(rates)) {
+        if (k.replace(/\./g, '').startsWith(nd)) return k;
+      }
+      return null;
+    }
+
     let LANG = (localStorage.getItem('ts-lang') || 'en');
     if (!LANGS.some(l => l.code === LANG)) LANG = 'en';
 
@@ -466,7 +476,7 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       const dest = document.getElementById('dest').value;
       let res = null;
       if (dest === 'CN') res = computeStack(dest, hts, origin, goods, sampleRates, fixed, overlay, cnFull);
-      else { const rates = FULL || sampleRates; res = rates[hts] ? computeStack(dest, hts, origin, goods, rates, fixed, overlay) : null; }
+      else { const rates = FULL || sampleRates; const key = lookupHts(hts, rates); res = key ? computeStack(dest, key, origin, goods, rates, fixed, overlay) : null; }
       window.__last = res; currentDest = dest; renderResult(res);
     }
 
@@ -498,6 +508,13 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       sel.innerHTML = opts.map(d => `<option value="${d}" data-i18n-dest="${d}">${destLabel(d, LANG)}</option>`).join('');
       sel.value = opts.includes(sel.value) ? sel.value : (opts[0] || 'CN');
       updateFieldHints();
+    }
+    function renderBatchDestOptions(origin) {
+      const sel = document.getElementById('batch-dest');
+      if (!sel) return;
+      const opts = destOptionsFor(origin);
+      sel.innerHTML = opts.map(d => `<option value="${d}" data-i18n-dest="${d}">${destLabel(d, LANG)}</option>`).join('');
+      sel.value = opts.includes(sel.value) ? sel.value : (opts[0] || 'US');
     }
 
     // ===== HS 自动补全（可输入也可点选；真实全量数据） =====
@@ -545,6 +562,7 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
 
     // ===== events =====
     document.getElementById('origin').addEventListener('change', e => { renderDestOptions(e.target.value); doCalc(); });
+    document.getElementById('batch-origin').addEventListener('change', e => { renderBatchDestOptions(e.target.value); });
     document.getElementById('calc').addEventListener('click', () => { doCalc(); document.getElementById('result').scrollIntoView({ behavior:'smooth', block:'start' }); });
     document.getElementById('hts').addEventListener('change', doCalc);
     document.getElementById('dest').addEventListener('change', () => { doCalc(); updateFieldHints(); });
@@ -583,6 +601,7 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     // ===== BATCH（自动待算行） =====
     const batchOriginSel = document.getElementById('batch-origin');
     if (batchOriginSel) batchOriginSel.innerHTML = document.getElementById('origin').innerHTML;
+    if (batchOriginSel) renderBatchDestOptions(batchOriginSel.value);
     const pending = [];
     function addRow() {
       const hs = document.getElementById('b-hs').value.trim();
@@ -610,7 +629,8 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     function batchCompute(hts, origin, dest, goods) {
       if (dest === 'CN') return computeStack(dest, hts, origin, goods, sampleRates, fixed, overlay, cnFull);
       const rates = FULL || sampleRates;
-      return rates[hts] ? computeStack(dest, hts, origin, goods, rates, fixed, overlay) : null;
+      const key = lookupHts(hts, rates);
+      return key ? computeStack(dest, key, origin, goods, rates, fixed, overlay) : null;
     }
     function doBatch() {
       if (!pending.length) { document.getElementById('batch-out').innerHTML = `<div class="empty" data-i18n="batch_empty">${t(LANG,'batch_empty')}</div>`; return; }
@@ -664,9 +684,8 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       const n = items.length;
       const latest = n ? String(items[0].date || '').slice(0, 10) : '';
       const txt = t(LANG, 'alerts_updated').replace('{n}', String(n)).replace('{date}', latest);
-      const link = `<a href="#changes" style="color:var(--accent);text-decoration:none;font-weight:600;white-space:nowrap">${t(LANG,'alerts_view')}</a>`;
       el.className = 'alerts';
-      el.innerHTML = `<span class="pulse"></span><div>⚠ ${txt} ${link}</div>`;
+      el.innerHTML = `<span class="pulse"></span><div>⚠ ${txt}</div>`;
     }
 
     // ===== 加载全量数据 + 初始化 =====
@@ -678,10 +697,26 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     applyLang(LANG);
     renderAlerts();
 
-    // ?hts=CODE 从百科页跳转预填
+    // ?hts=CODE[&dest=US|CN] 从百科页跳转预填（携带目的地，自动校正 origin 使目的地可选）
     try {
-      const hp = new URLSearchParams(location.search).get('hts');
-      if (hp) { document.getElementById('hts').value = hp; doCalc(); }
+      const sp = new URLSearchParams(location.search);
+      const hp = sp.get('hts');
+      const hd = (sp.get('dest') || '').toUpperCase();
+      if (hp) {
+        document.getElementById('hts').value = hp;
+        if (hd === 'US' || hd === 'CN') {
+          let oi = document.getElementById('origin').value;
+          if (!destOptionsFor(oi).includes(hd)) {
+            const cand = hd === 'US' ? 'CN' : 'US';
+            oi = cand;
+            document.getElementById('origin').value = oi;
+            renderDestOptions(oi);
+          }
+          document.getElementById('dest').value = hd;
+          updateFieldHints();
+        }
+        doCalc();
+      }
     } catch (e) {}
   </script>
 </body>

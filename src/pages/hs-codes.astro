@@ -267,13 +267,13 @@ const jsonLd = JSON.stringify({
         const rec = ds[k];
         if (TAB === 'US') {
           const r = pct(rec.base);
-          return `<tr><td class="code">${k}</td><td class="desc">${rec.desc || ''}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
+          return `<tr><td class="code">${k}</td><td class="desc">${rec.desc || ''}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}&dest=US" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
         } else {
           const r = pct(rec.mfn);
           // CN data: name is a short dash-prefixed description relative to its parent heading
           // (e.g. "-棉制", "--改良种用", "---其他"). Show it as-is and add a chapter badge for context.
           const chapter = k.slice(0, 4);
-          return `<tr><td class="code">${k}</td><td class="desc"><span class="ch">${chapter}</span>${rec.name || ''}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
+          return `<tr><td class="code">${k}</td><td class="desc"><span class="ch">${chapter}</span>${rec.name || ''}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}&dest=CN" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
         }
       }).join('');
       if (!shown.length) {
