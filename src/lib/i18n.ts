@@ -137,6 +137,8 @@ const en: Dict = {
   alerts_new: '⚠ New official tariff data since your last visit ({date}).',
   alerts_none: 'You are up to date — no new official tariff data since your last visit.',
   alerts_recent: 'Recent policy changes',
+  alerts_updated: 'Since your last visit ({date}), {n} official tariff update(s) published.',
+  alerts_view: 'View changes →',
   // ---- HS code encyclopedia (/hs-codes) ----
   hs_enc_btn: 'HS Code Encyclopedia',
   hs_enc_title: 'HS / HTS Code Encyclopedia',
@@ -297,6 +299,8 @@ const zh: Dict = {
   alerts_new: '⚠ 自你上次访问以来已有新的官方关税数据更新（{date}）。',
   alerts_none: '已是最新 —— 自你上次访问以来无新的官方关税数据变动。',
   alerts_recent: '近期政策变动',
+  alerts_updated: '自你上次访问（{date}）以来，已有 {n} 项官方关税数据更新。',
+  alerts_view: '查看变动 →',
   // ---- HS 编码百科（/hs-codes） ----
   hs_enc_btn: 'HS 编码百科',
   hs_enc_title: 'HS / HTS 编码百科',

@@ -96,14 +96,14 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:var(--ink);letter-spacing:.2px;text-decoration:none;}
     .brand .logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#7aa7ff);display:grid;place-items:center;color:#fff;font-size:15px;box-shadow:0 4px 12px rgba(47,109,240,.35)}
     .spacer{flex:1}
-    .lang-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .lang-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex-shrink:0;}
     .hbtn{display:inline-flex !important;align-items:center;gap:7px;height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--border);
       background:var(--card);color:var(--text);font-size:14px;cursor:pointer;transition:.15s;white-space:nowrap;text-decoration:none;visibility:visible !important;flex-shrink:0;flex-grow:0;}
     .hbtn:hover{box-shadow:0 1px 2px rgba(20,30,60,.06),0 8px 24px rgba(20,30,60,.07);transform:translateY(-1px);}
     .hbtn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
     .hbtn.icon{width:40px;padding:0;justify-content:center;}
     .hsep{width:1px;height:24px;background:var(--border);margin:0 2px;}
-    select#lang{height:40px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);padding:0 12px;font-size:14px;cursor:pointer;}
+    select#lang{height:40px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);padding:0 12px;font-size:14px;cursor:pointer;width:auto;max-width:170px;flex:0 0 auto;}
     @media (max-width:1280px){.hbtn{padding:0 12px;font-size:13.5px;}}
     @media (max-width:1100px){.hbtn{padding:0 10px;font-size:13px;}select#lang{padding:0 8px;font-size:13px;}}
     @media (max-width:900px){.hd-inner{gap:8px;padding:0 16px;}}
@@ -130,7 +130,12 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     @keyframes pulse{0%{transform:scale(.6);opacity:.7}100%{transform:scale(1.6);opacity:0}}
 
     /* ===== calculator form ===== */
-    .calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;align-items:end;}
+    .calc{display:block;}
+    .row{display:grid;gap:14px;margin-bottom:14px;align-items:end;}
+    .row.c3{grid-template-columns:1fr 1fr 1fr;}
+    .row.c2{grid-template-columns:1fr 1fr;}
+    .row .entry{margin:0;min-width:0;}
+    @media(max-width:620px){.row.c3,.row.c2{grid-template-columns:1fr;}}
     .entry{display:flex;flex-direction:column;gap:7px;min-width:0;}
     label.fld{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600;}
     input,select{background:var(--card);color:var(--text);border:1px solid var(--line2);border-radius:10px;padding:11px 12px;font-size:15px;width:100%;max-width:100%;min-width:0;}
@@ -203,10 +208,9 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     .area-head .t{font-size:13px;color:var(--muted);font-weight:600;}
     .clear-btn{height:30px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:12.5px;cursor:pointer;}
     .clear-btn:hover{color:var(--bad);border-color:var(--bad);}
-    .prow{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr .9fr 30px;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:13px;}
+    .prow{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr .9fr 32px;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-size:13px;}
     [data-theme="dark"] .prow{background:var(--card);}
-    .prow select,.prow input{height:34px;padding:0 8px;font-size:13px;border-radius:8px;}
-    @media(max-width:820px){.prow{grid-template-columns:1fr 1fr 30px;}.prow .hide-sm{display:none;}}
+    @media(max-width:820px){.prow{grid-template-columns:1fr 1fr 32px;}.prow .hide-sm{display:none;}}
     .prow .x{border:none;background:transparent;color:var(--bad);cursor:pointer;font-size:18px;line-height:1;justify-self:center;}
     .batch-out{max-height:380px;overflow-y:auto;margin-top:12px;border-top:1px dashed var(--border);padding-top:12px;}
     .batch-out::-webkit-scrollbar{width:10px;}
@@ -264,49 +268,57 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       <div class="col-left">
         <h2 class="sec" data-i18n="section_calc">Quick calculator</h2>
         <section class="card calc">
-          <div class="entry">
-            <label class="fld" for="hts" data-i18n="calc_hts">HTS code</label>
-            <div class="hs-wrap"><input id="hts" class="mono" placeholder="e.g. 6109.10.00" autocomplete="off" value={DEMO_HTS} /><div class="hs-list" id="hsList"></div></div>
+          <div class="row">
+            <div class="entry">
+              <label class="fld" for="product" data-i18n="calc_product">…or pick a product</label>
+              <select id="product"><option value="" data-i18n="calc_select">— select —</option>{products.map(p => <option value={p.hts} data-i18n-prod={p.hts}>{p.names.en} — {p.hts}</option>)}</select>
+            </div>
           </div>
-          <div class="entry">
-            <label class="fld" for="product" data-i18n="calc_product">…or pick a product</label>
-            <select id="product"><option value="" data-i18n="calc_select">— select —</option>{products.map(p => <option value={p.hts} data-i18n-prod={p.hts}>{p.names.en} — {p.hts}</option>)}</select>
+          <div class="row c3">
+            <div class="entry">
+              <label class="fld" for="hts" data-i18n="calc_hts">HTS code</label>
+              <div class="hs-wrap"><input id="hts" class="mono" placeholder="e.g. 6109.10.00" autocomplete="off" value={DEMO_HTS} /><div class="hs-list" id="hsList"></div></div>
+            </div>
+            <div class="entry">
+              <label class="fld" for="origin" data-i18n="calc_origin">Origin country</label>
+              <select id="origin">
+                {PINNED_ORIGINS.map(iso2 => {
+                  const o = ORIGINS.find(x => x.iso2 === iso2);
+                  if (!o) return null;
+                  return <option value={o.iso2} selected={o.iso2 === 'CN'} data-i18n-origin={o.iso2}>{originLabel(o.iso2, 'en')}</option>;
+                })}
+                {POPULAR_ORIGINS.map(iso2 => {
+                  const o = ORIGINS.find(x => x.iso2 === iso2);
+                  if (!o) return null;
+                  return <option value={o.iso2} data-i18n-origin={o.iso2}>{originLabel(o.iso2, 'en')}</option>;
+                })}
+                {_restOrigins.map(o => <option value={o.iso2} data-i18n-origin={o.iso2} title={US_EMBARGOED.includes(o.iso2) ? 'U.S.-embargoed origin — only the China destination is available' : ''}>{originLabel(o.iso2, 'en')}</option>)}
+              </select>
+            </div>
+            <div class="entry">
+              <label class="fld" for="dest" data-i18n="calc_dest">Destination market</label>
+              <select id="dest">{destOpts.map(d => <option value={d} selected={d === 'US'} data-i18n-dest={d}>{destLabel(d, 'en')}</option>)}</select>
+            </div>
           </div>
-          <div class="entry">
-            <label class="fld" for="goods" id="goodsLabel" data-i18n="calc_goods">Goods value (USD)</label>
-            <input id="goods" type="number" value="1000" min="0" step="1" />
+          <div class="row c2">
+            <div class="entry">
+              <label class="fld" for="goods" id="goodsLabel" data-i18n="calc_goods">Goods value (USD)</label>
+              <input id="goods" type="number" value="1000" min="0" step="1" />
+            </div>
+            <div class="entry">
+              <label class="fld" for="mode" data-i18n="calc_mode">Transport mode (record only)</label>
+              <select id="mode">
+                <option value="" data-i18n="mode_none">Unspecified</option>
+                <option value="sea" data-i18n="mode_sea">Sea</option>
+                <option value="air" data-i18n="mode_air">Air</option>
+                <option value="rail" data-i18n="mode_rail">Rail</option>
+                <option value="truck" data-i18n="mode_truck">Truck</option>
+              </select>
+            </div>
           </div>
-          <div class="entry">
-            <label class="fld" for="origin" data-i18n="calc_origin">Origin country</label>
-            <select id="origin">
-              {PINNED_ORIGINS.map(iso2 => {
-                const o = ORIGINS.find(x => x.iso2 === iso2);
-                if (!o) return null;
-                return <option value={o.iso2} selected={o.iso2 === 'CN'} data-i18n-origin={o.iso2}>{originLabel(o.iso2, 'en')}</option>;
-              })}
-              {POPULAR_ORIGINS.map(iso2 => {
-                const o = ORIGINS.find(x => x.iso2 === iso2);
-                if (!o) return null;
-                return <option value={o.iso2} data-i18n-origin={o.iso2}>{originLabel(o.iso2, 'en')}</option>;
-              })}
-              {_restOrigins.map(o => <option value={o.iso2} data-i18n-origin={o.iso2} title={US_EMBARGOED.includes(o.iso2) ? 'U.S.-embargoed origin — only the China destination is available' : ''}>{originLabel(o.iso2, 'en')}</option>)}
-            </select>
+          <div class="row">
+            <div class="entry"><button class="btn" id="calc" data-i18n="calc_btn">Calculate</button></div>
           </div>
-          <div class="entry">
-            <label class="fld" for="dest" data-i18n="calc_dest">Destination market</label>
-            <select id="dest">{destOpts.map(d => <option value={d} selected={d === 'US'} data-i18n-dest={d}>{destLabel(d, 'en')}</option>)}</select>
-          </div>
-          <div class="entry">
-            <label class="fld" for="mode" data-i18n="calc_mode">Transport mode (record only)</label>
-            <select id="mode">
-              <option value="" data-i18n="mode_none">Unspecified</option>
-              <option value="sea" data-i18n="mode_sea">Sea</option>
-              <option value="air" data-i18n="mode_air">Air</option>
-              <option value="rail" data-i18n="mode_rail">Rail</option>
-              <option value="truck" data-i18n="mode_truck">Truck</option>
-            </select>
-          </div>
-          <div class="entry"><button class="btn" id="calc" data-i18n="calc_btn">Calculate</button></div>
         </section>
         <p class="note" data-i18n="calc_mode_note">Duty is assessed on goods value (FOB); transport mode is recorded only and does not change the rate (USITC / HTSUS).</p>
 
@@ -604,10 +616,6 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     const batchOriginSel = document.getElementById('batch-origin');
     if (batchOriginSel) batchOriginSel.innerHTML = document.getElementById('origin').innerHTML;
     const pending = [];
-    function modesOptions(sel) {
-      const modes = [['','mode_none'],['sea','mode_sea'],['air','mode_air'],['rail','mode_rail'],['truck','mode_truck']];
-      return modes.map(([v,k]) => `<option value="${v}" ${v===sel?'selected':''}>${t(LANG,k)}</option>`).join('');
-    }
     function addRow() {
       const hs = document.getElementById('b-hs').value.trim();
       if (!hs) return;
@@ -620,21 +628,15 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       if (!el) return;
       cnt.textContent = pending.length;
       if (!pending.length) { el.innerHTML = `<div class="empty" data-i18n="batch_empty_pending">${t(LANG,'batch_empty_pending')}</div>`; return; }
-      const originOpts = document.getElementById('origin').innerHTML;
-      const destOpts = document.getElementById('dest').innerHTML;
       el.innerHTML = pending.map((r,i) => `
         <div class="prow">
           <span class="mono">${r.hs}</span>
-          <select class="p-origin hide-sm" data-i="${i}">${originOpts.replace('value="'+r.origin+'"','value="'+r.origin+'" selected')}</select>
-          <select class="p-dest hide-sm" data-i="${i}">${destOpts.replace('value="'+r.dest+'"','value="'+r.dest+'" selected')}</select>
-          <select class="p-mode hide-sm" data-i="${i}">${modesOptions(r.mode)}</select>
-          <input class="p-goods mono" data-i="${i}" value="${r.goods}" />
+          <span class="hide-sm">${originLabel(r.origin, LANG)}</span>
+          <span class="hide-sm">${destLabel(r.dest, LANG)}</span>
+          <span class="hide-sm">${t(LANG, r.mode ? ('mode_'+r.mode) : 'mode_none')}</span>
+          <span class="mono hide-sm">${usd(parseFloat(r.goods) || 0)}</span>
           <button class="x" data-i="${i}">×</button>
         </div>`).join('');
-      el.querySelectorAll('.p-origin').forEach(s => s.onchange = e => { pending[+s.dataset.i].origin = e.target.value; });
-      el.querySelectorAll('.p-dest').forEach(s => s.onchange = e => { pending[+s.dataset.i].dest = e.target.value; });
-      el.querySelectorAll('.p-mode').forEach(s => s.onchange = e => { pending[+s.dataset.i].mode = e.target.value; });
-      el.querySelectorAll('.p-goods').forEach(s => s.oninput = e => { pending[+s.dataset.i].goods = e.target.value; });
       el.querySelectorAll('.x').forEach(b => b.onclick = () => { pending.splice(+b.dataset.i, 1); renderPending(); });
     }
     function batchCompute(hts, origin, dest, goods) {
@@ -687,14 +689,16 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       }).join('');
     }
 
-    // ===== 变动预警横幅 =====
+    // ===== 变动预警横幅（对齐本地 v5：警告脉冲 + 自上次访问更新数 + 查看变动链接） =====
     function renderAlerts() {
       const el = document.getElementById('alerts-banner'); if (!el) return;
-      const last = (overlay.last_checked || '').slice(0, 10);
-      let seen = ''; try { seen = localStorage.getItem('ts_lastvisit') || ''; } catch (e) {}
-      if (last && seen && last > seen) { el.className = 'alerts'; el.innerHTML = '⚠ ' + t(LANG, 'alerts_new').replace('{date}', last); }
-      else { el.className = 'alerts'; el.innerHTML = '✓ ' + t(LANG, 'alerts_none'); }
-      try { if (last) localStorage.setItem('ts_lastvisit', last); } catch (e) {}
+      const items = (newsFeed && newsFeed.items) ? newsFeed.items : [];
+      const n = items.length;
+      const latest = n ? String(items[0].date || '').slice(0, 10) : '';
+      const txt = t(LANG, 'alerts_updated').replace('{n}', String(n)).replace('{date}', latest);
+      const link = `<a href="#changes" style="color:var(--accent);text-decoration:none;font-weight:600;white-space:nowrap">${t(LANG,'alerts_view')}</a>`;
+      el.className = 'alerts';
+      el.innerHTML = `<span class="pulse"></span><div>⚠ ${txt} ${link}</div>`;
     }
 
     // ===== 加载全量数据 + 初始化 =====
