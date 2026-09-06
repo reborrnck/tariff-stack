@@ -399,6 +399,46 @@ const clkLondon     = fmtClk('Europe/London');
     .export{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;}
     .export button{background:var(--card);color:var(--ink);border:1px solid var(--line2);border-radius:9px;padding:11px 18px;font-size:15px;font-weight:600;cursor:pointer;}
     .export button:hover{border-color:var(--accent);color:var(--accent);}
+    /* ---------- alerts banner ---------- */
+    .alerts-banner{margin:0 auto 16px;max-width:1700px;padding:11px 16px;border-radius:11px;font-size:14.5px;font-weight:600;display:flex;gap:10px;align-items:center;}
+    .alerts-banner.is-new{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;}
+    .alerts-banner.is-ok{background:#ecfdf3;border:1px solid #c8f0d4;color:#1a7f4b;}
+    [data-theme="dark"] .alerts-banner.is-new{background:#3a2410;border-color:#5c3a17;color:#f0b27a;}
+    [data-theme="dark"] .alerts-banner.is-ok{background:#0f2a1c;border-color:#1c5238;color:#6fbf9c;}
+    /* ---------- batch calculator ---------- */
+    .batch{margin-top:26px;}
+    .batch .batch-bar{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;margin-top:12px;}
+    .batch .batch-bar .fld{display:block;font-size:13px;color:var(--mut);font-weight:600;margin-bottom:6px;}
+    .batch textarea{width:100%;min-height:120px;margin-top:12px;background:var(--card);color:var(--ink);border:1px solid var(--line2);border-radius:9px;padding:12px 14px;font-size:14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;resize:vertical;}
+    .batch select,.batch input.goods{background:var(--card);color:var(--ink);border:1px solid var(--line2);border-radius:9px;padding:10px 12px;font-size:14px;}
+    .batch .batch-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;align-items:center;}
+    .batch .batch-actions .btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:11px 20px;font-size:15px;font-weight:700;cursor:pointer;}
+    .batch .batch-actions .btn:hover{opacity:.92;}
+    .batch .batch-count{font-size:13.5px;color:var(--mut);font-weight:600;}
+    .batch .batch-table{margin-top:14px;width:100%;border-collapse:collapse;font-size:14px;}
+    .batch .batch-table th,.batch .batch-table td{padding:9px 12px;border-bottom:1px solid var(--line2);text-align:left;}
+    .batch .batch-table th.num,.batch .batch-table td.num{text-align:right;}
+    .batch .batch-table th{color:var(--mut);font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;}
+    .batch .batch-table tr.total td{font-weight:800;border-top:2px solid var(--line2);}
+    .batch .empty{color:var(--mut);font-size:14px;margin-top:12px;}
+    /* ---------- watchlist & alerts ---------- */
+    .watch{max-width:1700px;margin:34px auto 0;padding:0 56px;}
+    .watch .watch-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:12px;}
+    .watch .watch-bar input{background:var(--card);color:var(--ink);border:1px solid var(--line2);border-radius:9px;padding:10px 12px;font-size:14px;width:260px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;}
+    .watch .watch-bar .btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;}
+    .watch .watch-bar .btn:hover{opacity:.92;}
+    .watch .watch-bar .btn.ghost{background:transparent;color:var(--mut);border:1px solid var(--line2);font-weight:600;}
+    .watch .watch-table{margin-top:14px;width:100%;border-collapse:collapse;font-size:14.5px;max-width:760px;}
+    .watch .watch-table th,.watch .watch-table td{padding:10px 14px;border-bottom:1px solid var(--line2);text-align:left;}
+    .watch .watch-table th{color:var(--mut);font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;}
+    .watch .watch-table .num{text-align:right;}
+    .watch .watch-table .rm{color:var(--bad);background:none;border:none;cursor:pointer;font-weight:600;font-size:13.5px;}
+    .watch .empty{color:var(--mut);font-size:14px;margin-top:10px;}
+    .watch .recent{margin-top:26px;}
+    .watch .recent ul{list-style:none;padding:0;margin:10px 0 0;}
+    .watch .recent li{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--line2);font-size:14px;}
+    .watch .recent .r-tag{font-weight:700;color:var(--accent);min-width:46px;}
+    .watch .recent .r-date{color:var(--mut);font-size:13px;min-width:96px;}
     /* ---------- footer ---------- */
     .site-footer{margin:40px auto 0;max-width:1700px;padding:30px 56px 36px;
       color:var(--mut);font-size:15px;line-height:1.6;
@@ -528,6 +568,7 @@ const clkLondon     = fmtClk('Europe/London');
   </div>
 
   <main>
+    <div id="alerts-banner" class="alerts-banner" role="status"></div>
     <div class="cols">
       <!-- ===== LEFT: calculator + classifier (input side) ===== -->
       <div class="col-left">
@@ -618,6 +659,27 @@ const clkLondon     = fmtClk('Europe/London');
           <button id="exp-json" data-i18n="exp_json">Export JSON</button>
           <button id="exp-csv" data-i18n="exp_csv">Export CSV</button>
         </div>
+
+        <!-- ===== BATCH CALCULATOR — many HS codes at once ===== -->
+        <section class="batch" id="batch">
+          <h2 class="sec" data-i18n="section_batch">Batch calculator</h2>
+          <p class="note" data-i18n="batch_sub">Paste one HS code per line. Or use rows: HTS,origin,dest,goods.</p>
+          <div class="batch-bar">
+            <div><label class="fld" for="batch-origin" data-i18n="batch_origin">Origin (shared)</label>
+              <select id="batch-origin"></select></div>
+            <div><label class="fld" for="batch-dest" data-i18n="batch_dest">Market (shared)</label>
+              <select id="batch-dest">{destOpts.map(d => <option value={d} selected={d === 'US'} data-i18n-dest={d}>{destLabel(d, 'en')}</option>)}</select></div>
+            <div><label class="fld" for="batch-goods" data-i18n="batch_goods">Goods value USD (shared)</label>
+              <input class="goods" id="batch-goods" type="number" value="1000" min="0" step="1" /></div>
+          </div>
+          <textarea id="batch-input" data-i18n-ph="batch_ph" placeholder="6109.10.00&#10;8703.23.00&#10;9403.20.00"></textarea>
+          <div class="batch-actions">
+            <button class="btn" id="batch-run" data-i18n="batch_btn">Calculate batch</button>
+            <button class="btn" id="batch-dl" data-i18n="batch_dl" style="display:none;">Download CSV</button>
+            <span class="batch-count" id="batch-count"></span>
+          </div>
+          <div id="batch-out"></div>
+        </section>
       </div>
 
       <!-- ===== RIGHT: worked example + by-origin + ad slot ===== -->
@@ -674,6 +736,22 @@ const clkLondon     = fmtClk('Europe/London');
 
   </main>
 
+  <!-- ===== WATCHLIST & CHANGE ALERTS (stickiness) ===== -->
+  <section class="watch" id="watch">
+    <h2 class="sec" data-i18n="section_watch">Watchlist &amp; change alerts</h2>
+    <p class="note" data-i18n="watch_sub">Save the HS codes you track.</p>
+    <div class="watch-bar">
+      <input id="watch-input" data-i18n-ph="watch_ph" placeholder="e.g. 6109.10.00" autocomplete="off" />
+      <button class="btn" id="watch-add" data-i18n="watch_add">Add to watchlist</button>
+      <button class="btn ghost" id="watch-clear" data-i18n="watch_clear">Clear all</button>
+    </div>
+    <div id="watch-list"></div>
+    <div class="recent">
+      <h3 class="sec" data-i18n="alerts_recent">Recent policy changes</h3>
+      <ul id="recent-list"></ul>
+    </div>
+  </section>
+
   <!-- ===== full-width divider ===== -->
   <div class="site-divider"></div>
 
@@ -707,6 +785,7 @@ const clkLondon     = fmtClk('Europe/London');
     import { destLabel } from '../lib/destinations.ts';
     import { destOptionsFor } from '../lib/origins.ts';
     import { t, layerName, originLabel, productName, descLabel, type Lang } from '../lib/i18n.ts';
+    import newsFeed from '../data/news_feed.json';
 
     const fixed = sample.fixed;
     const sampleRates = sample.rates;
@@ -915,6 +994,10 @@ const clkLondon     = fmtClk('Europe/London');
       updateFieldHints();
       if (window.__last) renderResult(window.__last);
       if (window.__matches && window.__matches.length) renderMatches();
+      renderBatch();
+      renderWatch();
+      renderRecent();
+      renderAlerts();
     }
 
     // ---- classifier hints: ALWAYS VISIBLE (no collapse) ----
@@ -976,21 +1059,151 @@ const clkLondon     = fmtClk('Europe/London');
     }
     document.getElementById('exp-json').addEventListener('click', () => {
       if (!window.__last) return;
-      download('tariffstack-result.json', JSON.stringify(window.__last, null, 2), 'application/json');
+      const payload = {
+        meta: { tool: 'TariffStack', generated_at: new Date().toISOString(), data_as_of: overlay.as_of, data_last_checked: overlay.last_checked, destination: window.__last.dest },
+        result: window.__last,
+      };
+      download('tariffstack-result.json', JSON.stringify(payload, null, 2), 'application/json');
     });
     document.getElementById('exp-csv').addEventListener('click', () => {
       const r = window.__last; if (!r) return;
-      const head = 'layer,rate,amount\n';
+      const head = `# TariffStack audit export\n# data_as_of,${overlay.as_of}\n# last_checked,${overlay.last_checked}\n# generated_at,${new Date().toISOString()}\nlayer,rate,amount\n`;
       const body = r.layers.map(l => `"${layerName(l.name, LANG)}",${l.rate},${l.amt.toFixed(2)}`).join('\n');
       download('tariffstack-result.csv', head + body, 'text/csv');
     });
 
+    // ===================== BATCH / WATCHLIST / ALERTS =====================
+    // ---- batch calculator ----
+    const batchOriginSel = document.getElementById('batch-origin');
+    if (batchOriginSel) batchOriginSel.innerHTML = document.getElementById('origin').innerHTML;
+    window.__batch = [];
+    function batchCompute(hts, origin, dest, goods) {
+      if (dest === 'CN') return computeStack(dest, hts, origin, goods, sampleRates, fixed, overlay, cnFull);
+      const rates = FULL || sampleRates;
+      return rates[hts] ? computeStack(dest, hts, origin, goods, rates, fixed, overlay) : null;
+    }
+    function doBatch() {
+      const defOrigin = (document.getElementById('batch-origin').value || 'CN').toUpperCase();
+      const defDest = (document.getElementById('batch-dest').value || 'US').toUpperCase();
+      const defGoods = parseFloat(document.getElementById('batch-goods').value) || 0;
+      const lines = (document.getElementById('batch-input').value || '').split('\n').map(s => s.trim()).filter(Boolean);
+      const rows = [];
+      for (const line of lines) {
+        const p = line.split(',').map(s => s.trim());
+        const hts = p[0] || '';
+        const origin = (p[1] || defOrigin).toUpperCase();
+        const dest = (p[2] || defDest).toUpperCase();
+        const goods = (p[3] !== undefined && p[3] !== '') ? (parseFloat(p[3]) || defGoods) : defGoods;
+        rows.push({ hts, origin, dest, goods, res: batchCompute(hts, origin, dest, goods) });
+      }
+      window.__batch = rows;
+      renderBatch();
+    }
+    function renderBatch() {
+      const out = document.getElementById('batch-out');
+      const dl = document.getElementById('batch-dl');
+      const cnt = document.getElementById('batch-count');
+      if (!out) return;
+      const rows = window.__batch || [];
+      if (!rows.length) { out.innerHTML = ''; if (dl) dl.style.display = 'none'; if (cnt) cnt.textContent = ''; return; }
+      const body = rows.map(r => {
+        if (!r.res) return `<tr><td>${r.hts}</td><td>${originLabel(r.origin, LANG)}</td><td>${destLabel(r.dest, LANG)}</td><td class="num">${usd(r.goods)}</td><td class="num">—</td><td class="num">—</td></tr>`;
+        return `<tr><td>${r.hts}</td><td>${originLabel(r.origin, LANG)}</td><td>${destLabel(r.dest, LANG)}</td><td class="num">${usd(r.goods)}</td><td class="num ${effClass(r.res.effective)}">${pct(r.res.effective)}</td><td class="num">${usd(r.res.total)}</td></tr>`;
+      }).join('');
+      out.innerHTML = `<table class="batch-table"><thead><tr>
+        <th>${t(LANG,'batch_col_hts')}</th><th>${t(LANG,'batch_col_origin')}</th><th>${t(LANG,'batch_col_dest')}</th>
+        <th class="num">${t(LANG,'batch_col_goods')}</th><th class="num">${t(LANG,'batch_col_eff')}</th><th class="num">${t(LANG,'batch_col_total')}</th></tr></thead><tbody>${body}</tbody></table>`;
+      if (dl) dl.style.display = '';
+      if (cnt) cnt.textContent = t(LANG,'batch_count').replace('{n}', String(rows.length));
+    }
+    function downloadBatchCSV() {
+      const rows = window.__batch || [];
+      if (!rows.length) return;
+      const esc = s => `"${String(s).replace(/"/g,'""')}"`;
+      const head = `hts,origin,dest,goods,effective_rate,total_duty\n`;
+      const body = rows.map(r => `${esc(r.hts)},${esc(r.origin)},${esc(r.dest)},${r.goods},${(r.res ? pct(r.res.effective) : '—')},${r.res ? r.res.total.toFixed(2) : ''}`).join('\n');
+      download('tariffstack-batch.csv', head + body, 'text/csv');
+    }
+
+    // ---- watchlist (localStorage) ----
+    const WKEY = 'ts-watch';
+    function loadWatch() { try { return JSON.parse(localStorage.getItem(WKEY) || '[]'); } catch (e) { return []; } }
+    function saveWatch(list) { try { localStorage.setItem(WKEY, JSON.stringify(list)); } catch (e) {} }
+    function renderWatch() {
+      const el = document.getElementById('watch-list');
+      if (!el) return;
+      const list = loadWatch();
+      if (!list.length) { el.innerHTML = `<p class="empty" data-i18n="watch_empty">${t(LANG,'watch_empty')}</p>`; return; }
+      const body = list.map((w, i) => {
+        const res = batchCompute(w.hts, (w.origin || 'CN').toUpperCase(), (w.dest || 'US').toUpperCase(), 1000);
+        const rate = res ? pct(res.effective) : '—';
+        const duty = res ? usd(res.total) : '—';
+        return `<tr><td>${w.hts}</td><td>${originLabel(w.origin || 'CN', LANG)}</td><td>${destLabel(w.dest || 'US', LANG)}</td><td class="num ${res ? effClass(res.effective) : ''}">${rate}</td><td class="num">${duty}</td><td class="num"><button class="rm" data-rm="${i}" data-i18n="watch_remove">${t(LANG,'watch_remove')}</button></td></tr>`;
+      }).join('');
+      el.innerHTML = `<table class="watch-table"><thead><tr>
+        <th>${t(LANG,'watch_col_hts')}</th><th>${t(LANG,'batch_col_origin')}</th><th>${t(LANG,'batch_col_dest')}</th>
+        <th class="num">${t(LANG,'watch_col_rate')}</th><th class="num">${t(LANG,'watch_col_total')}</th><th></th></tr></thead><tbody>${body}</tbody></table>`;
+      el.querySelectorAll('[data-rm]').forEach(b => b.addEventListener('click', () => {
+        const idx = parseInt(b.getAttribute('data-rm'), 10);
+        const list = loadWatch(); list.splice(idx, 1); saveWatch(list); renderWatch();
+      }));
+    }
+    function addWatch() {
+      const inp = document.getElementById('watch-input');
+      const hts = (inp && inp.value || '').trim();
+      if (!hts) return;
+      const list = loadWatch();
+      if (!list.some(w => w.hts === hts)) list.push({ hts, origin: document.getElementById('origin').value, dest: document.getElementById('dest').value });
+      saveWatch(list);
+      if (inp) inp.value = '';
+      renderWatch();
+    }
+    function clearWatch() { saveWatch([]); renderWatch(); }
+
+    // ---- change-alert banner (data last_checked vs visitor's last seen) ----
+    function renderAlerts() {
+      const el = document.getElementById('alerts-banner');
+      if (!el) return;
+      const last = (overlay.last_checked || '').slice(0, 10);
+      let seen = '';
+      try { seen = localStorage.getItem('ts_lastvisit') || ''; } catch (e) {}
+      if (last && seen && last > seen) {
+        el.className = 'alerts-banner is-new';
+        el.textContent = t(LANG, 'alerts_new').replace('{date}', last);
+      } else {
+        el.className = 'alerts-banner is-ok';
+        el.textContent = t(LANG, 'alerts_none');
+      }
+      try { if (last) localStorage.setItem('ts_lastvisit', last); } catch (e) {}
+    }
+    function renderRecent() {
+      const ul = document.getElementById('recent-list');
+      if (!ul || !newsFeed || !newsFeed.items) return;
+      ul.innerHTML = newsFeed.items.map(n => {
+        const txt = t(LANG, n.key) || n.key;
+        const tag = destLabel(n.tag || 'US', LANG);
+        return `<li><span class="r-tag">${tag}</span><span class="r-text">${txt}</span><span class="r-date">${n.date || ''}</span></li>`;
+      }).join('');
+    }
+
+    // batch / watch events
+    document.getElementById('batch-run').addEventListener('click', doBatch);
+    document.getElementById('batch-dl').addEventListener('click', downloadBatchCSV);
+    const batchTa = document.getElementById('batch-input');
+    if (batchTa) batchTa.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') doBatch(); });
+    document.getElementById('watch-add').addEventListener('click', addWatch);
+    document.getElementById('watch-clear').addEventListener('click', clearWatch);
+    const watchInp = document.getElementById('watch-input');
+    if (watchInp) watchInp.addEventListener('keydown', e => { if (e.key === 'Enter') addWatch(); });
+
     // load full dataset, apply saved language, render
-    fetch('/data/tariff_full.json').then(r => r.json()).then(j => { FULL = j; doCalc(); })
+    fetch('/data/tariff_full.json').then(r => r.json()).then(j => { FULL = j; doCalc(); renderBatch(); renderWatch(); })
       .catch(() => { FULL = null; doCalc(); });
-    fetch('/data/tariff_full_cn.json').then(r => r.json()).then(j => { cnFull = (j && j.by_hs8) ? j.by_hs8 : j; doCalc(); })
+    fetch('/data/tariff_full_cn.json').then(r => r.json()).then(j => { cnFull = (j && j.by_hs8) ? j.by_hs8 : j; doCalc(); renderBatch(); renderWatch(); })
       .catch(() => { cnFull = null; doCalc(); });
+    renderRecent();
     applyLang(LANG);
+    renderAlerts();
 
     // ---- live time-zone clocks (real-time, ticked every second) ----
     (function tickClocks(){

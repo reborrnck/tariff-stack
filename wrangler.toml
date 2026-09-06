@@ -1,5 +1,7 @@
 name = "tariff-stack"
 compatibility_date = "2026-09-04"
+main = "./worker/api.ts"
 
 [assets]
 directory = "./dist"
+binding = "ASSETS"

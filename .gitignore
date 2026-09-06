@@ -22,6 +22,10 @@ _cn_src/
 # ---- 刷新审计产物（FRESHNESS_REPORT 本地副本，CI 写在 runner.temp，不入库） ----
 .refresh_reports/
 
+# ---- 本地新鲜度/刷新核对报告（AI 本地核对脚本输出，非源码，会随运行再生） ----
+refresh_audit_*.md
+scripts/tariff_freshness_*.md
+
 # ---- 环境变量 ----
 .env
 .env.*
