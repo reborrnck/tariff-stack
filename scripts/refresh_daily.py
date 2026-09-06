@@ -147,14 +147,19 @@ def coerce_val(raw, vtype):
 
 # 页头滚动播报的"真实政策"条目（i18n key 驱动，10 语翻译由前端负责）。
 # 每日刷新时重写 generated_at=今日；政策实质变化时更新此列表并随 commit 同步线上。
+# ⚠️ 真实生效日（须与 Federal Register / USITC 官方公告核对，勿填占位 '2026'）：
+#   钢/铝/铜 50% 翻倍 2026-03-12；汽车 25% 2026-05-03；欧盟 cap 2026-08-27（取自 policy_overlay 笔记）；
+#   英国 EPD cap 2026-05-08；药品 2026-09-29 / 无人机 2026-09-03 / 多晶硅 2026-12-04（KNOWN 常量）；
+#   USITC 基表 Rev18 2026-09-02；UFLPA 2026-07-24。
+#   这些日期在每次刷新会被本列表覆盖写回 news_feed.json，故必须在此钉真实值，否则线上会回退成 '2026'。
 NEWS_FEED_ITEMS = [
-    {"key": "news_usitc",         "tag": "US", "date": "2026-08-24"},
-    {"key": "news_sec232_steel",  "tag": "US", "date": "2026"},
-    {"key": "news_sec232_autos",  "tag": "US", "date": "2026"},
+    {"key": "news_usitc",         "tag": "US", "date": "2026-09-02"},
+    {"key": "news_sec232_steel",  "tag": "US", "date": "2026-03-12"},
+    {"key": "news_sec232_autos",  "tag": "US", "date": "2026-05-03"},
     {"key": "news_sec232_pharma", "tag": "US", "date": KNOWN["sec232_pharma_eff"]},
     {"key": "news_sec232_drones", "tag": "US", "date": KNOWN["sec232_drones_eff"]},
-    {"key": "news_eu_cap",         "tag": "EU", "date": "2026"},
-    {"key": "news_uk_cap",         "tag": "UK", "date": "2026"},
+    {"key": "news_eu_cap",         "tag": "EU", "date": "2026-08-27"},
+    {"key": "news_uk_cap",         "tag": "UK", "date": "2026-05-08"},
     {"key": "news_uflpa",          "tag": "US", "date": "2026-07-24"},
 ]
 
