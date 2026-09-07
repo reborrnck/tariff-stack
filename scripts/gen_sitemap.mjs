@@ -20,7 +20,7 @@ const guideSlugs = readdirSync(guidesDir)
   .map((f) => f.replace(/\.astro$/, ''))
   .sort();
 
-const staticRoutes = ['/', '/about', '/privacy', '/terms', '/guides'];
+const staticRoutes = ['/', '/about', '/privacy', '/terms', '/contact', '/guides'];
 const totalPages = Math.max(1, Math.ceil(guideSlugs.length / PAGE_SIZE));
 const paginated = [];
 for (let p = 2; p <= totalPages; p++) paginated.push(`/guides/${p}`);

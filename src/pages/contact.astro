@@ -1,0 +1,142 @@
+---
+// Contact TariffStack — standalone page (per-page en + zh dict, mirrors about.astro).
+// Other languages fall back to en (per i18n convention); nothing added to the global i18n.ts.
+import SeoHead from '../components/SeoHead.astro';
+import CookieConsent from '../components/CookieConsent.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+const en = {
+  title: 'Contact TariffStack',
+  h1: 'Contact us',
+  updated: 'Last updated',
+  back: '← Back to TariffStack',
+  intro: 'Have a question, found a wrong rate, or want to partner with us? Reach the right inbox below. We read every message and reply as fast as we can.',
+
+  s1_h: 'General & support',
+  s1: 'Questions, corrections, takedown requests and feedback: write to TariffStack@outlook.com. When reporting a data issue, please include the HS / HTS code and the destination (U.S. or China) so we can investigate quickly.',
+
+  s2_h: 'Business & partnerships',
+  s2: 'For partnerships, media, or business enquiries, contact the team lead directly at zmarkz123zxc@gmail.com.',
+
+  s3_h: 'Before you write',
+  s3: 'TariffStack is an estimator, not a customs broker or law firm. We cannot give binding classification rulings or legal advice. For a real customs decision, contact the destination customs authority or a licensed broker.',
+
+  s4_h: 'Response time',
+  s4: 'We aim to reply within 2–3 business days. This is a free, advertising-supported tool run by a small team, so complex data investigations may take longer.',
+
+  footer_privacy: 'Advertising & Privacy',
+  footer_terms: 'Terms of Service',
+  footer_about: 'About',
+  footer_calc: 'Calculator',
+};
+const zh = {
+  title: '联系 TariffStack',
+  h1: '联系我们',
+  updated: '最后更新',
+  back: '← 返回 TariffStack',
+  intro: '有疑问、发现税率有误，或想与我们合作？请按下方对应邮箱联系。我们阅读每一封来信，并尽快回复。',
+
+  s1_h: '一般咨询与支持',
+  s1: '疑问、纠错、删除请求与反馈，请写信至 TariffStack@outlook.com。报告数据问题时，请附上 HS / HTS 编码与目的国（美国或中国），以便我们快速核查。',
+
+  s2_h: '商务与合作',
+  s2: '合作、媒体或商务事宜，请直接联系团队负责人：zmarkz123zxc@gmail.com。',
+
+  s3_h: '在来信之前',
+  s3: 'TariffStack 是估算器，不是报关行或律师事务所，无法提供具有约束力的归类裁定或法律意见。如需真实报关裁定，请联系目的国海关或持牌报关行。',
+
+  s4_h: '回复时间',
+  s4: '我们力争在 2–3 个工作日内回复。本工具由小团队运营、靠广告维持免费，复杂的数据核查可能需要更久。',
+
+  footer_privacy: '广告与隐私',
+  footer_terms: '服务条款',
+  footer_about: '关于',
+  footer_calc: '计算器',
+};
+const d = en;
+import overlay from '../data/policy_overlay.json';
+const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0, 10) || '2026-09-04';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{d.title}</title>
+  <meta name="description" content="Contact TariffStack — general support, data corrections and business enquiries. Reach the right inbox for this free U.S. + China import-duty estimator." />
+  <meta name="robots" content="index,follow" />
+  <SeoHead />
+  <style is:global>
+    :root{--bg:#f4f6fa;--card:#ffffff;--ink:#0f172a;--ink-deep:#0b1220;--content:#334155;--mut:#94a3b8;--line:#e6eaf1;--line2:#d7dde8;--accent:#1d4ed8;--accent-soft:#eef3ff;--good:#15803d;--warn:#b45309;--bad:#b91c1c;--scroll-thumb:#c8d0dd;--scroll-thumb-hover:#a8b3c5;--scroll-track:transparent;}
+    *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--scroll-thumb) var(--scroll-track);}
+    *::-webkit-scrollbar{width:10px;height:10px;}
+    *::-webkit-scrollbar-track{background:var(--scroll-track);}
+    *::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:10px;border:2px solid transparent;background-clip:padding-box;}
+    *::-webkit-scrollbar-thumb:hover{background:var(--scroll-thumb-hover);background-clip:padding-box;border:2px solid transparent;}
+    *::-webkit-scrollbar-corner{background:transparent;}
+    [data-theme="dark"]{
+      --bg:#0b1120; --card:#121a2b; --ink:#e8edf6; --ink-deep:#f4f8fd; --content:#c4cedb;
+      --mut:#8b99ad; --line:#1e2a3e; --line2:#2b3a52;
+      --accent:#8aa7d8; --accent-soft:#1a2740;
+      --good:#6fbf9c; --warn:#d8a866; --bad:#d88686;
+      --scroll-thumb:#2b3a52; --scroll-thumb-hover:#3d5070;
+    }
+    [data-theme="dark"] body{background:var(--bg);color:var(--content);}
+    [data-theme="dark"] .lead{background:var(--accent-soft);border-color:var(--line2);}
+    body{margin:0;font:19px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--content);-webkit-font-smoothing:antialiased;}
+    .wrap{max-width:920px;margin:0 auto;padding:32px 28px 64px;}
+    h1{margin:0 0 8px;font-size:34px;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+    .updated{font-size:14px;color:var(--mut);margin-bottom:20px;}
+    .lead{background:var(--accent-soft);border:1px solid #d6e2ff;border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;font-size:15.5px;color:var(--ink-deep);margin-bottom:24px;line-height:1.6;}
+    h2{margin:30px 0 10px;font-size:21px;font-weight:700;color:var(--ink);letter-spacing:-.005em;scroll-margin-top:80px;}
+    p{margin:0 0 14px;line-height:1.65;}
+    .back{margin-top:36px;display:inline-block;font-weight:700;}
+    .mail{color:var(--accent);font-weight:700;word-break:break-word;}
+    .pg-footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--mut);display:flex;gap:18px;flex-wrap:wrap;}
+    .pg-footer a{color:var(--accent);text-decoration:none;font-weight:600;}
+    .pg-footer a:hover{text-decoration:underline;}
+    @media (max-width:600px){.wrap{padding:20px 16px 48px;}h1{font-size:28px;}h2{font-size:19px;}}
+  </style>
+</head>
+<body>
+  <SiteHeader />
+  <main class="wrap">
+    <h1 data-i18n="h1">{d.h1}</h1>
+    <div class="updated"><span data-i18n="updated">{d.updated}</span>: {pageUpdated}</div>
+    <div class="lead" data-i18n="intro">{d.intro}</div>
+
+    <h2 id="s1" data-i18n="s1_h">{d.s1_h}</h2><p data-i18n="s1">{d.s1}</p>
+    <h2 id="s2" data-i18n="s2_h">{d.s2_h}</h2><p data-i18n="s2">{d.s2}</p>
+    <h2 id="s3" data-i18n="s3_h">{d.s3_h}</h2><p data-i18n="s3">{d.s3}</p>
+    <h2 id="s4" data-i18n="s4_h">{d.s4_h}</h2><p data-i18n="s4">{d.s4}</p>
+
+    <a class="back" href="/" data-i18n="back">{d.back}</a>
+
+    <nav class="pg-footer" aria-label="Footer">
+      <a href="/" data-i18n="footer_calc">{d.footer_calc}</a>
+      <a href="/about" data-i18n="footer_about">{d.footer_about}</a>
+      <a href="/privacy" data-i18n="footer_privacy">{d.footer_privacy}</a>
+      <a href="/terms" data-i18n="footer_terms">{d.footer_terms}</a>
+    </nav>
+  </main>
+
+  <script is:inline define:vars={{ zh }}>
+    // Lightweight zh swap — mirrors the about page language preference (localStorage 'ts-lang').
+    (function () {
+      try {
+        (function applyTheme(){ try { var s = localStorage.getItem('ts-theme') || 'light'; if (s === 'dark') document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+        var lang = localStorage.getItem('ts-lang') || 'en';
+        if (lang !== 'zh') return;
+        var nodes = document.querySelectorAll('[data-i18n]');
+        for (var i = 0; i < nodes.length; i++) {
+          var k = nodes[i].getAttribute('data-i18n');
+          if (zh[k] != null) nodes[i].textContent = zh[k];
+        }
+        document.documentElement.lang = 'zh';
+        document.title = '联系 TariffStack — TariffStack';
+      } catch (e) {}
+    })();
+  </script>
+
+  <CookieConsent />
+</body>
+</html>

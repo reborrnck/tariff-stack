@@ -1,5 +1,6 @@
 ---
 import SeoHead from '../components/SeoHead.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 import { t, LANGS } from '../lib/i18n.ts';
 import overlay from '../data/policy_overlay.json';
 
@@ -92,6 +93,13 @@ const jsonLd = JSON.stringify({
     .empty{padding:40px 14px;text-align:center;color:var(--muted);font-size:14px}
     .note{margin:16px 0 0;font-size:13px;color:var(--muted);line-height:1.6;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
     .note b{color:var(--text)}
+    /* ===== explain (original interpretation, anti low-value) ===== */
+    .explain{margin-top:36px;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
+    .explain .wrap{padding:28px 24px 30px}
+    .explain h2{margin:0 0 14px;font-size:21px;font-weight:700;color:var(--text);letter-spacing:-.01em}
+    .explain p{margin:0 0 12px;font-size:14.5px;line-height:1.7;color:var(--content);max-width:920px}
+    .explain p:last-child{margin-bottom:0}
+    @media(max-width:560px){.explain .wrap{padding:22px 16px 24px}.explain h2{font-size:19px}}
     /* ===== footer ===== */
     .site-footer{margin-top:48px;background:var(--header-bg);border-top:1px solid var(--border)}
     .footer-inner{max-width:var(--maxw);margin:0 auto;padding:34px 24px 20px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px}
@@ -149,6 +157,16 @@ const jsonLd = JSON.stringify({
     </div>
   </section>
 
+  <section class="explain">
+    <div class="wrap">
+      <h2 data-i18n="hs_about_h">How to read these codes</h2>
+      <p data-i18n="hs_about_p1">An HS (Harmonized System) code is a 6-digit international standard; the U.S. extends it to a 10-digit HTS subheading and China to an 8-digit HS code. The first two digits are the chapter (broad product group), the next four narrow it to the heading, and the extra digits add national detail. More digits = more precise classification = the rate you actually pay.</p>
+      <p data-i18n="hs_about_p2">The rate shown here is the official BASE / MFN rate only — the published duty before any stacked measures. For the U.S., Section 301 (China), Section 232 (steel / aluminium / autos / pharma), the UFLPA +12.5% forced-labour duty, and MPF / HMF fees can all apply on top. For China, the applied rate is the lower of MFN and any provisional / FTA rate. Use the calculator for the full landed cost.</p>
+      <p data-i18n="hs_about_p3">Where the numbers come from: U.S. rates are parsed from the official USITC Harmonized Tariff Schedule; China rates from the official 2026 Import & Export Tariff of the State Council Tariff Commission. Every figure is traceable to its source and stamped with an "as of" date so you can verify it yourself.</p>
+      <p data-i18n="hs_about_p4">This directory is a search aid, not legal or customs advice. Classification can be contested, and exclusions, AD / CVD, de-minimis thresholds and destination VAT / GST may change your real entry. Always confirm with the destination customs authority or a licensed broker before you file.</p>
+    </div>
+  </section>
+
   <footer class="site-footer">
     <div class="footer-inner">
       <div>
@@ -174,6 +192,7 @@ const jsonLd = JSON.stringify({
       <div>
         <h4 data-i18n="footer_contact">Contact</h4>
         <ul>
+          <li><a href="/contact" data-i18n="footer_contact_page">Contact us</a></li>
           <li><a href="mailto:TariffStack@outlook.com">TariffStack@outlook.com</a></li>
           <li><a href="mailto:zmarkz123zxc@gmail.com" data-i18n="footer_contact_biz">Business inquiries</a></li>
         </ul>
@@ -184,6 +203,8 @@ const jsonLd = JSON.stringify({
       <span><a href="/guides" data-i18n="guides_btn">关税指南</a></span>
     </div>
   </footer>
+
+  <CookieConsent />
 
   <script>
     import { t, LANGS } from '../lib/i18n.ts';
