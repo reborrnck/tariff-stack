@@ -17,16 +17,16 @@ const LANGS = [
   ['it', 'Italiano'],
 ];
 const L = {
-  en:     { guides: 'Guides', about: 'About',      lang_label: 'Language',        theme_label: 'Toggle dark mode' },
-  zh:     { guides: '指南',   about: '关于',      lang_label: '语言',            theme_label: '切换深色模式' },
-  'zh-TW':{ guides: '指南',   about: '關於',      lang_label: '語言',            theme_label: '切換深色模式' },
-  ja:     { guides: 'ガイド', about: '概要',      lang_label: '言語',            theme_label: 'ダークモード切替' },
-  es:     { guides: 'Guías',  about: 'Acerca de',  lang_label: 'Idioma',          theme_label: 'Alternar modo oscuro' },
-  de:     { guides: 'Leitfäden', about: 'Über uns', lang_label: 'Sprache',       theme_label: 'Dunkelmodus umschalten' },
-  ko:     { guides: '가이드', about: '소개',       lang_label: '언어',            theme_label: '다크 모드 전환' },
-  fr:     { guides: 'Guides', about: 'À propos',   lang_label: 'Langue',          theme_label: 'Basculer le mode sombre' },
-  pt:     { guides: 'Guias',  about: 'Sobre',      lang_label: 'Idioma',          theme_label: 'Alternar modo escuro' },
-  it:     { guides: 'Guide',  about: 'Informazioni', lang_label: 'Lingua',       theme_label: 'Attiva/disattiva tema scuro' },
+  en:     { guides: 'Guides', about: 'About', footer_calc: 'Calculator', footer_guides: 'Guides', footer_about: 'About', footer_contact: 'Contact', footer_privacy: 'Advertising & Privacy', footer_terms: 'Terms', lang_label: 'Language', theme_label: 'Toggle dark mode' },
+  zh:     { guides: '指南', about: '关于', footer_calc: '计算器', footer_guides: '指南', footer_about: '关于', footer_contact: '联系我们', footer_privacy: '广告与隐私', footer_terms: '服务条款', lang_label: '语言', theme_label: '切换深色模式' },
+  'zh-TW':{ guides: '指南', about: '關於', footer_calc: '計算機', footer_guides: '指南', footer_about: '關於', footer_contact: '聯絡我們', footer_privacy: '廣告與隱私', footer_terms: '服務條款', lang_label: '語言', theme_label: '切換深色模式' },
+  ja:     { guides: 'ガイド', about: '概要', footer_calc: '計算機', footer_guides: 'ガイド', footer_about: '概要', footer_contact: 'お問い合わせ', footer_privacy: '広告とプライバシー', footer_terms: '利用規約', lang_label: '言語', theme_label: 'ダークモード切替' },
+  es:     { guides: 'Guías', about: 'Acerca de', footer_calc: 'Calculadora', footer_guides: 'Guías', footer_about: 'Acerca de', footer_contact: 'Contacto', footer_privacy: 'Publicidad y Privacidad', footer_terms: 'Términos', lang_label: 'Idioma', theme_label: 'Alternar modo oscuro' },
+  de:     { guides: 'Leitfäden', about: 'Über uns', footer_calc: 'Rechner', footer_guides: 'Leitfäden', footer_about: 'Über uns', footer_contact: 'Kontakt', footer_privacy: 'Werbung & Datenschutz', footer_terms: 'Nutzungsbedingungen', lang_label: 'Sprache', theme_label: 'Dunkelmodus umschalten' },
+  ko:     { guides: '가이드', about: '소개', footer_calc: '관세 계산기', footer_guides: '가이드', footer_about: '소개', footer_contact: '문의', footer_privacy: '광고 및 개인정보', footer_terms: '이용 약관', lang_label: '언어', theme_label: '다크 모드 전환' },
+  fr:     { guides: 'Guides', about: 'À propos', footer_calc: 'Calculateur', footer_guides: 'Guides', footer_about: 'À propos', footer_contact: 'Contact', footer_privacy: 'Publicité & Confidentialité', footer_terms: 'Conditions', lang_label: 'Langue', theme_label: 'Basculer le mode sombre' },
+  pt:     { guides: 'Guias', about: 'Sobre', footer_calc: 'Calculadora', footer_guides: 'Guias', footer_about: 'Sobre', footer_contact: 'Contato', footer_privacy: 'Publicidade & Privacidade', footer_terms: 'Termos', lang_label: 'Idioma', theme_label: 'Alternar modo escuro' },
+  it:     { guides: 'Guide', about: 'Informazioni', footer_calc: 'Calcolatrice', footer_guides: 'Guide', footer_about: 'Informazioni', footer_contact: 'Contatti', footer_privacy: 'Pubblicità & Privacy', footer_terms: 'Termini', lang_label: 'Lingua', theme_label: 'Attiva/disattiva tema scuro' },
 };
 ---
 <header class="ts-site" id="ts-site-header">
@@ -49,6 +49,18 @@ const L = {
     </div>
   </div>
 </header>
+<footer class="ts-foot">
+  <div class="ts-foot-inner">
+    <nav class="ts-foot-nav" aria-label="Footer">
+      <a href="/" data-sh="footer_calc">Calculator</a>
+      <a href="/guides" data-sh="footer_guides">Guides</a>
+      <a href="/about" data-sh="footer_about">About</a>
+      <a href="/contact" data-sh="footer_contact">Contact</a>
+      <a href="/privacy" data-sh="footer_privacy">Advertising &amp; Privacy</a>
+      <a href="/terms" data-sh="footer_terms">Terms</a>
+    </nav>
+  </div>
+</footer>
 <style>
   .ts-site{background:var(--card);border-bottom:1px solid var(--line);margin-bottom:28px;}
   .ts-inner{max-width:920px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
@@ -64,21 +76,27 @@ const L = {
   .ts-theme:hover{border-color:var(--accent);}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
   @media (max-width:600px){.ts-inner{padding:12px 16px;gap:10px;}.ts-l{gap:12px;}.ts-nav{gap:12px;}.ts-brand{font-size:17px;}}
+  .ts-foot{background:var(--card);border-top:1px solid var(--line);margin-top:36px;}
+  .ts-foot-inner{max-width:920px;margin:0 auto;padding:18px 28px;display:flex;justify-content:center;}
+  .ts-foot-nav{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+  .ts-foot-nav a{color:var(--accent);text-decoration:none;font-weight:600;font-size:14px;white-space:nowrap;}
+  .ts-foot-nav a:hover{text-decoration:underline;}
+  @media (max-width:600px){.ts-foot-inner{padding:14px 16px;}.ts-foot-nav{gap:14px;}}
 </style>
 <script is:inline>
   (function () {
     var LANGS = ['en','zh','zh-TW','ja','es','de','ko','fr','pt','it'];
     var L = {
-      en:{guides:'Guides',about:'About',lang_label:'Language',theme_label:'Toggle dark mode'},
-      zh:{guides:'指南',about:'关于',lang_label:'语言',theme_label:'切换深色模式'},
-      'zh-TW':{guides:'指南',about:'關於',lang_label:'語言',theme_label:'切換深色模式'},
-      ja:{guides:'ガイド',about:'概要',lang_label:'言語',theme_label:'ダークモード切替'},
-      es:{guides:'Guías',about:'Acerca de',lang_label:'Idioma',theme_label:'Alternar modo oscuro'},
-      de:{guides:'Leitfäden',about:'Über uns',lang_label:'Sprache',theme_label:'Dunkelmodus umschalten'},
-      ko:{guides:'가이드',about:'소개',lang_label:'언어',theme_label:'다크 모드 전환'},
-      fr:{guides:'Guides',about:'À propos',lang_label:'Langue',theme_label:'Basculer le mode sombre'},
-      pt:{guides:'Guias',about:'Sobre',lang_label:'Idioma',theme_label:'Alternar modo escuro'},
-      it:{guides:'Guide',about:'Informazioni',lang_label:'Lingua',theme_label:'Attiva/disattiva tema scuro'}
+      en:{guides:'Guides',about:'About',footer_calc:'Calculator',footer_guides:'Guides',footer_about:'About',footer_contact:'Contact',footer_privacy:'Advertising & Privacy',footer_terms:'Terms',lang_label:'Language',theme_label:'Toggle dark mode'},
+      zh:{guides:'指南',about:'关于',footer_calc:'计算器',footer_guides:'指南',footer_about:'关于',footer_contact:'联系我们',footer_privacy:'广告与隐私',footer_terms:'服务条款',lang_label:'语言',theme_label:'切换深色模式'},
+      'zh-TW':{guides:'指南',about:'關於',footer_calc:'計算機',footer_guides:'指南',footer_about:'關於',footer_contact:'聯絡我們',footer_privacy:'廣告與隱私',footer_terms:'服務條款',lang_label:'語言',theme_label:'切換深色模式'},
+      ja:{guides:'ガイド',about:'概要',footer_calc:'計算機',footer_guides:'ガイド',footer_about:'概要',footer_contact:'お問い合わせ',footer_privacy:'広告とプライバシー',footer_terms:'利用規約',lang_label:'言語',theme_label:'ダークモード切替'},
+      es:{guides:'Guías',about:'Acerca de',footer_calc:'Calculadora',footer_guides:'Guías',footer_about:'Acerca de',footer_contact:'Contacto',footer_privacy:'Publicidad y Privacidad',footer_terms:'Términos',lang_label:'Idioma',theme_label:'Alternar modo oscuro'},
+      de:{guides:'Leitfäden',about:'Über uns',footer_calc:'Rechner',footer_guides:'Leitfäden',footer_about:'Über uns',footer_contact:'Kontakt',footer_privacy:'Werbung & Datenschutz',footer_terms:'Nutzungsbedingungen',lang_label:'Sprache',theme_label:'Dunkelmodus umschalten'},
+      ko:{guides:'가이드',about:'소개',footer_calc:'관세 계산기',footer_guides:'가이드',footer_about:'소개',footer_contact:'문의',footer_privacy:'광고 및 개인정보',footer_terms:'이용 약관',lang_label:'언어',theme_label:'다크 모드 전환'},
+      fr:{guides:'Guides',about:'À propos',footer_calc:'Calculateur',footer_guides:'Guides',footer_about:'À propos',footer_contact:'Contact',footer_privacy:'Publicité & Confidentialité',footer_terms:'Conditions',lang_label:'Langue',theme_label:'Basculer le mode sombre'},
+      pt:{guides:'Guias',about:'Sobre',footer_calc:'Calculadora',footer_guides:'Guias',footer_about:'Sobre',footer_contact:'Contato',footer_privacy:'Publicidade & Privacidade',footer_terms:'Termos',lang_label:'Idioma',theme_label:'Alternar modo escuro'},
+      it:{guides:'Guide',about:'Informazioni',footer_calc:'Calcolatrice',footer_guides:'Guide',footer_about:'Informazioni',footer_contact:'Contatti',footer_privacy:'Pubblicità & Privacy',footer_terms:'Termini',lang_label:'Lingua',theme_label:'Attiva/disattiva tema scuro'}
     };
     function apply(){
       try {

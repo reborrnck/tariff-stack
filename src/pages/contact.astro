@@ -23,10 +23,6 @@ const en = {
   s4_h: 'Response time',
   s4: 'We aim to reply within 2–3 business days. This is a free, advertising-supported tool run by a small team, so complex data investigations may take longer.',
 
-  footer_privacy: 'Advertising & Privacy',
-  footer_terms: 'Terms of Service',
-  footer_about: 'About',
-  footer_calc: 'Calculator',
 };
 const zh = {
   title: '联系 TariffStack',
@@ -47,10 +43,6 @@ const zh = {
   s4_h: '回复时间',
   s4: '我们力争在 2–3 个工作日内回复。本工具由小团队运营、靠广告维持免费，复杂的数据核查可能需要更久。',
 
-  footer_privacy: '广告与隐私',
-  footer_terms: '服务条款',
-  footer_about: '关于',
-  footer_calc: '计算器',
 };
 const d = en;
 import overlay from '../data/policy_overlay.json';
@@ -91,9 +83,6 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
     p{margin:0 0 14px;line-height:1.65;}
     .back{margin-top:36px;display:inline-block;font-weight:700;}
     .mail{color:var(--accent);font-weight:700;word-break:break-word;}
-    .pg-footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--mut);display:flex;gap:18px;flex-wrap:wrap;}
-    .pg-footer a{color:var(--accent);text-decoration:none;font-weight:600;}
-    .pg-footer a:hover{text-decoration:underline;}
     @media (max-width:600px){.wrap{padding:20px 16px 48px;}h1{font-size:28px;}h2{font-size:19px;}}
   </style>
 </head>
@@ -110,13 +99,6 @@ const pageUpdated = String(overlay.last_checked || overlay.as_of || '').slice(0,
     <h2 id="s4" data-i18n="s4_h">{d.s4_h}</h2><p data-i18n="s4">{d.s4}</p>
 
     <a class="back" href="/" data-i18n="back">{d.back}</a>
-
-    <nav class="pg-footer" aria-label="Footer">
-      <a href="/" data-i18n="footer_calc">{d.footer_calc}</a>
-      <a href="/about" data-i18n="footer_about">{d.footer_about}</a>
-      <a href="/privacy" data-i18n="footer_privacy">{d.footer_privacy}</a>
-      <a href="/terms" data-i18n="footer_terms">{d.footer_terms}</a>
-    </nav>
   </main>
 
   <script is:inline define:vars={{ zh }}>
