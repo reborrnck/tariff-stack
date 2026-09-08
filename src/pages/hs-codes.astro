@@ -12,6 +12,54 @@ const jsonLd = JSON.stringify({
   "description": "Complete official U.S. HTS and China HS code directory with real base / MFN rates, sourced from USITC and the China Tariff Commission schedule.",
   "inLanguage": ["en", "zh", "zh-TW", "ja", "ko", "es", "fr", "pt", "de", "it"],
 });
+
+// ===== GEO 修复：服务端渲染前 N 条真实税率进静态 HTML（AI 爬虫不执行 JS 也能读到真值） =====
+import ssg from '../data/hs_codes_ssg.json';
+const CAP = 200;
+const esc = (s) => String(s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const pct = (x) => {
+  const n = Number(x);
+  if (!isFinite(n) || n === 0) return { txt: 'Free', free: true };
+  return { txt: (n % 1 === 0 ? n : n.toFixed(2)) + '%', free: false };
+};
+const usHead = `<tr><th data-i18n="hs_enc_code">Code</th><th data-i18n="hs_enc_desc">Description</th><th class="num" data-i18n="hs_enc_rate">Base rate</th><th></th></tr>`;
+const usRows = ssg.us.slice(0, CAP).map(r => {
+  const p = pct(r.base);
+  return `<tr><td class="code">${esc(r.code)}</td><td class="desc">${esc(r.desc)}</td><td class="rate ${p.free ? 'free' : ''}">${p.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(r.code)}&dest=US" data-i18n="hs_enc_use">Use calculator</a></td></tr>`;
+}).join('');
+const cnRows = ssg.cn.slice(0, CAP).map(r => {
+  const p = pct(r.mfn);
+  const ch = r.code.slice(0, 4);
+  return `<tr><td class="code">${esc(r.code)}</td><td class="desc"><span class="ch">${esc(ch)}</span>${esc(r.name)}</td><td class="rate ${p.free ? 'free' : ''}">${p.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(r.code)}&dest=CN" data-i18n="hs_enc_use">Use calculator</a></td></tr>`;
+}).join('');
+const usTable = `<table><thead>${usHead}</thead><tbody>${usRows}</tbody></table>`;
+const cnTable = `<table><thead>${usHead}</thead><tbody>${cnRows}</tbody></table>`;
+const featHead = `<tr><th data-i18n="hs_enc_code">Code</th><th data-i18n="hs_enc_desc">Description</th><th class="num" data-i18n="hs_enc_rate">Base rate</th><th></th></tr>`;
+const featUsRows = ssg.featuredUs.map(r => {
+  const p = pct(r.base);
+  return `<tr><td class="code">${esc(r.code)}</td><td class="desc">${esc(r.desc)}</td><td class="rate ${p.free ? 'free' : ''}">${p.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(r.code)}&dest=US" data-i18n="hs_enc_use">Use calculator</a></td></tr>`;
+}).join('');
+const featCnRows = ssg.featuredCn.map(r => {
+  const p = pct(r.mfn);
+  const ch = r.code.slice(0, 4);
+  return `<tr><td class="code">${esc(r.code)}</td><td class="desc"><span class="ch">${esc(ch)}</span>${esc(r.name)}</td><td class="rate ${p.free ? 'free' : ''}">${p.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(r.code)}&dest=CN" data-i18n="hs_enc_use">Use calculator</a></td></tr>`;
+}).join('');
+const featUsTable = `<table><thead>${featHead}</thead><tbody>${featUsRows}</tbody></table>`;
+const featCnTable = `<table><thead>${featHead}</thead><tbody>${featCnRows}</tbody></table>`;
+const ssgCount = `Showing <b>${Math.min(CAP, ssg.us.length)}</b> of ${ssg.meta.usTotal} U.S. HTS codes`;
+const dsJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "TariffStack official U.S. HTS & China HS tariff rates",
+  "description": `Real, sourced base / MFN tariff rates for ${ssg.meta.usTotal} U.S. HTS subheadings and ${ssg.meta.cnTotal} China 8-digit HS codes.`,
+  "url": "https://tariff-stack.zmarkz123zxc.workers.dev/hs-codes",
+  "sameAs": ["https://hts.usitc.gov/", "https://www.customs.gov.cn/"],
+  "spatialCoverage": ["US", "CN"],
+  "temporalCoverage": String(ssg.meta.generatedAt || ''),
+  "license": "https://tariff-stack.zmarkz123zxc.workers.dev/terms",
+  "distribution": [{ "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://tariff-stack.zmarkz123zxc.workers.dev/data/tariff_full.json" }]
+});
 ---
 <!doctype html>
 <html lang="en">
@@ -21,6 +69,7 @@ const jsonLd = JSON.stringify({
   <title>TariffStack · HS / HTS Code Encyclopedia</title>
   <meta name="description" content="Every official U.S. HTS and China HS code — real, complete and sourced. Search 25,903 U.S. subheadings and 14,584 China 8-digit codes by code or keyword, with base / MFN rates." />
   <script type="application/ld+json" set:html={jsonLd}></script>
+  <script type="application/ld+json" set:html={dsJsonLd}></script>
   <SeoHead />
   <style is:global>
     :root{
@@ -93,6 +142,12 @@ const jsonLd = JSON.stringify({
     .empty{padding:40px 14px;text-align:center;color:var(--muted);font-size:14px}
     .note{margin:16px 0 0;font-size:13px;color:var(--muted);line-height:1.6;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
     .note b{color:var(--text)}
+    /* ===== popular (static GEO block: real high-traffic rates in HTML) ===== */
+    .popular{margin-top:34px}
+    .popular .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+    .popular h2{font-size:19px;margin:0 0 14px;color:var(--text);font-weight:700}
+    .popular-box{max-height:none;margin-top:0}
+    @media(max-width:560px){.popular .wrap{padding:0 16px}.popular h2{font-size:17px}}
     /* ===== explain (original interpretation, anti low-value) ===== */
     .explain{margin-top:36px;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
     .explain .wrap{padding:28px 24px 30px}
@@ -146,14 +201,21 @@ const jsonLd = JSON.stringify({
       </div>
 
       <div class="meta-row">
-        <span class="count" id="count"><span data-i18n="hs_enc_loading">Loading official tariff data…</span></span>
+        <span class="count" id="count" set:html={ssgCount}></span>
       </div>
 
-      <div class="results" id="results">
-        <div class="empty" data-i18n="hs_enc_loading">Loading official tariff data…</div>
-      </div>
+      <div class="results" id="results" set:html={usTable}></div>
+      <div id="ssg-cn-data" hidden set:html={cnTable}></div>
 
       <p class="note"><b data-i18n="hs_enc_note_title">Base rate only.</b> <span data-i18n="hs_enc_note">Shown is the official base / MFN rate. Stacked duties (Section 301, Section 232, UFLPA +12.5%, MPF/HMF) apply per destination — use the calculator for the full landed cost.</span></p>
+    </div>
+  </section>
+
+  <section class="popular">
+    <div class="wrap">
+      <h2 data-i18n="hs_popular_h">Popular HS codes — real base rates</h2>
+      <div class="results popular-box" id="popular-us" set:html={featUsTable}></div>
+      <div id="popular-cn" hidden set:html={featCnTable}></div>
     </div>
   </section>
 

@@ -110,6 +110,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Generate HS SSG snapshot (GEO — embed real rates into static HTML)
+        # 读取刷新后的 tariff_full*.json，生成 hs_codes_ssg.json（前 200 条真值），
+        # 供 hs-codes.astro 服务端渲染进静态 HTML，使 AI 爬虫无需执行 JS 即可读到真税率。
+        run: node scripts/build_hs_ssg.mjs
+
       - name: Build static site
         run: npm run build
 
