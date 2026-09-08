@@ -1,0 +1,267 @@
+---
+import SeoHead from '../../components/SeoHead.astro';
+import CookieConsent from '../../components/CookieConsent.astro';
+import { t, LANGS } from '../../lib/i18n.ts';
+import overlay from '../../data/policy_overlay.json';
+import ssg from '../../data/hs_codes_ssg.json';
+
+// GEO 修复②：为 Top20 高频 HS 6 位前缀各生成一个静态详情页，服务端渲染真实中美双率 + JSON-LD。
+export function getStaticPaths() {
+  return (ssg.details || []).map(d => ({ params: { code: d.code }, props: { d } }));
+}
+
+const { d } = Astro.props;
+const code = d.code;
+const verifiedDate = String(overlay.last_checked || overlay.as_of || '').slice(0, 10);
+
+const esc = (s) => String(s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const pct = (x) => {
+  const n = Number(x);
+  if (!isFinite(n) || n === 0) return { txt: 'Free', free: true };
+  return { txt: (n % 1 === 0 ? n : n.toFixed(2)) + '%', free: false };
+};
+const usP = d.us ? pct(d.us.base) : null;
+const cnP = d.cn ? pct(d.cn.mfn) : null;
+const usCaption = d.us ? `HTS ${d.us.code}` : 'No U.S. HTS match';
+const cnCaption = d.cn ? `HS ${d.cn.code}` : 'No China HS match';
+
+const description = `Official HS ${code} tariff: U.S. base rate ${usP ? usP.txt : 'n/a'} (${usCaption}) and China MFN ${cnP ? cnP.txt : 'n/a'} (${cnCaption}). Sourced from USITC and the China Tariff Commission 2026 schedule.`;
+const articleLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": `HS ${code} — official U.S. & China tariff rate`,
+  "description": description,
+  "inLanguage": ["en", "zh", "zh-TW", "ja", "ko", "es", "fr", "pt", "de", "it"],
+  "about": { "@type": "Thing", "name": `HS code ${code}`, "identifier": code },
+  "dateModified": verifiedDate,
+  "publisher": { "@type": "Organization", "name": "TariffStack", "url": "https://tariff-stack.zmarkz123zxc.workers.dev" }
+});
+const datasetLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": `TariffStack HS ${code} official rates`,
+  "description": description,
+  "url": `https://tariff-stack.zmarkz123zxc.workers.dev/hs/${code}`,
+  "sameAs": ["https://hts.usitc.gov/", "https://www.customs.gov.cn/"],
+  "spatialCoverage": ["US", "CN"],
+  "temporalCoverage": verifiedDate,
+  "license": "https://tariff-stack.zmarkz123zxc.workers.dev/terms",
+  "distribution": [{ "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://tariff-stack.zmarkz123zxc.workers.dev/data/tariff_full.json" }]
+});
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HS {code} tariff rate — U.S. & China</title>
+  <meta name="description" content={description} />
+  <script type="application/ld+json" set:html={articleLd}></script>
+  <script type="application/ld+json" set:html={datasetLd}></script>
+  <SeoHead />
+  <style is:global>
+    :root{
+      --bg:#f4f6fb; --card:#fff; --text:#1a2233; --muted:#5b6678;
+      --accent:#2f6df0; --accent-soft:#e8f0ff; --border:#e2e8f2;
+      --good:#10b981; --warn:#f59e0b; --bad:#ef4444; --header-bg:#fff;
+      --shadow:0 1px 2px rgba(20,30,60,.06),0 8px 24px rgba(20,30,60,.07);
+      --maxw:1180px;
+    }
+    html[data-theme="dark"]{
+      --bg:#0e1320; --card:#161e30; --text:#e6ebf5; --muted:#9aa6bd;
+      --accent:#8aa7d8; --accent-soft:#1a2740; --border:#243049; --header-bg:#131a2b;
+      --good:#6fbf9c; --warn:#d8a866; --bad:#d88686;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 -apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
+    a{color:var(--accent);text-decoration:none}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+    .site-header{background:var(--header-bg);border-radius:0 0 30px 30px;box-shadow:var(--shadow);position:sticky;top:0;z-index:30}
+    .site-header .wrap{display:flex;align-items:center;gap:14px;height:64px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:.2px;color:var(--text)}
+    .brand .logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#7aa7ff);display:grid;place-items:center;color:#fff;font-size:15px;box-shadow:0 4px 12px rgba(47,109,240,.35)}
+    .spacer{flex:1}
+    .hbtn{display:inline-flex !important;align-items:center;gap:7px;height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:14px;cursor:pointer;transition:.15s;white-space:nowrap;text-decoration:none;visibility:visible !important}
+    .hbtn:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+    .hbtn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+    .hsep{width:1px;height:24px;background:var(--border);margin:0 2px}
+    .hbtn.icon{width:40px;padding:0;justify-content:center}
+    select#lang{height:40px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);padding:0 12px;font-size:14px;cursor:pointer}
+    @media (max-width:1280px){.hbtn{padding:0 12px;font-size:13.5px}}
+    @media (max-width:1100px){.hbtn{padding:0 10px;font-size:13px}select#lang{padding:0 8px;font-size:13px}}
+    @media (max-width:900px){.site-header .wrap{gap:8px;padding:0 16px}}
+    .hero{padding:40px 0 8px}
+    .hero h1{font-size:34px;margin:0 0 8px;line-height:1.12;font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:.5px}
+    .hero .sub{color:var(--muted);max-width:720px;margin:0 0 16px}
+    .back{display:inline-block;font-size:13.5px;color:var(--muted);margin-bottom:14px;font-weight:600}
+    .back:hover{color:var(--accent)}
+    .verified{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:6px 14px;box-shadow:var(--shadow)}
+    .verified .dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 0 4px color-mix(in srgb,var(--good) 22%,transparent)}
+    /* ===== rate cards ===== */
+    .cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:24px 0 6px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:22px 22px 24px}
+    .card h3{margin:0 0 10px;font-size:15px;font-weight:700;color:var(--text)}
+    .rate-big{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:34px;font-weight:800;color:var(--accent);line-height:1.1}
+    .rate-big.free{color:var(--good)}
+    .rate-cap{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:4px 0 10px}
+    .sub-code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;color:var(--muted);margin-bottom:6px}
+    .card .desc{font-size:14px;line-height:1.55;color:var(--text);min-height:40px}
+    .calc-btn{display:inline-block;margin-top:14px;font-size:13.5px;font-weight:600;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:9px 14px;transition:.15s}
+    .calc-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+    .na{color:var(--muted);font-size:14px;padding:18px 0}
+    @media(max-width:680px){.cards{grid-template-columns:1fr}.hero h1{font-size:28px}}
+    .note{margin:18px 0 0;font-size:13px;color:var(--muted);line-height:1.6;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+    .note b{color:var(--text)}
+    /* ===== explain ===== */
+    .explain{margin-top:36px;background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
+    .explain .wrap{padding:28px 24px 30px}
+    .explain h2{margin:0 0 14px;font-size:21px;font-weight:700;color:var(--text);letter-spacing:-.01em}
+    .explain p{margin:0 0 12px;font-size:14.5px;line-height:1.7;color:var(--text);max-width:920px}
+    .explain p:last-child{margin-bottom:0}
+    @media(max-width:560px){.explain .wrap{padding:22px 16px 24px}.explain h2{font-size:19px}}
+    /* ===== footer ===== */
+    .site-footer{margin-top:48px;background:var(--header-bg);border-top:1px solid var(--border)}
+    .footer-inner{max-width:var(--maxw);margin:0 auto;padding:34px 24px 20px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px}
+    @media(max-width:820px){.footer-inner{grid-template-columns:1fr 1fr}}
+    .site-footer h4{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:0 0 12px}
+    .site-footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+    .site-footer a{color:var(--text);text-decoration:none;font-size:14px}
+    .site-footer a:hover{color:var(--accent)}
+    .site-footer .brand-blurb{color:var(--muted);font-size:13px;max-width:280px;margin:10px 0 0}
+    .footer-bottom{max-width:var(--maxw);margin:0 auto;padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12.5px}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/"><span class="logo">⬢</span> TariffStack</a>
+      <div class="spacer"></div>
+      <a class="hbtn" href="/hs-codes" data-i18n="hs_enc_btn">HS 编码百科</a>
+      <a class="hbtn" href="/guides" data-i18n="guides_btn">关税指南</a>
+      <span class="hsep"></span>
+      <select id="lang" aria-label="Language">
+        {LANGS.map(l => <option value={l.code}>{l.label}</option>)}
+      </select>
+      <button class="hbtn icon" id="theme-toggle" title="切换主题" aria-label="Toggle dark mode"><span class="tt-ico">🌙</span></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap">
+      <a class="back" href="/hs-codes" data-i18n="hs_detail_back">← Back to HS Code Encyclopedia</a>
+      <h1>HS {code}</h1>
+      <p class="sub" data-i18n="hs_detail_sub">Official U.S. base rate and China MFN rate for this HS code, sourced from USITC and the China Tariff Commission.</p>
+      <span class="verified"><span class="dot"></span> <span data-i18n="badge_pre">✓ Rates verified against official customs data (USITC U.S. + China Tariff Commission) on</span> {verifiedDate} <span data-i18n="badge_tz"> (Beijing time)</span></span>
+
+      <div class="cards">
+        <div class="card">
+          <h3 data-i18n="hs_detail_us_h">United States (HTS)</h3>
+          {d.us ? (
+            <div class={`rate-big ${usP.free ? 'free' : ''}`}>{usP.txt}</div>
+            <div class="rate-cap" data-i18n="hs_detail_us_rate">U.S. base rate</div>
+            <div class="sub-code">HTS {d.us.code}</div>
+            <div class="desc">{d.us.desc}</div>
+            <a class="calc-btn" href={`/?hts=${encodeURIComponent(d.us.code)}&dest=US`} data-i18n="hs_detail_calc_us">Calculate U.S. landed cost</a>
+          ) : <div class="na">No U.S. HTS match</div>}
+        </div>
+        <div class="card">
+          <h3 data-i18n="hs_detail_cn_h">China (HS)</h3>
+          {d.cn ? (
+            <div class={`rate-big ${cnP.free ? 'free' : ''}`}>{cnP.txt}</div>
+            <div class="rate-cap" data-i18n="hs_detail_cn_rate">China MFN rate</div>
+            <div class="sub-code">HS {d.cn.code}</div>
+            <div class="desc">{d.cn.name}</div>
+            <a class="calc-btn" href={`/?hts=${encodeURIComponent(d.cn.code)}&dest=CN`} data-i18n="hs_detail_calc_cn">Calculate China landed cost</a>
+          ) : <div class="na">No China HS match</div>}
+        </div>
+      </div>
+
+      <p class="note"><b data-i18n="hs_enc_note_title">Base rate only.</b> <span data-i18n="hs_enc_note">Shown is the official base / MFN rate. Stacked duties (Section 301, Section 232, UFLPA +12.5%, MPF/HMF) apply per destination — use the calculator for the full landed cost.</span></p>
+    </div>
+  </section>
+
+  <section class="explain">
+    <div class="wrap">
+      <h2 data-i18n="hs_about_h">How to read these codes</h2>
+      <p data-i18n="hs_about_p1">An HS (Harmonized System) code is a 6-digit international standard; the U.S. extends it to a 10-digit HTS subheading and China to an 8-digit HS code. The first two digits are the chapter (broad product group), the next four narrow it to the heading, and the extra digits add national detail. More digits = more precise classification = the rate you actually pay.</p>
+      <p data-i18n="hs_about_p2">The rate shown here is the official BASE / MFN rate only — the published duty before any stacked measures. For the U.S., Section 301 (China), Section 232 (steel / aluminium / autos / pharma), the UFLPA +12.5% forced-labour duty, and MPF / HMF fees can all apply on top. For China, the applied rate is the lower of MFN and any provisional / FTA rate. Use the calculator for the full landed cost.</p>
+      <p data-i18n="hs_about_p3">Where the numbers come from: U.S. rates are parsed from the official USITC Harmonized Tariff Schedule; China rates from the official 2026 Import & Export Tariff of the State Council Tariff Commission. Every figure is traceable to its source and stamped with an "as of" date so you can verify it yourself.</p>
+      <p data-i18n="hs_about_p4">This directory is a search aid, not legal or customs advice. Classification can be contested, and exclusions, AD / CVD, de-minimis thresholds and destination VAT / GST may change your real entry. Always confirm with the destination customs authority or a licensed broker before you file.</p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <div class="brand"><span class="logo">⬢</span> TariffStack</div>
+        <p class="brand-blurb" data-i18n="footer_tagline">Free import-duty & landed-cost calculator — U.S. + China</p>
+      </div>
+      <div>
+        <h4 data-i18n="footer_product">Product</h4>
+        <ul>
+          <li><a href="/" data-i18n="footer_calc">Calculator</a></li>
+          <li><a href="/hs-codes" data-i18n="hs_enc_btn">HS 编码百科</a></li>
+          <li><a href="/guides" data-i18n="guides_btn">关税指南</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="footer_legal">Legal</h4>
+        <ul>
+          <li><a href="/privacy" data-i18n="footer_privacy">Advertising & Privacy</a></li>
+          <li><a href="/terms" data-i18n="footer_terms">Terms of Service & Disclaimer</a></li>
+          <li><a href="/about" data-i18n="footer_about">About TariffStack</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="footer_contact">Contact</h4>
+        <ul>
+          <li><a href="/contact" data-i18n="footer_contact_page">Contact page</a></li>
+          <li><a href="mailto:TariffStack@outlook.com">TariffStack@outlook.com</a></li>
+          <li><a href="mailto:zmarkz123zxc@gmail.com">zmarkz123zxc@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 TariffStack · USITC / 中国海关总署</span>
+      <span><a href="/guides" data-i18n="guides_btn">关税指南</a></span>
+    </div>
+  </footer>
+
+  <CookieConsent />
+
+  <script>
+    import { t, LANGS } from '../../lib/i18n.ts';
+    let LANG = (localStorage.getItem('ts-lang') || 'en');
+    if (!LANGS.some(l => l.code === LANG)) LANG = 'en';
+    (function initTheme(){
+      try {
+        const saved = localStorage.getItem('ts-theme') || 'light';
+        if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+        const ico = document.querySelector('#theme-toggle .tt-ico');
+        if (ico) ico.textContent = saved === 'dark' ? '☀️' : '🌙';
+      } catch (e) {}
+    })();
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const next = isDark ? 'light' : 'dark';
+      if (next === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      else document.documentElement.removeAttribute('data-theme');
+      try { localStorage.setItem('ts-theme', next); } catch (e) {}
+      const ico = document.querySelector('#theme-toggle .tt-ico');
+      if (ico) ico.textContent = next === 'dark' ? '☀️' : '🌙';
+    });
+    function applyLang(lang) {
+      LANG = lang;
+      localStorage.setItem('ts-lang', lang);
+      document.documentElement.lang = lang;
+      document.getElementById('lang').value = lang;
+      document.querySelectorAll('[data-i18n]').forEach(e => {
+        const s = t(lang, e.getAttribute('data-i18n')); if (s) e.textContent = s;
+      });
+    }
+    document.getElementById('lang').addEventListener('change', e => applyLang(e.target.value));
+    applyLang(LANG);
+  </script>
+</body>
+</html>

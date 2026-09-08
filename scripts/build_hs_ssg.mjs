@@ -76,6 +76,21 @@ const featuredCn = CN_ANCHORS
   .filter(Boolean)
   .map(k => { const r = cnBy[k]; return { code: k, ex: !!r.ex, name: r.name || '', mfn: r.mfn, general: r.general }; });
 
+// 高频 HS 6 位前缀专属详情页（GEO 改造②）：Top20 高频码，各解析代表性 US 10 位 HTS + CN 8 位 HS 真值。
+const TOP_CODES = ['610910','620342','640399','851762','847130','852872','870323','392690','950300','940360','845011','420292','871120','730890','841810','940161','610610','620462','732393','854231'];
+const details = TOP_CODES.map(code => {
+  const usKey = resolveKey(usFull, code, 6);
+  const cnKey = resolveKey(cnBy, code, 6);
+  const u = usKey ? usFull[usKey] : null;
+  const c = cnKey ? cnBy[cnKey] : null;
+  return {
+    code,
+    chapter: code.slice(0, 2),
+    us: u ? { code: usKey, desc: u.desc || '', base: (u.base === undefined ? null : u.base), ch99: u.ch99 || '', ch99_rate: (u.ch99_rate === undefined ? 0 : u.ch99_rate) } : null,
+    cn: c ? { code: cnKey, name: c.name || '', mfn: (c.mfn === undefined ? null : c.mfn), general: (c.general === undefined ? null : c.general) } : null,
+  };
+});
+
 const out = {
   meta: {
     usTotal: usKeys.length,
@@ -87,6 +102,7 @@ const out = {
   cn,
   featuredUs,
   featuredCn,
+  details,
 };
 
 const outPath = path.join(dataDir, 'hs_codes_ssg.json');

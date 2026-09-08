@@ -107,6 +107,15 @@ const en: Dict = {
   footer_legal: 'Legal',
   footer_calc: 'Calculator',
   footer_right_tag: 'Authoritative customs data · for reference only · defer to official notice',
+  // ---- HS code detail pages (/hs/[code]) ----
+  hs_detail_back: '← Back to HS Code Encyclopedia',
+  hs_detail_sub: 'Official U.S. base rate and China MFN rate for this HS code, sourced from USITC and the China Tariff Commission.',
+  hs_detail_us_h: 'United States (HTS)',
+  hs_detail_cn_h: 'China (HS)',
+  hs_detail_us_rate: 'U.S. base rate',
+  hs_detail_cn_rate: 'China MFN rate',
+  hs_detail_calc_us: 'Calculate U.S. landed cost',
+  hs_detail_calc_cn: 'Calculate China landed cost',
   // ---- transport mode (record-only) + batch auto-pending ----
   calc_mode: 'Transport mode (record only)',
   mode_none: 'Unspecified',
@@ -129,6 +138,15 @@ const en: Dict = {
 };
 
 const zh: Dict = {
+  // ---- HS code detail pages (/hs/[code]) ----
+  hs_detail_back: '← 返回 HS 编码百科',
+  hs_detail_sub: '本 HS 编码的美国基础税率与中国最惠国税率，数据来源 USITC 与中国关税税则委员会。',
+  hs_detail_us_h: '美国（HTS）',
+  hs_detail_cn_h: '中国（HS）',
+  hs_detail_us_rate: '美国基础税率',
+  hs_detail_cn_rate: '中国最惠国税率',
+  hs_detail_calc_us: '计算美国到岸成本',
+  hs_detail_calc_cn: '计算中国到岸成本',
   news_title: '实时关税政策更新',
   news_usitc: '美国税率采用 USITC HTS Rev {rev}（{date}）—— 完整子目级',
   news_sec232_steel: '232 条款 钢铁、铝及铜 关税：50%',

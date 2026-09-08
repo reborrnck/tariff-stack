@@ -1,0 +1,39 @@
+# TariffStack
+
+> TariffStack is a free, source-verified import-duty and landed-cost calculator for the U.S. and China. It publishes official base / MFN tariff rates parsed from the USITC Harmonized Tariff Schedule and the China Tariff Commission 2026 schedule, with every figure traceable to its source and stamped with an "as of" date.
+
+## Key pages
+- / — Import-duty & landed-cost calculator (U.S. + China) with full tariff-stack breakdown (MFN / Section 301 / Section 232 / UFLPA +12.5% / MPF / HMF).
+- /hs-codes — HS / HTS Code Encyclopedia: every official U.S. HTS and China HS code with real base / MFN rates.
+- /guides — Tariff guides (AD/CVD, China retaliation, HS lookup, classification, broker entry types, and more).
+- /about — About TariffStack and data methodology.
+
+## High-traffic HS code detail pages (real U.S. & China rates)
+- /hs/610910 — HS 610910 (cotton T-shirts) tariff rate
+- /hs/620342 — HS 620342 (men's cotton trousers) tariff rate
+- /hs/640399 — HS 640399 (leather footwear) tariff rate
+- /hs/851762 — HS 851762 (transmission apparatus / comms) tariff rate
+- /hs/847130 — HS 847130 (portable computers / laptops) tariff rate
+- /hs/852872 — HS 852872 (TV reception apparatus) tariff rate
+- /hs/870323 — HS 870323 (passenger motor cars) tariff rate
+- /hs/392690 — HS 392690 (articles of plastics) tariff rate
+- /hs/950300 — HS 950300 (toys) tariff rate
+- /hs/940360 — HS 940360 (wooden furniture) tariff rate
+- /hs/845011 — HS 845011 (household washing machines) tariff rate
+- /hs/420292 — HS 420292 (trunks, suitcases, bags) tariff rate
+- /hs/871120 — HS 871120 (motorcycles) tariff rate
+- /hs/730890 — HS 730890 (iron/steel structures) tariff rate
+- /hs/841810 — HS 841810 (household refrigerators) tariff rate
+- /hs/940161 — HS 940161 (upholstered seats) tariff rate
+- /hs/610610 — HS 610610 (women's T-shirts/shirts) tariff rate
+- /hs/620462 — HS 620462 (women's trousers) tariff rate
+- /hs/732393 — HS 732393 (steel tableware/kitchenware) tariff rate
+- /hs/854231 — HS 854231 (processors / microcontrollers) tariff rate
+
+## Data endpoints (JSON, official source)
+- https://tariff-stack.zmarkz123zxc.workers.dev/data/tariff_full.json — U.S. HTS base rates (USITC).
+- https://tariff-stack.zmarkz123zxc.workers.dev/data/tariff_full_cn.json — China 8-digit HS MFN rates (Tariff Commission).
+- https://tariff-stack.zmarkz123zxc.workers.dev/api/calc — programmatic tariff calculation API (GET/POST; returns JSON including meta.as_of / last_checked).
+
+## Methodology
+Rates shown are official base / MFN rates. Stacked U.S. duties (Section 301, Section 232, UFLPA +12.5%, MPF/HMF) and China's applied rate (lower of MFN / provisional / FTA) are applied in the calculator. All figures are for reference only and are not legal or customs advice; confirm with the destination customs authority or a licensed broker before filing.
