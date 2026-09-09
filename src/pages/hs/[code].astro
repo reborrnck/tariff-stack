@@ -107,8 +107,6 @@ const datasetLd = JSON.stringify({
     .rate-cap{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:4px 0 10px}
     .sub-code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;color:var(--muted);margin-bottom:6px}
     .card .desc{font-size:14px;line-height:1.55;color:var(--text);min-height:40px}
-    .card .desc .tr-line{display:block;margin-top:4px;font-size:12.5px;color:var(--accent);opacity:.9;line-height:1.4}
-    .tr-line[hidden]{display:none}
     .calc-btn{display:inline-block;margin-top:14px;font-size:13.5px;font-weight:600;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:9px 14px;transition:.15s}
     .calc-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
     .na{color:var(--muted);font-size:14px;padding:18px 0}
@@ -163,7 +161,7 @@ const datasetLd = JSON.stringify({
             <div class={`rate-big ${usP.free ? 'free' : ''}`}>{usP.txt}</div>
             <div class="rate-cap" data-i18n="hs_detail_us_rate">U.S. base rate</div>
             <div class="sub-code">HTS {d.us.code}</div>
-            <div class="desc">{d.us.desc}<div class="tr-line" data-i18n-desc={d.us.desc} data-hts={d.us.code} hidden></div></div>
+            <div class="desc">{d.us.desc}</div>
             <a class="calc-btn" href={`/?hts=${encodeURIComponent(d.us.code)}&dest=US`} data-i18n="hs_detail_calc_us">Calculate U.S. landed cost</a>
           ) : <div class="na">No U.S. HTS match</div>}
         </div>
@@ -173,7 +171,7 @@ const datasetLd = JSON.stringify({
             <div class={`rate-big ${cnP.free ? 'free' : ''}`}>{cnP.txt}</div>
             <div class="rate-cap" data-i18n="hs_detail_cn_rate">China MFN rate</div>
             <div class="sub-code">HS {d.cn.code}</div>
-            <div class="desc" data-i18n-desc={d.cn.name} data-hts={d.cn.code}>{d.cn.name}</div>
+            <div class="desc">{d.cn.name}</div>
             <a class="calc-btn" href={`/?hts=${encodeURIComponent(d.cn.code)}&dest=CN`} data-i18n="hs_detail_calc_cn">Calculate China landed cost</a>
           ) : <div class="na">No China HS match</div>}
         </div>
@@ -233,7 +231,7 @@ const datasetLd = JSON.stringify({
   <CookieConsent />
 
   <script>
-    import { t, LANGS, ensureDescI18n, fillDescTags } from '../../lib/i18n.ts';
+    import { t, LANGS } from '../../lib/i18n.ts';
     let LANG = (localStorage.getItem('ts-lang') || 'en');
     if (!LANGS.some(l => l.code === LANG)) LANG = 'en';
     (function initTheme(){
@@ -261,11 +259,9 @@ const datasetLd = JSON.stringify({
       document.querySelectorAll('[data-i18n]').forEach(e => {
         const s = t(lang, e.getAttribute('data-i18n')); if (s) e.textContent = s;
       });
-      fillDescTags(lang);
     }
     document.getElementById('lang').addEventListener('change', e => applyLang(e.target.value));
     applyLang(LANG);
-    ensureDescI18n().then(() => fillDescTags(LANG));
   </script>
 </body>
 </html>

@@ -115,24 +115,6 @@ jobs:
         # 供 hs-codes.astro 服务端渲染进 static HTML，使 AI 爬虫无需执行 JS 即可读到真税率。
         run: node scripts/build_hs_ssg.mjs
 
-      # ===== 描述翻译回填（免费 MT 种子 + 本仓库拥有/可校，逐日增量填满全覆盖） =====
-      # 读取最新 tariff_full.json 的不重复英文描述，用 MyMemory（免卡免注册免密钥）逐语言填空
-      # 进 public/data/desc_i18n.json；按语言优先级(zh/zh-TW 优先)消费每日字符预算，幂等、可续跑。
-      # 高频通用词已手翻入库，长尾由本步随每日 cron 渐进覆盖；结果与真税率同随 build 上线。
-      - name: Seed HS description translations (free MT) + commit
-        env:
-          MYMEMORY_EMAIL: ${{ secrets.MYMEMORY_EMAIL || 'TariffStack@outlook.com' }}
-          DESC_CHAR_BUDGET: ${{ secrets.DESC_CHAR_BUDGET || '50000' }}
-        run: |
-          node scripts/translate_desc.mjs
-          if ! git diff --quiet -- public/data/desc_i18n.json; then
-            git add public/data/desc_i18n.json
-            git commit -m "chore(i18n): seed HS description translations ($(date -u +%Y-%m-%d))"
-            git push
-          else
-            echo "no translation changes this run"
-          fi
-
       - name: Validate tariff data (block deploy if corrupt)
         # 守门（2026-09-09 加）：全量扫 25903 US + 14584 CN 真值 + resolveKey 取数一致性 +
         # SSG 输出边界。任何单位错乱(÷100) / 取数错位(误命中 0 税率 heading) / 越界 → 退出码 1

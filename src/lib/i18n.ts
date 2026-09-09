@@ -920,68 +920,14 @@ const DESC_VOCAB: DescRow[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// HS description translation layer
+// HS description translation layer — REMOVED 2026-09-09 (per user: rolled back
+// the description MT feature; HS descriptions now display in their official
+// language only). The curated product-name helper descLabel() below is kept.
 // ---------------------------------------------------------------------------
-// Curated translation table lives at /data/desc_i18n.json, keyed by the ORIGINAL
-// English source string (one entry per distinct USITC description). It is filled
-// progressively and committed to the repo so we OWN and can correct every string:
-//   - high-frequency generic phrases (Other, Of cotton, For men, ...) hand-curated
-//   - the remaining ~11k distinct descriptions seeded by scripts/translate_desc.mjs
-//     (free, no-key machine translation committed back to the repo; we review/correct)
-// The official English (USITC) / Chinese (CN) wording ALWAYS stays visible; the
-// translation shows as a secondary line. Nothing is ever lost or garbled.
 
-let DESC_I18N: Record<string, Record<string, string>> | null = null;
-let DESC_I18N_LOADING: Promise<Record<string, Record<string, string>>> | null = null;
-
-// Load the description translation table once (client-side). Returns a cached
-// promise so repeated calls are cheap. On any failure we just get an empty table.
-export function ensureDescI18n(): Promise<Record<string, Record<string, string>>> {
-  if (DESC_I18N) return Promise.resolve(DESC_I18N);
-  if (DESC_I18N_LOADING) return DESC_I18N_LOADING;
-  DESC_I18N_LOADING = fetch('/data/desc_i18n.json')
-    .then(r => (r.ok ? r.json() : {}))
-    .then(j => { DESC_I18N = j && typeof j === 'object' ? j : {}; return DESC_I18N; })
-    .catch(() => { DESC_I18N = {}; return DESC_I18N; });
-  return DESC_I18N_LOADING;
-}
-
-// Normalize a source segment so keys line up even when USITC appends a trailing
-// colon or a parenthetical heading code, e.g. "Wheat and meslin:" -> "Wheat and meslin",
-// "Of cotton (369)" -> "Of cotton".
-export function normDescKey(s: string): string {
-  return (s || '').trim().replace(/:\s*$/, '').replace(/\s*\(\d+\)\s*$/, '').trim();
-}
-
-// Translate a source string (or a ' — '-joined composed description) to `lang`.
-// Returns '' when no COMPLETE translation is available so the caller keeps the
-// original official wording. A curated PRODUCTS full name wins when an HTS is given.
-export function descTrans(source: string, lang: Lang, hts?: string): string {
-  if (lang === 'en' || !source) return '';
-  if (hts) {
-    const p = PRODUCTS.find(x => x.hts === hts);
-    if (p && p.names[lang]) return p.names[lang];
-  }
-  const table = DESC_I18N;
-  if (!table) return '';
-  // "Other" family is by far the most frequent token (≈21% of views); translate it
-  // unambiguously as a fallback so coverage is immediate without per-code entries.
-  if (/^other(\s*\(.*\))?$/i.test(source.trim())) {
-    const o = table['Other'];
-    if (o && o[lang]) return o[lang];
-  }
-  const segs = source.split(' — ').map(s => normDescKey(s)).filter(Boolean);
-  if (!segs.length) return '';
-  const tr = segs.map(s => (table[s] && table[s][lang]) || null);
-  if (tr.some(x => x === null)) return ''; // require full coverage of the composed phrase
-  return tr.join(' — ');
-}
-
-// Translate a USITC HTS description to the user's language (legacy single-string API).
-// Priority: curated PRODUCTS entry (full product name) -> original English.
-// NOTE: pages now render the official wording + a separate translation line via
-// descTrans(); this function is kept for the PRODUCTS fast-path and callers that
-// only need the curated name.
+// Curated product-name helper (PRODUCTS catalog): returns the curated name for a
+// known product HTS, else the original English. Descriptions show in their official
+// language; this only resolves curated product dropdown names.
 export function descLabel(enDesc: string, lang: Lang, hts?: string): string {
   if (lang === 'en' || !enDesc) return enDesc;
   // Priority 1: curated PRODUCTS catalog
@@ -993,18 +939,3 @@ export function descLabel(enDesc: string, lang: Lang, hts?: string): string {
   return enDesc;
 }
 
-// Fill every [data-i18n-desc] element with its translation line for `lang`.
-// The element's text becomes the translated wording (shown as the secondary line
-// under the official English/Chinese); it is hidden when no translation exists.
-export function fillDescTags(lang: Lang): void {
-  if (typeof document === 'undefined') return;
-  const els = document.querySelectorAll('[data-i18n-desc]');
-  for (let i = 0; i < els.length; i++) {
-    const e = els[i] as HTMLElement;
-    const src = e.getAttribute('data-i18n-desc') || '';
-    const hts = e.getAttribute('data-hts') || undefined;
-    const tr = descTrans(src, lang, hts);
-    if (tr && tr !== src) { e.textContent = tr; e.removeAttribute('hidden'); }
-    else { e.textContent = ''; e.setAttribute('hidden', ''); }
-  }
-}

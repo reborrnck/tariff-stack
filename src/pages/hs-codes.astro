@@ -26,7 +26,7 @@ const pct = (x) => {
 const usHead = `<tr><th data-i18n="hs_enc_code">Code</th><th data-i18n="hs_enc_desc">Description</th><th class="num" data-i18n="hs_enc_rate">Base rate</th><th></th></tr>`;
 const usRows = ssg.us.slice(0, CAP).map(r => {
   const p = pct(r.base * 100);
-  return `<tr><td class="code">${esc(r.code)}</td><td class="desc">${esc(r.desc)}<div class="tr-line" data-i18n-desc="${esc(r.desc)}" data-hts="${esc(r.code)}" hidden></div></td><td class="rate ${p.free ? 'free' : ''}">${p.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(r.code)}&dest=US" data-i18n="hs_enc_use">Use calculator</a></td></tr>`;
+  return `<tr><td class="code">${esc(r.code)}</td><td class="desc">${esc(r.desc)}</td><td class="rate ${p.free ? 'free' : ''}">${p.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(r.code)}&dest=US" data-i18n="hs_enc_use">Use calculator</a></td></tr>`;
 }).join('');
 const cnRows = ssg.cn.slice(0, CAP).map(r => {
   const p = pct(r.mfn);
@@ -38,7 +38,7 @@ const cnTable = `<table><thead>${usHead}</thead><tbody>${cnRows}</tbody></table>
 const featHead = `<tr><th data-i18n="hs_enc_code">Code</th><th data-i18n="hs_enc_desc">Description</th><th class="num" data-i18n="hs_enc_rate">Base rate</th><th></th></tr>`;
 const featUsRows = ssg.featuredUs.map(r => {
   const p = pct(r.base * 100);
-  return `<tr><td class="code">${esc(r.code)}</td><td class="desc">${esc(r.desc)}<div class="tr-line" data-i18n-desc="${esc(r.desc)}" data-hts="${esc(r.code)}" hidden></div></td><td class="rate ${p.free ? 'free' : ''}">${p.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(r.code)}&dest=US" data-i18n="hs_enc_use">Use calculator</a></td></tr>`;
+  return `<tr><td class="code">${esc(r.code)}</td><td class="desc">${esc(r.desc)}</td><td class="rate ${p.free ? 'free' : ''}">${p.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(r.code)}&dest=US" data-i18n="hs_enc_use">Use calculator</a></td></tr>`;
 }).join('');
 const featCnRows = ssg.featuredCn.map(r => {
   const p = pct(r.mfn);
@@ -133,8 +133,6 @@ const dsJsonLd = JSON.stringify({
     tbody tr:hover{background:var(--accent-soft)}
     .code{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;color:var(--accent);font-size:14px;white-space:nowrap;width:120px}
     .desc{color:var(--text);min-width:340px;max-width:560px;white-space:normal;word-break:break-word;line-height:1.5}
-    .desc .tr-line{display:block;margin-top:3px;font-size:12.5px;color:var(--accent);opacity:.9;line-height:1.4}
-    .tr-line[hidden]{display:none}
     .rate{font-family:ui-monospace,Menlo,Consolas,monospace;text-align:right;white-space:nowrap;font-weight:600;width:120px}
     .rate.free{color:var(--good)}
     .use{text-align:right;white-space:nowrap;width:130px}
@@ -271,7 +269,7 @@ const dsJsonLd = JSON.stringify({
   <CookieConsent />
 
   <script>
-    import { t, LANGS, ensureDescI18n, fillDescTags } from '../lib/i18n.ts';
+    import { t, LANGS } from '../lib/i18n.ts';
 
     let LANG = (localStorage.getItem('ts-lang') || 'en');
     if (!LANGS.some(l => l.code === LANG)) LANG = 'en';
@@ -367,7 +365,6 @@ const dsJsonLd = JSON.stringify({
         el.innerHTML = TAB === 'US' ? SSG_US_HTML : SSG_CN_HTML;
         const lbl = t(LANG,'hs_enc_showing').replace('{m}', String(Math.min(CAP,total))).replace('{n}', String(total));
         cnt.innerHTML = '<b>' + lbl + '</b>' + (total > CAP ? ' · ' + t(LANG,'hs_enc_more').replace('{cap}', String(CAP)) : '');
-        fillDescTags(LANG);
         return;
       }
       const keys = Object.keys(ds);
@@ -390,7 +387,7 @@ const dsJsonLd = JSON.stringify({
         if (TAB === 'US') {
           const r = pct(rec.base * 100);
           const usSrc = composeDesc(US, k) || rec.desc || '';
-          return `<tr><td class="code">${k}</td><td class="desc">${esc(usSrc)}<div class="tr-line" data-i18n-desc="${esc(usSrc)}" data-hts="${k}" hidden></div></td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}&dest=US" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
+          return `<tr><td class="code">${k}</td><td class="desc">${esc(usSrc)}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}&dest=US" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
         } else {
           const r = pct(rec.mfn);
           // CN data: name is a short dash-prefixed description relative to its parent heading
@@ -404,7 +401,6 @@ const dsJsonLd = JSON.stringify({
       } else {
         el.innerHTML = `<table><thead>${head}</thead><tbody>${rows}</tbody></table>`;
       }
-      fillDescTags(LANG);
       const label = q
         ? t(LANG,'hs_enc_match').replace('{m}', String(matched.length)).replace('{n}', String(total))
         : t(LANG,'hs_enc_showing').replace('{m}', String(Math.min(shown.length, total))).replace('{n}', String(total));
@@ -444,8 +440,6 @@ const dsJsonLd = JSON.stringify({
 
     applyLang(LANG);
     loadUS();
-    // 加载描述翻译表，加载完后回填所有译文行（render/fillDescTags 依赖该表）
-    ensureDescI18n().then(() => fillDescTags(LANG));
   </script>
 </body>
 </html>

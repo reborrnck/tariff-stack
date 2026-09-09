@@ -133,8 +133,6 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     .hs-list .opt:hover,.hs-list .opt.active{background:var(--accent-soft)}
     .hs-list .opt .c{font-family:ui-monospace,Menlo,monospace;color:var(--accent);font-weight:700;min-width:82px;flex:none}
     .hs-list .opt .d{color:var(--muted);display:flex;flex-direction:column;gap:2px}
-    .hs-list .opt .d .tr-line{font-size:11.5px;color:var(--accent);opacity:.92;line-height:1.35}
-    .tr-line[hidden]{display:none}
     .hs-list .opt.none{color:var(--muted);cursor:default}
 
     /* ===== 结果区：限高 + 滑轮 ===== */
@@ -400,7 +398,7 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     import { computeStack } from '../lib/calc.ts';
     import { destLabel } from '../lib/destinations.ts';
     import { destOptionsFor } from '../lib/origins.ts';
-    import { t, layerName, originLabel, descTrans, ensureDescI18n, fillDescTags, LANGS, type Lang } from '../lib/i18n.ts';
+    import { t, layerName, originLabel, LANGS, type Lang } from '../lib/i18n.ts';
     import newsFeed from '../data/news_feed.json';
 
     const fixed = sample.fixed;
@@ -503,7 +501,6 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       document.querySelectorAll('[data-i18n-origin]').forEach(e => { e.textContent = originLabel(e.getAttribute('data-i18n-origin'), lang); });
       document.querySelectorAll('[data-i18n-dest]').forEach(e => { e.textContent = destLabel(e.getAttribute('data-i18n-dest'), lang); });
       hsRenderers.forEach(fn => fn());
-      fillDescTags(lang);
       updateFieldHints();
       if (window.__last) renderResult(window.__last);
       renderBatch(); renderPending(); renderTimeline();
@@ -547,8 +544,7 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       const he = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
       function render(q) {
         const items = hsSuggest(q);
-        list.innerHTML = items.length ? items.map(it => `<div class="opt" data-c="${it.code}"><span class="c">${it.code}</span><span class="d">${he(it.desc)}<span class="tr-line" data-i18n-desc="${he(it.desc)}" data-hts="${it.code}" hidden></span></span></div>`).join('') : '<div class="opt none" data-i18n="classify_none">'+t(LANG,'classify_none')+'</div>';
-        fillDescTags(LANG);
+        list.innerHTML = items.length ? items.map(it => `<div class="opt" data-c="${it.code}"><span class="c">${it.code}</span><span class="d">${he(it.desc)}</span></div>`).join('') : '<div class="opt none" data-i18n="classify_none">'+t(LANG,'classify_none')+'</div>';
         list.classList.add('show');
         list.querySelectorAll('.opt[data-c]').forEach(o => {
           o.addEventListener('mousedown', e => e.preventDefault());
@@ -695,8 +691,6 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       .catch(() => { cnFull = null; doCalc(); });
     renderTimeline();
     applyLang(LANG);
-    // 加载描述翻译表，加载完后回填所有译文行（语言切换/下拉重渲染也会触发 fillDescTags）
-    ensureDescI18n().then(() => fillDescTags(LANG));
 
     // ?hts=CODE[&dest=US|CN] 从百科页跳转预填（携带目的地，自动校正 origin 使目的地可选）
     try {
