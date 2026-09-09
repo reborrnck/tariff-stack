@@ -4159,18 +4159,516 @@
     "zh": "在每个重量不超过6.8公斤的直接容器中",
     "zh-TW": "在每個重量不超過6.8公斤的直接容器中",
     "ja": "重量がそれぞれ6.8kg以下の即時コンテナ内",
-    "ko": "내용물의 무게가 각각 6.8kg 이하인 즉각적인 용기에서"
+    "ko": "내용물의 무게가 각각 6.8kg 이하인 즉각적인 용기에서",
+    "es": "En envases inmediatos de peso con su contenido de 6,8 kg o menos cada uno",
+    "fr": "En récipients immédiats pesant chacun 6,8 kg ou moins avec leur contenu",
+    "pt": "Em recipientes imediatos pesando com o seu conteúdo 6,8 kg ou menos cada",
+    "de": "In unmittelbaren Gebinden mit einem Gewicht von je 6,8 kg oder weniger",
+    "it": "In contenitori immediati di peso con il loro contenuto pari o inferiore a 6,8 kg ciascuno"
   },
   "Described in additional U.S. note 18 to this chapter and entered pursuant to its provisions": {
     "zh": "在本章的附加美国注释18中描述并根据其规定输入",
-    "zh-TW": "本章美國附加附註18中描述並根據其規定進行輸入"
+    "zh-TW": "本章美國附加附註18中描述並根據其規定進行輸入",
+    "ja": "本章への追加の米国注記18に記載され、その規定に従って入力された",
+    "ko": "이 장의 추가 미국 주석 18에 설명되어 있으며 해당 조항에 따라 입력되었습니다.",
+    "es": "Descrito en la nota adicional 18 de los EE. UU. de este capítulo e ingresado de conformidad con sus disposiciones",
+    "fr": "Décrit dans la note américaine supplémentaire 18 de ce chapitre et entré conformément à ses dispositions",
+    "pt": "Descrito na nota adicional dos EUA 18 a este capítulo e inserido de acordo com suas disposições",
+    "de": "Beschrieben in der zusätzlichen US-Anmerkung 18 zu diesem Kapitel und gemäß seinen Bestimmungen eingetragen",
+    "it": "Descritto nella nota aggiuntiva US 18 di questo capitolo e inserito ai sensi delle sue disposizioni"
   },
   "Described in additional U.S. note 19 to this chapter and entered pursuant to its provisions": {
     "zh": "在本章的附加美国注释19中描述并根据其规定输入",
-    "zh-TW": "本章美國附加附註19中描述並根據其規定進行輸入"
+    "zh-TW": "本章美國附加附註19中描述並根據其規定進行輸入",
+    "ja": "本章の追加の米国注記19に記載され、その規定に従って入力された",
+    "ko": "이 장의 추가 미국 주석 19에 설명되어 있으며 해당 조항에 따라 입력되었습니다.",
+    "es": "Descrito en la nota adicional 19 de los EE. UU. de este capítulo e ingresado de conformidad con sus disposiciones",
+    "fr": "Décrit dans la note supplémentaire américaine 19 de ce chapitre et entré conformément à ses dispositions",
+    "pt": "Descrito na nota adicional dos EUA 19 a este capítulo e inserido de acordo com suas disposições",
+    "de": "Beschrieben in der zusätzlichen US-Anmerkung 19 zu diesem Kapitel und gemäß seinen Bestimmungen eingetragen",
+    "it": "Descritto nella nota aggiuntiva 19 del presente capitolo e inserito ai sensi delle sue disposizioni"
   },
   "Described in additional U.S. note 22 to this chapter and entered pursuant to its provisions": {
     "zh": "在本章的附加美国注释22中描述并根据其规定输入",
-    "zh-TW": "本章美國附加附註22中描述並根據其規定進行輸入"
+    "zh-TW": "本章美國附加附註22中描述並根據其規定進行輸入",
+    "ja": "本章への追加の米国注22に記載され、その規定に従って入力された",
+    "ko": "이 장의 추가 미국 주석 22에 설명되어 있으며 해당 조항에 따라 입력되었습니다.",
+    "es": "Descrito en la nota adicional 22 de los EE. UU. de este capítulo e ingresado de conformidad con sus disposiciones",
+    "fr": "Décrit dans la note supplémentaire américaine 22 de ce chapitre et entré conformément à ses dispositions",
+    "pt": "Descrito na nota adicional dos EUA 22 a este capítulo e inserido de acordo com suas disposições",
+    "de": "Beschrieben in der zusätzlichen US-Anmerkung 22 zu diesem Kapitel und gemäß seinen Bestimmungen eingetragen",
+    "it": "Descritto nella nota aggiuntiva US 22 di questo capitolo e inserito ai sensi delle sue disposizioni"
+  },
+  "Certified Organic": {
+    "zh": "有机认证",
+    "zh-TW": "有機認證",
+    "ja": "認定オーガニック",
+    "ko": "유기농 인증",
+    "es": "Certificado orgánico.",
+    "fr": "Certifié biologique",
+    "pt": "*Biológico certificado",
+    "de": "Biozertifiziert.",
+    "it": "Certificato come biologico."
+  },
+  "Onions": {
+    "zh": "洋葱",
+    "zh-TW": "洋蔥",
+    "ja": "タマネギ",
+    "ko": "양파",
+    "es": "Cebollas",
+    "fr": "Oignons",
+    "pt": "Cebolas",
+    "de": "Zwiebeln",
+    "it": "Cipolle"
+  },
+  "Orange": {
+    "zh": "精锐",
+    "zh-TW": "橘色",
+    "ja": "オレンジ",
+    "ko": "오렌지",
+    "es": "Anaranjado",
+    "pt": "Laranja",
+    "it": "Arancia"
+  },
+  "Of a kind for processing as described in statistical note 3 to this chapter": {
+    "zh": "属于本章统计注释3所述的处理类型",
+    "zh-TW": "屬於本章統計註釋3所述的處理類型",
+    "ja": "本章の統計注記3に記載されているような処理のための種類",
+    "ko": "이 장의 통계 노트 3에 설명 된대로 처리를위한 일종의",
+    "es": "De un tipo para procesamiento como se describe en la nota estadística 3 de este capítulo",
+    "fr": "Des types de traitement décrits dans la note statistique 3 du présent chapitre",
+    "pt": "Do tipo para processamento conforme descrito na nota estatística 3 deste capítulo",
+    "de": "Von einer Art für die Verarbeitung, wie in der statistischen Anmerkung 3 zu diesem Kapitel beschrieben",
+    "it": "Del tipo destinato alla lavorazione descritto nella nota statistica 3 di questo capitolo"
+  },
+  "In shell": {
+    "zh": "在外壳中",
+    "zh-TW": "在shell中",
+    "ja": "シェル内",
+    "ko": "쉘 내",
+    "es": "Con cáscara",
+    "fr": "en coques",
+    "pt": "Com rasca",
+    "de": "in der Schale",
+    "it": "Con guscio"
+  },
+  "For sowing": {
+    "zh": "用于播种",
+    "zh-TW": "用於播種",
+    "ja": "播種用",
+    "ko": "파종용",
+    "es": "Para siembra",
+    "fr": "destinées à l'ensemencement",
+    "pt": "Para sementeira",
+    "de": "zur Aussaat",
+    "it": "destinati alla semina"
+  },
+  "If entered at any other time": {
+    "zh": "如果在任何其他时间输入",
+    "zh-TW": "如果在其他時間輸入",
+    "ja": "それ以外の時間に入力された場合",
+    "ko": "다른 시간에 입력한 경우",
+    "es": "Si se introduce en cualquier otro momento",
+    "fr": "Si saisi à un autre moment",
+    "pt": "Se inserido em qualquer outro momento",
+    "de": "Wenn zu einem anderen Zeitpunkt eingegeben",
+    "it": "Se inserito in qualsiasi altro momento"
+  },
+  "Containing peanuts or peanut products": {
+    "zh": "含有花生或花生制品",
+    "zh-TW": "含有花生或花生制品",
+    "ja": "ピーナッツまたはピーナッツ製品を含む",
+    "ko": "땅콩 또는 땅콩 제품 함유",
+    "es": "Que contengan cacahuetes o productos a base de cacahuetes",
+    "fr": "Contenant des arachides ou des produits à base d'arachides",
+    "pt": "Que contenham amendoim ou produtos à base de amendoim",
+    "de": "Enthält Erdnüsse oder Erdnussprodukte",
+    "it": "Contenente arachidi o prodotti a base di arachidi"
+  },
+  "In containers holding less than 1.4 kg": {
+    "zh": "装在容量小于1.4公斤的容器中",
+    "zh-TW": "在容量小於1.4公斤的容器中",
+    "ja": "1.4kg未満の容器内",
+    "ko": "1.4kg 미만을 담은 용기",
+    "es": "En envases de contenido inferior a 1,4 kg",
+    "fr": "En récipients de moins de 1,4 kg",
+    "pt": "Em recipientes de capacidade inferior a 1,4 kg",
+    "de": "In Behältern mit einem Inhalt von weniger als 1,4 kg",
+    "it": "In contenitori di capacità inferiore a 1,4 kg"
+  },
+  "Dark-air cured Kentucky and Tennessee": {
+    "zh": "肯塔基州和田纳西州的黑暗空气治愈体验",
+    "zh-TW": "肯塔基州和田納西州的黑暗治療",
+    "ja": "ケンタッキー州とテネシー州で濃い空気で治癒",
+    "ko": "어두운 공기가 치료된 켄터키와 테네시",
+    "es": "Kentucky y Tennessee curados con aire oscuro",
+    "fr": "Le Kentucky et le Tennessee séchés à l'air foncé",
+    "pt": "Kentucky e Tennessee curados pelo ar escuro",
+    "de": "Dunkle Luft geheilt Kentucky und Tennessee",
+    "it": "Dark-air cured Kentucky e Tennessee"
+  },
+  "Blackfat": {
+    "ja": "ブラックファット",
+    "ko": "블랙팻",
+    "es": "Grasa negra",
+    "pt": "Gordura Negra",
+    "it": "Grasso nero"
+  },
+  "Of vanadium": {
+    "zh": "钒的",
+    "zh-TW": "釩的",
+    "ja": "バナジウムの",
+    "es": "De vanadio",
+    "fr": "De vanadium",
+    "pt": "De vanádio",
+    "de": "Aus Vanadium",
+    "it": "Di vanadio"
+  },
+  "Fast color bases": {
+    "zh": "快速色彩底座",
+    "zh-TW": "快速色彩底座",
+    "ja": "高速カラーベース",
+    "ko": "빠른 색상 베이스",
+    "es": "Bases de color rápidas",
+    "fr": "Bases de couleurs rapides",
+    "pt": "Bases de cores rápidas",
+    "de": "Schnelle Farbgrundlagen",
+    "it": "Basi di colore veloci"
+  },
+  "Antidepressants, tranquilizers and other psychotherapeutic agents": {
+    "zh": "抗抑郁药、镇静剂和其他心理治疗剂",
+    "zh-TW": "抗抑鬱藥、鎮靜劑和其他心理治療藥物",
+    "ja": "抗うつ剤、精神安定剤およびその他の心理療法剤",
+    "ko": "항우울제, 진정제 및 기타 정신 치료제",
+    "es": "Antidepresivos, tranquilizantes y otros agentes psicoterapéuticos",
+    "fr": "Antidépresseurs, tranquillisants et autres agents psychothérapeutiques",
+    "pt": "Antidepressivos, tranquilizantes e outros agentes psicoterapêuticos",
+    "de": "Antidepressiva, Beruhigungsmittel und andere Psychotherapeutika",
+    "it": "Antidepressivi, tranquillanti e altri agenti psicoterapeutici"
+  },
+  "Of polymers of ethylene": {
+    "zh": "乙烯聚合物的",
+    "zh-TW": "乙烯聚合物的",
+    "ja": "エチレンのポリマーの",
+    "ko": "에틸렌 중합체의",
+    "es": "De polímeros de etileno",
+    "fr": "en polymères de l'éthylène",
+    "pt": "De polímeros de etileno",
+    "de": "Aus Polymeren des Ethylens",
+    "it": "Di polimeri di etilene"
+  },
+  "Of polymers of vinyl chloride": {
+    "zh": "氯乙烯聚合物的",
+    "zh-TW": "氯乙烯聚合物的",
+    "ja": "塩化ビニルのポリマーの",
+    "ko": "염화비닐의 중합체의",
+    "es": "De polímeros de cloruro de vinilo",
+    "fr": "en polymères du chlorure de vinyle",
+    "pt": "De polímeros de cloreto de vinilo",
+    "de": "Vinylchloridpolymeren",
+    "it": "polimeri di cloruro di vinile"
+  },
+  "Of polyethylene": {
+    "zh": "聚乙烯的",
+    "zh-TW": "聚乙烯的",
+    "ja": "ポリエチレンの",
+    "ko": "폴리에틸렌의",
+    "es": "De polietileno",
+    "fr": "- - - - - De polyéthylène",
+    "pt": "De polietileno",
+    "de": "Aus Polyethylen",
+    "it": "Di polietilene"
+  },
+  "Over 70 percent by weight of plastics": {
+    "zh": "超过70重量%的塑料",
+    "zh-TW": "超過70重量%的塑料",
+    "ja": "プラスチックの重量比で70 ％以上",
+    "ko": "플라스틱의 70 중량 % 이상",
+    "es": "Más del 70 por ciento en peso de plásticos",
+    "fr": "Plus de 70 % en poids de plastiques",
+    "pt": "Mais de 70 por cento em peso de plásticos",
+    "de": "Über 70 Gewichtsprozent Kunststoffe",
+    "it": "Oltre il 70% in peso di materie plastiche"
+  },
+  "Floor coverings": {
+    "zh": "地板覆盖物",
+    "zh-TW": "地板覆蓋物",
+    "ja": "床材",
+    "ko": "바닥 깔개",
+    "es": "Revestimientos para suelos",
+    "fr": "Revêtements de sols",
+    "pt": "Revestimentos para solos",
+    "de": "Bodenbelaege",
+    "it": "pavimentazioni"
+  },
+  "With textile components in which vegetable fibers predominate by weight over any other single textile fiber": {
+    "zh": "含有纺织品成分，其中植物纤维以重量计优于任何其他单一纺织纤维",
+    "zh-TW": "含有紡織成分，其中植物纖維的重量優於任何其他單一紡織纖維",
+    "ja": "植物繊維が他の単一の繊維よりも重量で優勢な繊維成分",
+    "ko": "식물성 섬유가 다른 단일 섬유보다 중량이 우세한 섬유 구성 요소로",
+    "es": "Con componentes textiles en los que las fibras vegetales predominan en peso sobre cualquier otra fibra textil individual",
+    "fr": "Avec des composants textiles dans lesquels les fibres végétales prédominent en poids sur toute autre fibre textile unique",
+    "pt": "Com componentes têxteis em que as fibras vegetais predominam em peso sobre qualquer outra fibra têxtil única",
+    "de": "Mit textilen Bestandteilen, bei denen pflanzliche Fasern gewichtsmäßig über jede andere einzelne Textilfaser überwiegen",
+    "it": "Con componenti tessili in cui le fibre vegetali predominano in peso su qualsiasi altra singola fibra tessile"
+  },
+  "Of a width exceeding 20 cm": {
+    "zh": "宽度超过20厘米",
+    "zh-TW": "寬度超過20釐米",
+    "ja": "幅20 cmを超えるもの",
+    "ko": "너비가 20cm를 초과하는 경우",
+    "es": "De anchura superior a 150 cm",
+    "fr": "- - - - D’une largeur excédant 20 cm",
+    "pt": "De largura superior a 150 cm",
+    "de": "Mit einer Breite von mehr als 20 cm",
+    "it": "Di larghezza superiore a 20 cm"
+  },
+  "Combined with textile materials": {
+    "zh": "与纺织材料相结合",
+    "zh-TW": "與紡織材料結合",
+    "ja": "テキスタイル素材との組み合わせ",
+    "ko": "섬유 소재와 결합",
+    "es": "Combinado con materiales textiles",
+    "fr": "- - - Combinés à des matières textiles",
+    "pt": "Combinado com materiais têxteis",
+    "de": "Kombiniert mit textilen Materialien",
+    "it": "Abbinato a materiali tessili"
+  },
+  "Of reptile leather": {
+    "zh": "爬行动物皮革",
+    "zh-TW": "爬行動物皮革",
+    "ja": "レプタイルレザーの",
+    "ko": "파충류 가죽의",
+    "es": "De piel de reptil",
+    "fr": "En cuir de reptile",
+    "pt": "De couro de répteis",
+    "de": "Aus Reptilienleder",
+    "it": "Di pelle di rettile"
+  },
+  "Of reinforced or laminated plastics": {
+    "zh": "强化塑料或层压塑料的",
+    "zh-TW": "強化塑膠或層壓塑膠",
+    "ja": "強化またはラミネートされたプラスチックの",
+    "ko": "강화 또는 적층 플라스틱의",
+    "es": "De plástico reforzado o laminado",
+    "fr": "En matières plastiques renforcées ou stratifiées",
+    "pt": "De plásticos reforçados ou laminados",
+    "de": "Aus verstärkten oder laminierten Kunststoffen",
+    "it": "Di materie plastiche rinforzate o stratificate"
+  },
+  "Not mechanically worked or surface covered": {
+    "zh": "没有机械加工或表面覆盖",
+    "zh-TW": "沒有機械加工或表面覆蓋",
+    "ja": "機械的に動作していない、または表面が覆われていない",
+    "ko": "기계적으로 작동하지 않거나 표면을 덮지 않음",
+    "es": "Sin trabajo mecánico ni recubrimiento de superficie",
+    "fr": "non ouvrés mécaniquement ni recouverts en surface",
+    "pt": "Não trabalhados mecanicamente nem revestidos à superfície",
+    "de": "Nicht mechanisch bearbeitet oder oberflächenbeschichtet",
+    "it": "Non lavorato meccanicamente o ricoperto in superficie"
+  },
+  "Not surface covered (except for oil treatment)": {
+    "zh": "不覆盖表面（油处理除外）",
+    "zh-TW": "不覆蓋表面（油處理除外）",
+    "ja": "表面が覆われていない（オイル処理を除く）",
+    "ko": "표면을 덮지 않음 (오일 처리 제외)",
+    "es": "Sin cubrir la superficie (excepto para el tratamiento del aceite)",
+    "fr": "Non recouvert de surface (sauf traitement à l'huile)",
+    "pt": "Não coberto pela superfície (exceto para tratamento de óleo)",
+    "de": "Nicht oberflächenbedeckt (außer bei Ölbehandlung)",
+    "it": "Non ricoperto in superficie (ad eccezione del trattamento dell'olio)"
+  },
+  "With a face ply of mahogany (Swietenia spp. or Khaya spp.)": {
+    "zh": "带有红木面层（ Swietenia spp.或Khaya spp. ）",
+    "zh-TW": "帶有桃花心木面紗（ Swietenia spp.或Khaya spp. ）",
+    "ja": "マホガニーのフェイスプライ（ Swietenia属またはKhaya属）",
+    "ko": "마호가니 (Swietenia spp. 또는 Khaya spp.)",
+    "es": "Con una capa facial de caoba (Swietenia spp. o Khaya spp.)",
+    "fr": "Avec une face en acajou (Swietenia spp. ou Khaya spp.)",
+    "pt": "Com face de mogno (Swietenia spp. ou Khaya spp.)",
+    "de": "Mit einer Gesichtslage aus Mahagoni (Swietenia spp. oder Khaya spp.)",
+    "it": "Con un velo di mogano (Swietenia spp. o Khaya spp.)"
+  },
+  "Bleached": {
+    "zh": "漂白",
+    "zh-TW": "漂白",
+    "ja": "漂白",
+    "ko": "표백됨",
+    "es": "Blanqueado",
+    "fr": "Décoloré",
+    "pt": "Descolorado",
+    "de": "Gebleicht",
+    "it": "Decolorato"
+  },
+  "Unimproved wool; other wool, not finer than 40s": {
+    "zh": "未经改良的羊毛；其他羊毛，不超过40s",
+    "zh-TW": "未改良羊毛；其他羊毛，不超過40s",
+    "ja": "改良されていないウール、他のウール、40代以下",
+    "ko": "개선되지 않은 양모, 기타 양모, 40초 이하",
+    "es": "Lana no mejorada; otras lanas, no más finas de 40",
+    "fr": "Laine non améliorée ; autre laine, pas plus fine que 40s",
+    "pt": "Lã não melhorada; outra lã, não mais fina do que 40s",
+    "de": "Unverbesserte Wolle; andere Wolle, nicht feiner als 40s",
+    "it": "Lana non migliorata; altra lana, non più fine di 40s"
+  },
+  "Other wool, finer than 40s but not finer than 44s": {
+    "zh": "其他羊毛，细于40s但不细于44s",
+    "zh-TW": "其他羊毛，細度超過40s但不超過44s",
+    "ja": "その他のウール、40 sより細かいが44 sより細かくない",
+    "ko": "40s보다 미세하지만 44s보다 미세하지 않은 기타 양모",
+    "es": "Las demás lanas, más finas que 40 pero no más finas que 44",
+    "fr": "Autre laine, plus fine que 40s mais pas plus fine que 44s",
+    "pt": "Outra lã, mais fina que 40s, mas não mais fina que 44s",
+    "de": "Andere Wolle, feiner als 40s, aber nicht feiner als 44s",
+    "it": "Altra lana, più fine di 40s ma non più fine di 44s"
+  },
+  "Unbleached, not mercerized": {
+    "zh": "未漂白，未丝光化",
+    "zh-TW": "未漂白，未絲光化",
+    "ja": "漂白されておらず、マーセル化されていません",
+    "ko": "표백되지 않음, 머서화되지 않음",
+    "es": "Sin blanquear, sin mercerizar",
+    "fr": "Écru, non mercerisé",
+    "pt": "Não branqueado, não mercerizado",
+    "de": "Ungebleicht, nicht merzerisiert",
+    "it": "Non sbiancato, non mercerizzato"
+  },
+  "Plain weave, weighing not more than 100 g/m²": {
+    "zh": "平纹编织，重量不超过100 g/m ²",
+    "zh-TW": "平織，重量不超過100 g/m ²",
+    "ja": "100 g/m ²以下の平織り",
+    "ko": "평직, 중량 100 g/m ² 이하",
+    "es": "De ligamento tafetán, de peso inferior o igual a 100 g/m2",
+    "fr": "32.2 A armure toile, d’un poids excédant 100 g/m² :",
+    "pt": "Em ponto de tafetá, com peso não superior a 100 g/m2",
+    "de": "Leinwandbindung, mit einem Gewicht von nicht mehr als 100 g/m²",
+    "it": "Trama semplice, peso non superiore a 100 g/m²"
+  },
+  "Plain weave, weighing more than 100 g/m²": {
+    "zh": "平纹织物，重量超过100克/平方米",
+    "zh-TW": "平織，重量超過100 g/m ²",
+    "ja": "100 g/m ²以上の平織り",
+    "ko": "평직, 중량 100 g/m ² 이상",
+    "es": "De ligamento tafetán, de peso superior a 100 g/m2",
+    "fr": "À armure toile, d&apos;un poids excédant 100 g/m² :",
+    "pt": "Em ponto de tafetá, com peso superior a 100 g/m2",
+    "de": "Leinwandbindung, über 100 g/m²",
+    "it": "Trama semplice, peso superiore a 100 g/m²"
+  },
+  "Satin weave or twill weave, other than 3-thread or 4-thread twill or cross twill": {
+    "zh": "缎面编织或斜纹编织， 3线或4线斜纹或交叉斜纹除外",
+    "zh-TW": "緞面織或斜紋織，三線或四線斜紋或十字斜紋除外",
+    "ja": "サテン織りまたはツイル織り、3スレッドまたは4スレッドツイルまたはクロスツイル以外",
+    "ko": "새틴 직조 또는 트윌 직조 (3단 또는 4단 트윌 또는 크로스 트윌 제외)",
+    "es": "Tejido de satén o sarga, excepto sarga de 3 o 4 hilos o sarga cruzada",
+    "fr": "Tissu satiné ou sergé, autre que le sergé à 3 ou 4 fils ou le sergé croisé",
+    "pt": "Tecido de cetim ou sarja, exceto sarja de 3 ou 4 fios ou sarja transversal",
+    "de": "Satinbindung oder Köperbindung, andere als 3- oder 4-fädiger Köper oder Kreuzköper",
+    "it": "Trama in raso o saia, diversa da saia a 3 fili o a 4 fili o saia incrociata"
+  },
+  "Jacquard weave": {
+    "zh": "提花编织",
+    "zh-TW": "提花織布",
+    "ja": "ジャカード織",
+    "es": "Tejido jacquard",
+    "fr": "Tissu jacquard",
+    "pt": "Tecido jacquard",
+    "de": "Jacquard-Gewebe",
+    "it": "Trama jacquard"
+  },
+  "Of vegetable fibers, except cotton": {
+    "zh": "植物纤维，棉花除外",
+    "zh-TW": "植物纖維，棉花除外",
+    "ja": "綿を除く植物繊維の",
+    "ko": "면을 제외한 식물성 섬유의",
+    "es": "De fibras vegetales, excepto algodón",
+    "fr": "De fibres végétales, à l'exception du coton",
+    "pt": "De fibras vegetais, excepto algodão",
+    "de": "Aus pflanzlichen Fasern, ausgenommen Baumwolle",
+    "it": "Di fibre vegetali, escluso il cotone"
+  },
+  "Of cotton or man-made fibers": {
+    "zh": "由棉或人造纤维制成",
+    "zh-TW": "棉或人造纖維",
+    "ja": "綿または人工繊維の",
+    "ko": "면 또는 인조 섬유",
+    "es": "De algodón o fibras sintéticas o artificiales",
+    "fr": "De coton ou de fibres synthétiques ou artificielles :",
+    "pt": "De algodão ou de fibras sintéticas ou artificiais",
+    "de": "Aus Baumwolle oder Chemiefasern",
+    "it": "Di cotone o fibre sintetiche o artificiali"
+  },
+  "Over 70 percent by weight of rubber or plastics": {
+    "zh": "超过70%的橡胶或塑料重量",
+    "zh-TW": "超過70%的橡膠或塑料重量",
+    "ja": "ゴムまたはプラスチックの重量比で70 ％以上",
+    "ko": "70 중량 % 이상의 고무 또는 플라스틱",
+    "es": "Más del 70 por ciento en peso de caucho o plástico",
+    "fr": "Plus de 70 % en poids de caoutchouc ou de plastique",
+    "pt": "Mais de 70 por cento em peso de borracha ou plástico",
+    "de": "Über 70 Gewichtsprozent Gummi oder Kunststoff",
+    "it": "Oltre il 70% in peso di gomma o plastica"
+  },
+  "Of silk": {
+    "zh": "丝绸的",
+    "zh-TW": "絲綢的",
+    "ja": "シルクの",
+    "ko": "실크의",
+    "es": "De seda",
+    "fr": "De soie",
+    "pt": "De seda",
+    "de": "Aus Seide",
+    "it": "% di seta."
+  },
+  "Garments described in heading 6101": {
+    "zh": "标题6101中描述的服装",
+    "zh-TW": "標題6101中描述的服裝",
+    "ja": "見出し6101に記載されている衣服",
+    "ko": "표제 6101에 설명된 의복",
+    "es": "Prendas descritas en la partida 6101",
+    "fr": "Vêtements décrits au numero 6101 or 6102 :",
+    "pt": "Vestuário descrito na posição 6101",
+    "de": "Bekleidung im Sinne der Position 6101",
+    "it": "Indumenti descritti nella voce 6101"
+  },
+  "Imported as parts of play suits": {
+    "zh": "作为游乐服的一部分进口",
+    "zh-TW": "作為遊戲服的一部分進口",
+    "ja": "プレイスーツのパーツとして輸入",
+    "ko": "놀이복의 일부로 수입됨",
+    "es": "Importado como parte de trajes de juego",
+    "fr": "Importé dans le cadre de combinaisons de jeu"
+  },
+  "Garments described in heading 6102; jackets and blazers described in heading 6104": {
+    "zh": "标题6102中描述的服装；标题6104中描述的夹克和西装外套",
+    "zh-TW": "標題6102中描述的服裝；標題6104中描述的夾克和西裝外套",
+    "ja": "見出し6102に記載されている衣服、見出し6104に記載されているジャケットとブレザー",
+    "ko": "표제 6102에 설명된 의복, 표제 6104에 설명된 재킷 및 블레이저",
+    "es": "Prendas de vestir descritas en la partida 6102; chaquetas y blazers descritos en la partida 6104",
+    "fr": "Vêtements décrits dans la position 6102 ; vestes et blazers décrits dans la position 6104",
+    "pt": "Vestuário descrito na posição 6102; casacos e blazers descritos na posição 6104"
+  },
+  "Ice hockey gloves and field hockey gloves": {
+    "zh": "冰上曲棍球手套和田径曲棍球手套",
+    "zh-TW": "冰上曲棍球手套和草地曲棍球手套",
+    "ja": "アイスホッケーグローブとフィールドホッケーグローブ",
+    "ko": "아이스하키 장갑 및 필드 하키 장갑",
+    "es": "Guantes de hockey sobre hielo y guantes de hockey sobre césped",
+    "fr": "Gants de hockey sur glace et gants de hockey sur gazon",
+    "pt": "Luvas de hóquei no gelo e luvas de hóquei em campo"
+  },
+  "Garments described in heading 6201": {
+    "zh": "标题6201中描述的服装",
+    "zh-TW": "標題6201中描述的服裝",
+    "ja": "見出し6201に記載されている衣服"
+  },
+  "Covering the ankle": {
+    "zh": "遮盖脚踝"
+  },
+  "Unglazed": {
+    "zh": "未上釉"
+  },
+  "Of lead crystal": {
+    "zh": "铅水晶的"
   }
 }
