@@ -79,7 +79,15 @@ export function composeDesc(dict, leafKey) {
     if (parts.length && parts[parts.length - 1].toLowerCase() === s.toLowerCase()) continue;
     parts.push(s);
   }
-  return parts.join(' — ');
+  let out = parts.join(' — ');
+  // 回退：整条 HS 链在源数据缺中间 heading（如 1101 只存 10 位子码）时，
+  // composeDesc 会丢失全部文本。此时叶子原始 desc 即官方 "Other"（HTS 未另列名子类），
+  // 带 HS 章号上下文显示 Ch.<章> Other，避免孤立 "Other" 用户看不懂。
+  if (!out) {
+    const ch = leafKey.replace(/\./g, '').slice(0, 2);
+    out = `Ch.${ch} Other`;
+  }
+  return out;
 }
 function cleanDescPart(d) {
   let s = (d || '').replace(/:\s*$/, '').trim();

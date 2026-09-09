@@ -21,7 +21,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { resolveKey } from './build_hs_ssg.mjs';
+import { resolveKey, composeDesc } from './build_hs_ssg.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const dataDir = path.join(path.resolve(__dirname, '..'), 'src', 'data');
@@ -140,6 +140,16 @@ for (const d of ssg.details) if (d.us && isOther(d.us.desc)) v(`SSG.details ${d.
 for (const r of ssg.cn) if (r.name && /^[-–—]/.test(r.name)) v(`SSG.cn ${r.code}: name 含前导横线 (${r.name}) — 未清洗`);
 for (const r of ssg.featuredCn) if (r.name && /^[-–—]/.test(r.name)) v(`SSG.featuredCn ${r.code}: name 含前导横线 (${r.name})`);
 for (const d of ssg.details) if (d.cn && d.cn.name && /^[-–—]/.test(d.cn.name)) v(`SSG.details ${d.code} CN: name 含前导横线`);
+
+// 全库 US 描述守门：composeDesc 回退后应不再残留纯 "Other"（应为 Ch.xx Other 带章号上下文）。
+// 覆盖客户端 JS 搜索会命中的全库 25903 条，防止"孤立 Other"回归再次出现。
+let pureOther = 0;
+for (const [code, rec] of Object.entries(usFull)) {
+  if (!rec || typeof rec !== 'object' || !('desc' in rec)) continue;
+  const d = composeDesc(usFull, code);
+  if (d.trim().toLowerCase() === 'other') pureOther++;
+}
+if (pureOther > 0) v(`全库 US 残留纯 "Other" ${pureOther} 条（应为 Ch.xx Other 带章号上下文）`);
 
 // ---------- 报告 ----------
 log(`\n==== 校验 ${violations.length === 0 ? 'PASS ✅' : 'FAIL ❌'} ====`);

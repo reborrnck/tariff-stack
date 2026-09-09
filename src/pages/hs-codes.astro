@@ -338,7 +338,9 @@ const dsJsonLd = JSON.stringify({
         if (parts.length && parts[parts.length - 1].toLowerCase() === s.toLowerCase()) continue;
         parts.push(s);
       }
-      return parts.join(' — ');
+      let out = parts.join(' — ');
+      if (!out) { const ch = leafKey.replace(/\./g, '').slice(0, 2); out = `Ch.${ch} Other`; }
+      return out;
     }
     function cleanCnName(name) { return (name || '').replace(/^[-–—\s]+/, '').trim(); }
 
