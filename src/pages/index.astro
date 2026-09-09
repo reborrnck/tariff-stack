@@ -44,7 +44,6 @@ const jsonLd = JSON.stringify({
 
 const pct = (x: number) => (x * 100).toFixed(2) + '%';
 const usd = (x: number) => '$' + x.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const effClass = (e: number) => (e > 0.3 ? 'bad' : e > 0.15 ? 'warn' : 'good');
 const LAYER_COLOR: Record<string,string> = {'mfn':'mfn','s301':'s301','s232':'s232','forced':'forced','forced_labor':'forced','mpf':'mpf','hmf':'hmf'};
 const layerColorVar = (n: string) => 'var(--' + (LAYER_COLOR[n] || 'accent') + ')';
 const workedPos = worked.layers.filter(l => l.rate > 0);
@@ -471,7 +470,6 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       bindExport();
     }
 
-    let currentDest = 'US';
     function doCalc() {
       const hts = (document.getElementById('hts').value || '').trim();
       const origin = document.getElementById('origin').value;
@@ -480,7 +478,7 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       let res = null;
       if (dest === 'CN') res = computeStack(dest, hts, origin, goods, sampleRates, fixed, overlay, cnFull);
       else { const rates = FULL || sampleRates; const key = lookupHts(hts, rates); res = key ? computeStack(dest, key, origin, goods, rates, fixed, overlay) : null; }
-      window.__last = res; currentDest = dest; renderResult(res);
+      window.__last = res; renderResult(res);
     }
 
     function updateFieldHints() {

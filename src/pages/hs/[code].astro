@@ -14,8 +14,6 @@ const { d } = Astro.props;
 const code = d.code;
 const verifiedDate = String(overlay.last_checked || overlay.as_of || '').slice(0, 10);
 
-const esc = (s) => String(s)
-  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const pct = (x) => {
   const n = Number(x);
   if (!isFinite(n) || n === 0) return { txt: 'Free', free: true };

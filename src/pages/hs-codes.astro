@@ -274,8 +274,10 @@ const dsJsonLd = JSON.stringify({
     let LANG = (localStorage.getItem('ts-lang') || 'en');
     if (!LANGS.some(l => l.code === LANG)) LANG = 'en';
 
-    // HTML-escape helper (must match the frontmatter `esc` definition — needed by render()'s US row)
-    const esc = (s) => String(s);
+    // HTML-escape helper — MUST match the frontmatter `esc` definition so client-rendered
+    // rows escape the same way as the server-rendered SSG table (data can contain & < > ").
+    const esc = (s) => String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
     // ---- theme ----
     (function initTheme(){
