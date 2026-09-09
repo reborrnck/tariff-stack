@@ -115,6 +115,13 @@ jobs:
         # 供 hs-codes.astro 服务端渲染进静态 HTML，使 AI 爬虫无需执行 JS 即可读到真税率。
         run: node scripts/build_hs_ssg.mjs
 
+      - name: Validate tariff data (block deploy if corrupt)
+        # 守门（2026-09-09 加）：全量扫 25903 US + 14584 CN 真值 + resolveKey 取数一致性 +
+        # SSG 输出边界。任何单位错乱(÷100) / 取数错位(误命中 0 税率 heading) / 越界 → 退出码 1
+        # → 本步变红 → 阻断后续 build/deploy，杜绝"坏数据随部署上线"复发。
+        # 注：US 从价税可合法 >100%（花生 131.8% / 烟叶 350%），故上界放至 base>5 才判 bug。
+        run: node scripts/validate_tariffs.mjs
+
       - name: Build static site
         run: npm run build
 
