@@ -319,6 +319,12 @@ const dsJsonLd = JSON.stringify({
     let Q = '';
     const CAP = 200;
 
+    // SSG 兜底：fetch 失败时按当前 TAB 选对应 SSG 表回填，避免切 tab 后 #results 残留错数据集
+    const SSG_US_HTML = document.getElementById('results').innerHTML;
+    const SSG_CN_HTML = document.getElementById('ssg-cn-data').innerHTML;
+    const US_TOTAL = 25903;
+    const CN_TOTAL = 14584;
+
     const norm = (s) => (s || '').toLowerCase().replace(/[\s.]/g, '');
     const pct = (x) => {
       const n = Number(x);
@@ -355,8 +361,12 @@ const dsJsonLd = JSON.stringify({
       const cnt = document.getElementById('count');
       const ds = dataset();
       if (!ds) {
-        // 数据 fetch 未完成：保留 #results 里的 SSG 200 行真实税率；fillDescTags 仍会回填
-        // SSG 已嵌入的 .tr-line 翻译钩子
+        // 数据 fetch 未完成：按 TAB 选对应 SSG 表回填 #results + 重写 count；
+        // 这样切 tab 后即便 fetch 还没就绪（或失败）也能立刻显示对应数据集的 SSG 真值。
+        const total = TAB === 'US' ? US_TOTAL : CN_TOTAL;
+        el.innerHTML = TAB === 'US' ? SSG_US_HTML : SSG_CN_HTML;
+        const lbl = t(LANG,'hs_enc_showing').replace('{m}', String(Math.min(CAP,total))).replace('{n}', String(total));
+        cnt.innerHTML = '<b>' + lbl + '</b>' + (total > CAP ? ' · ' + t(LANG,'hs_enc_more').replace('{cap}', String(CAP)) : '');
         fillDescTags(LANG);
         return;
       }
@@ -409,6 +419,7 @@ const dsJsonLd = JSON.stringify({
     });
     document.getElementById('tab-us').addEventListener('click', () => {
       TAB = 'US'; document.getElementById('tab-us').classList.add('on'); document.getElementById('tab-cn').classList.remove('on');
+      if (!US) loadUS();
       render();
     });
     document.getElementById('tab-cn').addEventListener('click', () => {
