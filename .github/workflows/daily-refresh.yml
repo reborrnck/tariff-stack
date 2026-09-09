@@ -122,7 +122,7 @@ jobs:
       - name: Seed HS description translations (free MT) + commit
         env:
           MYMEMORY_EMAIL: ${{ secrets.MYMEMORY_EMAIL || 'TariffStack@outlook.com' }}
-          DESC_CHAR_BUDGET: ${{ secrets.DESC_CHAR_BUDGET || '15000' }}
+          DESC_CHAR_BUDGET: ${{ secrets.DESC_CHAR_BUDGET || '50000' }}
         run: |
           node scripts/translate_desc.mjs
           if ! git diff --quiet -- public/data/desc_i18n.json; then

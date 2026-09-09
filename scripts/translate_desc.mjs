@@ -55,9 +55,11 @@ function collectSources() {
 
 async function translate(text, pair) {
   const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${pair}&de=${encodeURIComponent(EMAIL)}`;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 8000);
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      const r = await fetch(url);
+      const r = await fetch(url, { signal: ctrl.signal });
       if (r.status === 429) { await sleep(2500); continue; }
       if (!r.ok) return null;
       const j = await r.json();
