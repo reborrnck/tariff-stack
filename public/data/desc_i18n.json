@@ -3481,14 +3481,31 @@
     "ko": "호두 얼굴 플라이로 (Juglans spp.)",
     "es": "Con una capa facial de nogal (Juglans spp.)",
     "fr": "Avec une face en noyer (Juglans spp.)",
-    "pt": "Com uma camada facial de nogueira (Juglans spp.)"
+    "pt": "Com uma camada facial de nogueira (Juglans spp.)",
+    "de": "Mit einer Gesichtslage aus Walnuss (Juglans spp.)",
+    "it": "Con un velo di noce (Juglans spp.)"
   },
   "Weighing more than 150 g/m²": {
     "zh": "重量超过150克/平方米",
-    "zh-TW": "重量超過150克/平方米"
+    "zh-TW": "重量超過150克/平方米",
+    "ja": "重量150 g/m ²以上",
+    "ko": "무게 150g/m ² 이상",
+    "es": "De peso superior a 150 g/m2",
+    "fr": "- -D&apos;un poids supérieur à 150 g/m²",
+    "pt": "Pesando mais de 150 g/m²",
+    "de": "Mit einem Gewicht von mehr als 150 g/m²",
+    "it": "Di peso superiore a 150 g/m²"
   },
   "Base stock for trays, dishes, plates, cups and the like": {
-    "zh": "托盘、盘子、盘子、杯子等的基础库存"
+    "zh": "托盘、盘子、盘子、杯子等的基础库存",
+    "zh-TW": "託盤、碗碟、盤子、杯子等的基礎庫存",
+    "ja": "トレイ、食器、皿、カップなどのベースストック",
+    "ko": "트레이, 접시, 접시, 컵 등을 위한 베이스 스톡",
+    "es": "Material base para bandejas, platos, platos, tazas y similares",
+    "fr": "Stock de base pour plateaux, plats, assiettes, tasses et similaires",
+    "pt": "Estoque base para bandejas, louças, pratos, copos e afins",
+    "de": "Grundstock für Tabletts, Geschirr, Teller, Tassen und dergleichen",
+    "it": "Fondo per vassoi, stoviglie, piatti, tazze e simili"
   },
   "Rye": {
     "zh": "黑麦",
@@ -3577,5 +3594,583 @@
     "pt": "Farinhas de cereais exceto de trigo ou de mistura de trigo e centeio",
     "de": "Mehl von anderem Getreide als Weizen oder Mengkorn",
     "it": "Farine di cereali diverse da quelle di frumento o di frumento e segala"
+  },
+  "Folding carton stock": {
+    "zh": "折叠纸箱库存",
+    "zh-TW": "折疊紙箱庫存",
+    "ja": "折りたたみ式カートンストック",
+    "ko": "접이식 카톤 재고",
+    "es": "Caja de cartón plegable",
+    "fr": "Stock de cartons pliables",
+    "pt": "Estoque DE caixas dobráveis",
+    "de": "Faltschachtelvorrat",
+    "it": "Cartone pieghevole stock"
+  },
+  "Tapestry fabrics and upholstery fabrics of a weight exceeding 300 g/m2": {
+    "zh": "重量超过300克/平方米的挂毯织物和室内装饰织物",
+    "zh-TW": "重量超過300克/平方米的掛毯織物和內飾織物",
+    "ja": "重量が300 g/m 2を超えるタペストリー生地および室内装飾生地",
+    "ko": "중량이 300g/m2를 초과하는 태피스트리 직물 및 실내 장식 직물",
+    "es": "Tejidos para tapicería y tapicería de un peso superior a 300 g/m2",
+    "fr": "Tissus de tapisserie et tissus d'ameublement d'un poids supérieur à 300 g/m2",
+    "pt": "Tecidos para tapeçarias e estofos com peso superior a 300 g/m2",
+    "de": "Wandteppichstoffe und Polsterstoffe mit einem Gewicht von mehr als 300 g/m2",
+    "it": "Tessuti per arazzi e tessuti per tappezzeria di peso superiore a 300 g/m2"
+  },
+  "Multiple (folded) or cabled": {
+    "zh": "多个（折叠）或有线",
+    "zh-TW": "多個（折疊）或纜線",
+    "ja": "複数（折りたたみ式）またはケーブル接続",
+    "ko": "여러 개 (접힘) 또는 케이블 연결됨",
+    "es": "Retorcidos o cableados",
+    "fr": "retors ou câblés",
+    "pt": "Retorcidos ou retorcidos múltiplos",
+    "de": "Mehrfach (gefaltet) oder verkabelt",
+    "it": "Multipli (piegati) o cablati"
+  },
+  "Osnaburg": {
+    "zh": "奥斯纳堡",
+    "zh-TW": "奧斯納堡",
+    "ja": "オスナブルク",
+    "ko": "오스나부르크",
+    "es": "osnaburgo"
+  },
+  "Jacquard woven": {
+    "zh": "提花编织",
+    "zh-TW": "提花編織",
+    "ja": "ジャカード織り",
+    "ko": "자카드 직조",
+    "es": "Jacquard tejido",
+    "fr": "Tissus Jacquard :",
+    "pt": "Tecido jacquard",
+    "de": "Jacquard gewebt",
+    "it": "Tessuto jacquard"
+  },
+  "Of polypropylene": {
+    "zh": "聚丙烯的",
+    "zh-TW": "聚丙烯的",
+    "ja": "ポリプロピレンの",
+    "ko": "폴리프로필렌의",
+    "es": "De polipropileno",
+    "fr": "de polypropylène",
+    "pt": "De polipropileno",
+    "de": "Aus Polypropylen",
+    "it": "Di polipropilene"
+  },
+  "Of nylon or other polyamides": {
+    "zh": "由尼龙或其他聚酰胺制成",
+    "zh-TW": "尼龍或其他聚醯胺",
+    "ja": "ナイロンまたは他のポリアミドの",
+    "ko": "나일론 또는 기타 폴리아미드의",
+    "es": "De nailon o demás poliamidas",
+    "fr": "de nylon ou d'autres polyamides",
+    "pt": "De náilon ou de outras poliamidas",
+    "de": "Aus Nylon oder anderen Polyamiden",
+    "it": "Di nylon o altre poliammidi"
+  },
+  "3-thread or 4-thread twill, including cross twill, of polyester staple fibers": {
+    "zh": "涤纶短纤维三线或四线斜纹面料，包括十字斜纹面料",
+    "zh-TW": "聚酯短纖維三線或四線斜紋，包括十字斜紋",
+    "ja": "ポリエステルステープルファイバーのクロスツイルを含む3スレッドまたは4スレッドツイル",
+    "ko": "폴리에스테르 스테이플 섬유의 크로스 트윌을 포함한 3-스레드 또는 4-스레드 트윌",
+    "es": "De fibras discontinuas de poliéster, de ligamento sarga, incluido el cruzado, de curso inferior o igual a 4",
+    "fr": "À armure sergé, y compris le croisé, de rapport d&apos;armure 3 ou 4, en fibres de polyester discontinues :",
+    "pt": "De fibras descontínuas de poliéster, em ponto sarjado, incluindo o diagonal, cuja relação de textura não seja superior a 4",
+    "de": "aus Polyester-Spinnfasern, in 3- oder 4-bindigem Köper, einschließlich Doppelköper",
+    "it": "Twill a 3 o 4 fili, incluso il twill incrociato, di fibre in fiocco di poliestere"
+  },
+  "Other woven fabrics of polyester staple fibers": {
+    "zh": "涤纶短纤维的其他编织面料",
+    "zh-TW": "其他聚酯短纖維織物",
+    "ja": "ポリエステルステープル繊維のその他の織布",
+    "ko": "폴리에스테르 스테이플 섬유의 기타 직물",
+    "es": "Otros tejidos de fibras discontinuas de poliéster",
+    "fr": "Autres tissus de fibres discontinues de polyester :",
+    "pt": "Outros tecidos de fibras descontínuas de poliéster",
+    "de": "Andere Gewebe aus Polyester-Stapelfasern",
+    "it": "Altri tessuti di fibre in fiocco di poliestere"
+  },
+  "Containing 5 percent or more by weight of elastomeric yarn or rubber thread": {
+    "zh": "含有5重量%或更多的弹性纱线或橡胶线",
+    "zh-TW": "含有5重量%或更多的彈性紗線或橡膠線",
+    "ja": "5重量％以上のエラストマー糸またはゴム糸を含む",
+    "ko": "5중량 % 이상의 탄성사 또는 고무사 함유",
+    "es": "Con un contenido de hilo elastomérico o hilo de caucho igual o superior al 5 por ciento en peso",
+    "fr": "Contenant 5 % ou plus en poids de fil élastomère ou de fil de caoutchouc",
+    "pt": "Que contenham 5 por cento ou mais, em peso, de fios de elastómeros ou de fios de borracha",
+    "de": "Mit 5 Gewichtsprozent oder mehr Elastomergarn oder Gummifaden",
+    "it": "Contenenti almeno il 5 percento in peso di filato elastomerico o filo di gomma"
+  },
+  "Sleepwear": {
+    "zh": "家居服",
+    "zh-TW": "睡衣",
+    "ja": "寝間着",
+    "ko": "잠옷",
+    "es": "Ropa de dormir",
+    "fr": "Vêtements pour dormir",
+    "pt": "Roupa de dormir",
+    "de": "Nachtwäsche",
+    "it": "Un pigiama!"
+  },
+  "Containing 36 percent or more by weight of flax fibers": {
+    "zh": "含有36%或更多重量的亚麻纤维",
+    "zh-TW": "按重量計含有36%或以上的亞麻纖維",
+    "ja": "亜麻繊維を36重量％以上含む",
+    "ko": "아마섬유 36중량 % 이상 함유",
+    "es": "Que contengan 36 por ciento o más en peso de fibras de lino",
+    "fr": "Contenant au moins 26% en poids de fibres de lin :",
+    "pt": "Contendo 36 por cento ou mais em peso de fibras de linho",
+    "de": "Mit einem Gehalt an Flachsfasern von 36 Gewichtsprozent oder mehr",
+    "it": "Contenente il 36% o più in peso di fibre di lino"
+  },
+  "Blouses and shirts, except those imported as parts of sets": {
+    "zh": "衬衫和衬衫，但作为套装零件进口的衬衫和衬衫除外",
+    "zh-TW": "襯衫和襯衫，但作為套裝零件進口的除外",
+    "ja": "ブラウスとシャツ（セットの一部として輸入されたものを除く）",
+    "ko": "블라우스와 셔츠 (세트의 일부로 수입된 것은 제외)",
+    "es": "Blusas y camisas, excepto las importadas como parte de conjuntos",
+    "fr": "Ensembles bain de soleil, sorties de bain et vêtements similaires..................",
+    "pt": "Blusas e camisas, exceto as importadas como partes de conjuntos",
+    "de": "Blusen und Hemden, ausgenommen solche, die als Teile von Sets importiert werden",
+    "it": "Bluse e camicie, ad eccezione di quelle importate come parti di set"
+  },
+  "Trousers, breeches and shorts, except those imported as parts of sets": {
+    "zh": "长裤、马裤和短裤，作为套装零件进口的除外",
+    "zh-TW": "長褲、馬褲和短褲，但作為套裝零件進口的長褲、馬褲和短褲除外",
+    "ja": "パンツ、ブリーチ、ショーツ（セットの一部として輸入されたものを除く）",
+    "ko": "바지, 브리치즈, 반바지 (세트의 일부로 수입된 것은 제외)",
+    "es": "Pantalones, calzones y pantalones cortos, excepto los importados como parte de juegos",
+    "fr": "Pantalons, culottes et shorts, à l'exception de ceux importés en tant que parties d'ensembles",
+    "pt": "Calças, bermudas e calções, exceto os importados como partes de conjuntos",
+    "de": "Hosen, Reithosen und Shorts, ausgenommen solche, die als Teile von Sets importiert werden",
+    "it": "Pantaloni, calzoncini e pantaloncini, ad eccezione di quelli importati come parti di set"
+  },
+  "Sets": {
+    "zh": "集合",
+    "zh-TW": "集合",
+    "ja": "セット",
+    "ko": "세트",
+    "es": "Conjuntos",
+    "fr": "Ensembles",
+    "pt": "Conjuntos",
+    "de": "Mengen",
+    "it": "Piantoni"
+  },
+  "Imported as parts of sets": {
+    "zh": "作为套装的一部分导入",
+    "zh-TW": "作為套裝的一部分匯入",
+    "ja": "セットの一部としてインポート",
+    "ko": "세트의 일부로 가져옴",
+    "es": "Importado como parte de conjuntos",
+    "fr": "Importé en tant que parties d'ensembles",
+    "pt": "Importados como partes de conjuntos",
+    "de": "Importiert als Teile von Sets",
+    "it": "Importato come parte di set"
+  },
+  "Corduroy": {
+    "zh": "燈心絨",
+    "zh-TW": "灯芯绒",
+    "ja": "コーデュロイ",
+    "ko": "코듀로이",
+    "es": "Pana",
+    "fr": "Velours côtelé",
+    "pt": "Bombazina",
+    "de": "Kordsamt",
+    "it": "Velluto a coste"
+  },
+  "Recreational performance outerwear": {
+    "zh": "休闲表演外套",
+    "zh-TW": "休閒表演外套",
+    "ja": "レクリエーションパフォーマンスアウターウェア",
+    "ko": "레크리에이션 퍼포먼스 아우터웨어",
+    "es": "Ropa exterior de rendimiento recreativo",
+    "fr": "Vêtements d'extérieur de performance récréative",
+    "pt": "Vestuário exterior de desempenho recreativo",
+    "de": "Freizeit-Performance-Oberbekleidung",
+    "it": "Outerwear ricreativo performante"
+  },
+  "Pillowcovers": {
+    "zh": "枕套",
+    "zh-TW": "枕頭套",
+    "ja": "枕カバー",
+    "ko": "베개 커버",
+    "es": "Fundas de almohada",
+    "fr": "Housses d'oreiller",
+    "pt": "Fronhas",
+    "de": "Kissenbezüge",
+    "it": "Copricuscini"
+  },
+  "Valued over $6.50 but not over $12/pair": {
+    "zh": "价值超过$ 6.50但不超过$ 12/对",
+    "zh-TW": "價值超過$ 6.50但不超過$ 12/對",
+    "ja": "$ 6.50を超えたが、ペアあたり$ 12を超えていない",
+    "ko": "$ 6.50 를 초과하지만 $ 12/쌍을 초과하지 않음",
+    "es": "Valorado por encima de $ 6.50 pero no por encima de $ 12/par",
+    "fr": "D'une valeur supérieure à 6,50 $ mais n'excédant pas 12 $ / paire",
+    "pt": "Avaliado acima de $ 6,50, mas não acima de $ 12/par",
+    "de": "Bewertet über 6,50 $, aber nicht über 12 $/Paar",
+    "it": "Valutato oltre $6,50 ma non oltre $12/paio"
+  },
+  "Welt footwear": {
+    "zh": "WELT鞋类",
+    "zh-TW": "WELT鞋履",
+    "ja": "ウェルトフットウェア",
+    "ko": "웰트 신발",
+    "es": "Calzado ribeteado",
+    "fr": "Chaussures Welt",
+    "de": "WELT-SCHUH",
+    "it": "Calzature Welt"
+  },
+  "Tiles, the largest surface area of which is capable of being enclosed in a square the side of which is 30 cm or less": {
+    "zh": "瓷砖，其最大表面积能够封闭在边长为30厘米或更小的正方形中",
+    "zh-TW": "瓷磚，其最大表面積能夠被封閉在一個正方形中，其側面為30釐米或更小",
+    "ja": "最大表面積が三〇センチメートル以下の正方形で囲むことができるタイル",
+    "ko": "측면이 30cm 이하인 정사각형으로 둘러싸일 수 있는 가장 큰 표면적의 타일",
+    "es": "Azulejos, cuya mayor superficie puede encerrarse en un cuadrado cuyo lado mide 30 cm o menos",
+    "fr": "Carreaux dont la plus grande surface est susceptible d'être enfermée dans un carré dont le côté est de 30 cm ou moins",
+    "pt": "Ladrilhos, cuja maior área de superfície é capaz de ser fechada em um quadrado cujo lado é de 30 cm ou menos",
+    "de": "Fliesen, deren größte Fläche in einem Quadrat eingeschlossen werden kann, dessen Seite 30 cm oder weniger beträgt",
+    "it": "Piastrelle, la cui superficie più grande è in grado di essere racchiusa in un quadrato il cui lato è di 30 cm o meno"
+  },
+  "Of a thickness of 3 mm or more but less than 4.75 mm": {
+    "zh": "厚度为3毫米或更大但小于4.75毫米",
+    "zh-TW": "厚度爲3毫米或更大但小於4.75毫米",
+    "ja": "厚さが３ ｍｍ以上４ ． ７ ５ ｍｍ未満のもの",
+    "ko": "두께 3mm 이상 4.75 mm 미만",
+    "es": "De espesor superior o igual a 3 mm pero inferior a 4,75 mm",
+    "fr": "— — d'une largeur n'excédant pas 500 mm: — — ­ d'une épaisscut de 3 mm ou plus mais inférieure à 4,75 mm ex 7211 19 91",
+    "pt": "Outros: - Dc largura não superior a 500 mm: - — De espessura de 3 mm ou mais, mas inferior a 4,75 mm ex 7211 19 91",
+    "de": "Mit einer Dicke von 3 mm oder mehr, aber weniger als 4,75 mm",
+    "it": "di spessore uguale o superiore a 3 mm o più ed inferiore a 4,75 mm"
+  },
+  "Clad": {
+    "zh": "合金硬币",
+    "zh-TW": "包覆",
+    "ja": "クラッド",
+    "ko": "클래드",
+    "es": "Chapados",
+    "fr": "plaqués",
+    "pt": "Folheados ou chapeados",
+    "de": "verkleidet",
+    "it": "Rivestito"
+  },
+  "Of a width of 1370 mm or more": {
+    "zh": "宽度为1370毫米或以上",
+    "zh-TW": "寬度為1370毫米或以上",
+    "ja": "幅1370 mm以上のもの",
+    "ko": "너비 1,370mm 이상",
+    "es": "De anchura superior o igual a 35 mm",
+    "fr": "- D'une largeur de 35 mm ou plus",
+    "pt": "De largura igual ou superior a 35 mm",
+    "de": "Mit einer Breite von 1370 mm oder mehr",
+    "it": "Di larghezza pari o superiore a 1370 mm"
+  },
+  "Of tool steel": {
+    "zh": "工具钢",
+    "zh-TW": "工具鋼的",
+    "ja": "工具鋼",
+    "ko": "공구강의",
+    "es": "De acero para herramientas",
+    "fr": "en aciers pour outillage",
+    "pt": "De aços para ferramentas",
+    "de": "Aus Werkzeugstahl",
+    "it": "di acciai per utensili"
+  },
+  "Having a wall thickness of 12.7 mm or more but less than 19 mm": {
+    "zh": "壁厚为12.7毫米或更大但小于19毫米",
+    "zh-TW": "壁厚爲12.7毫米或以上但小於19毫米",
+    "ja": "壁厚が１ ２ ． ７ ｍｍ以上１ ９ ｍｍ未満のもの",
+    "ko": "벽 두께가 12.7mm 이상 19mm 미만인 경우",
+    "es": "Con un espesor de pared igual o superior a 12,7 mm pero inferior a 19 mm",
+    "fr": "Avoir une épaisseur de paroi de 12,7 mm ou plus mais inférieure à 19 mm",
+    "pt": "Com uma espessura de parede igual ou superior a 12,7 mm, mas inferior a 19 mm",
+    "de": "Mit einer Wandstärke von 12,7 mm oder mehr, aber weniger als 19 mm",
+    "it": "Con uno spessore di parete di 12,7 mm o più ma inferiore a 19 mm"
+  },
+  "Other parts": {
+    "zh": "其他活动：",
+    "zh-TW": "其他零件",
+    "ja": "その他の部品",
+    "ko": "기타 부품",
+    "es": "Otras partes",
+    "fr": "Autres pièces",
+    "pt": "Outras partes",
+    "de": "Sonstige Teile",
+    "it": "Altri componenti"
+  },
+  "Portable": {
+    "zh": "绿色版",
+    "zh-TW": "攜帶式",
+    "ja": "ポータブル版",
+    "ko": "휴대용",
+    "es": "Portátil",
+    "pt": "Portátil",
+    "de": "Tragbar",
+    "it": "Le attrezzature &#x0D;"
+  },
+  "Of copper-zinc base alloys (brass)": {
+    "zh": "铜锌基合金（黄铜）",
+    "zh-TW": "銅鋅基合金（黃銅）",
+    "ja": "銅亜鉛系合金（黄銅）",
+    "ko": "구리-아연계 합금 (황동)",
+    "es": "A base de cobre-cinc (latón)",
+    "fr": "à base de cuivre-zinc (laiton)",
+    "pt": "À base de cobre-zinco (latão)",
+    "de": "Aus Kupfer-Zink-Basislegierungen (Messing)",
+    "it": "Di leghe a base di rame-zinco (ottone)"
+  },
+  "Connecting rods": {
+    "zh": "连杆",
+    "zh-TW": "連接桿",
+    "ja": "コンロッド",
+    "ko": "연결봉",
+    "es": "Biela",
+    "fr": "Bielles",
+    "pt": "Biela",
+    "de": "Pleuelstangen",
+    "it": "Bielle"
+  },
+  "Heat-treatable industrial alloys of a kind described in statistical note 7 to this chapter": {
+    "zh": "本章统计注释7中描述的可热处理工业合金",
+    "zh-TW": "本章統計註釋7中描述的可熱處理工業合金",
+    "ja": "本章の統計注記7に記載されている種類の熱処理可能な工業用合金",
+    "ko": "이 장의 통계 주석 7에 설명된 종류의 열처리 가능한 산업용 합금",
+    "es": "Aleaciones industriales tratables térmicamente del tipo descrito en la nota estadística 7 de este capítulo",
+    "fr": "Alliages industriels traitables thermiquement du type décrit dans la note statistique 7 du présent chapitre",
+    "pt": "Ligas industriais tratáveis termicamente do tipo descrito na nota estatística 7 deste capítulo",
+    "de": "Wärmebehandelbare Industrielegierungen, wie sie in der statistischen Anmerkung 7 zu diesem Kapitel beschrieben sind",
+    "it": "Leghe industriali trattabili termicamente del tipo descritto nella nota statistica 7 di questo capitolo"
+  },
+  "Steel forgings": {
+    "zh": "钢锻件",
+    "zh-TW": "鋼鍛件",
+    "ja": "スチール鍛造品",
+    "ko": "강철 단조",
+    "es": "Forjados de acero",
+    "fr": "Pièces forgées en acier",
+    "pt": "Forjados de aço",
+    "de": "Stahlschmiedeteile",
+    "it": "Forgiati in acciaio"
+  },
+  "Aircraft turbines": {
+    "zh": "飞机涡轮机",
+    "zh-TW": "飛機渦輪機",
+    "ja": "航空機タービン",
+    "ko": "항공기 터빈",
+    "es": "Turbinas de avión",
+    "fr": "En fr.",
+    "pt": "Turbinas DE aeronaves",
+    "de": "Flugzeugturbinen",
+    "it": "Turbine per aeromobili"
+  },
+  "Wheel and tire assemblies": {
+    "zh": "车轮和轮胎组件",
+    "zh-TW": "車輪和輪胎組件",
+    "ja": "ホイールとタイヤアセンブリ",
+    "ko": "휠 및 타이어 어셈블리",
+    "es": "Conjuntos de ruedas y neumáticos",
+    "fr": "Assemblages de roues et de pneus",
+    "pt": "Conjuntos de rodas e pneus",
+    "de": "Rad- und Reifenbaugruppen",
+    "it": "Assemblaggi di ruote e pneumatici"
+  },
+  "For working metal": {
+    "zh": "用于加工金属",
+    "zh-TW": "適用於加工金屬",
+    "ja": "加工金属用",
+    "ko": "금속 가공용",
+    "es": "Para mecanizar metal",
+    "fr": "pour l'usinage des métaux",
+    "pt": "Para trabalhar metais",
+    "de": "Für die Metallbearbeitung",
+    "it": "Per la lavorazione dei metalli"
+  },
+  "Valued under $1,000 each": {
+    "zh": "每个价值低于$ 1,000",
+    "zh-TW": "每個價值低於$ 1,000",
+    "ja": "各1,000 $未満の価値",
+    "ko": "각각 $ 1,000 미만의 가치",
+    "es": "Valoradas en menos de 1000 $ cada una",
+    "fr": "Évalué à moins de 1 000 $ chacun",
+    "pt": "Avaliado em menos de $ 1.000 cada",
+    "de": "Im Wert von jeweils unter 1.000 $",
+    "it": "Valutato meno di $1.000 ciascuno"
+  },
+  "Having engines with more than 4 cylinders but not more than 6 cylinders": {
+    "zh": "发动机超过4缸但不超过6缸",
+    "zh-TW": "擁有超過4個汽缸但不超過6個汽缸的引擎",
+    "ja": "4気筒以上6気筒以下のエンジン",
+    "ko": "4기통 이상 6기통 이하 엔진 보유",
+    "es": "Tener motores con más de 4 cilindros pero no más de 6 cilindros",
+    "fr": "Avoir des moteurs de plus de 4 cylindres mais pas plus de 6 cylindres",
+    "pt": "Ter motores com mais de 4 cilindros, mas não mais de 6 cilindros",
+    "de": "Mit Motoren mit mehr als 4 Zylindern, aber nicht mehr als 6 Zylindern",
+    "it": "Avere motori con più di 4 cilindri ma non più di 6 cilindri"
+  },
+  "Having engines with more than 6 cylinders": {
+    "zh": "发动机有6个以上的气缸",
+    "zh-TW": "擁有超過6個汽缸的引擎",
+    "ja": "6気筒以上のエンジンを有すること",
+    "ko": "6기통 이상의 엔진 보유",
+    "es": "Tener motores con más de 6 cilindros",
+    "fr": "Avoir des moteurs de plus de 6 cylindres",
+    "pt": "Ter motores com mais de 6 cilindros",
+    "de": "Mit Motoren mit mehr als 6 Zylindern",
+    "it": "Avere motori con più di 6 cilindri"
+  },
+  "Other, including parts and accessories": {
+    "zh": "其他，包括零件和配件",
+    "zh-TW": "其他，包括零件和配件",
+    "ja": "その他（部品および付属品を含む）",
+    "ko": "기타 (부품 및 액세서리 포함)",
+    "es": "Los demás, incluidas las partes y accesorios",
+    "fr": "autres, y compris les parties et accessoires",
+    "pt": "Outros, incluindo as partes e acessórios",
+    "de": "Sonstige, einschließlich Teile und Zubehör",
+    "it": "Altro, comprese parti e accessori"
+  },
+  "Cribs": {
+    "zh": "粮仓",
+    "zh-TW": "嬰兒牀",
+    "ja": "収納小屋",
+    "ko": "곳간",
+    "es": "Cunas",
+    "fr": "Berceaux",
+    "pt": "Tulha",
+    "de": "Kinderbetten",
+    "it": "Culle"
+  },
+  "Boneless": {
+    "zh": "无骨",
+    "zh-TW": "無骨",
+    "ja": "骨なし",
+    "ko": "뼈 없는",
+    "es": "Deshuesada",
+    "fr": "désossées",
+    "pt": "Desossadas",
+    "de": "ohne Knochen",
+    "it": "disossate"
+  },
+  "Not farmed": {
+    "zh": "未养殖",
+    "zh-TW": "未耕作",
+    "ja": "養殖されていない",
+    "ko": "농사를 짓지 않음",
+    "es": "No cultivado",
+    "fr": "Non cultivé",
+    "pt": "Não cultivado",
+    "de": "Nicht bewirtschaftet",
+    "it": "Non allevato"
+  },
+  "Herrings (Clupea harengus, Clupea pallasii)": {
+    "zh": "鲱鱼（ Clupea harengus ， Clupea pallasii ）",
+    "zh-TW": "Herrings （ Clupea harengus ， Clupea pallasii ）",
+    "ja": "ヘリングス（クルーペア・ハレンガス、クルーペア・パラシー）",
+    "ko": "청어 (Clupea harengus, Clupea pallasii)",
+    "es": "Arenques (Clupea harengus, Clupea pallasii)",
+    "fr": "Harengs (Clupea harengus, Clupea pallasii)",
+    "pt": "Arenques (Clupea harengus, Clupea pallasii)",
+    "de": "Heringe (Clupea harengus, Clupea pallasii)",
+    "it": "Aringhe (Clupea harengus, Clupea pallasii)"
+  },
+  "Tilapias (Oreochromis spp.)": {
+    "zh": "罗非鱼（ Oreochromis spp. ）",
+    "zh-TW": "羅非魚（ Oreochromis spp. ）",
+    "ja": "ティラピア（オレオクロミス属）",
+    "ko": "틸라피아스 (Oreochromis spp.)",
+    "pt": "Tilápias (Oreochromis spp.)",
+    "de": "Tilapias (Oreochromis-Arten)",
+    "it": "Tilapie (Oreochromis spp.)"
+  },
+  "Rays and skates (Rajidae)": {
+    "zh": "光线和溜冰鞋（ Rajidae ）",
+    "zh-TW": "光線和溜冰鞋（ Rajidae ）",
+    "ja": "光線とスケート靴（ラジダ科）",
+    "ko": "가오리와 스케이트 (Rajidae)",
+    "es": "Rayas (Rajidae)",
+    "fr": "Raies (Rajidae)",
+    "pt": "Raias (Rajidae)",
+    "de": "Rochen und Schlittschuhe (Rajidae)",
+    "it": "Razze e pattini (Rajidae)"
+  },
+  "Pike": {
+    "zh": "北美狗鱼",
+    "zh-TW": "梭子魚",
+    "ja": "パイク",
+    "ko": "PikeLanguage",
+    "es": "PikeLanguage",
+    "fr": "Brochet",
+    "pt": "Pique",
+    "de": "Hecht",
+    "it": "PICCA"
+  },
+  "Pickerel": {
+    "zh": "梭鱼",
+    "zh-TW": "梭魚",
+    "ja": "ピカレル",
+    "ko": "강꼬치고기",
+    "es": "Lucio joven",
+    "fr": "Brochet",
+    "pt": "Lúcio",
+    "de": "Zander",
+    "it": "Luccio"
+  },
+  "Whitefish": {
+    "zh": "白鱼",
+    "zh-TW": "白鲑",
+    "ja": "白身の魚",
+    "ko": "송어",
+    "es": "Lavareto",
+    "fr": "Poissons blancs",
+    "pt": "Peixe branco",
+    "de": "Maräne",
+    "it": "Pesce Lavarello"
+  },
+  "Sole": {
+    "zh": "比目鱼",
+    "zh-TW": "比目魚",
+    "ja": "シタビラメ",
+    "ko": "서대기",
+    "es": "Planta del pie",
+    "fr": "Plante des pieds",
+    "pt": "Linguado",
+    "de": "Der",
+    "it": "Suola"
+  },
+  "Cod": {
+    "zh": "鳕鱼",
+    "zh-TW": "鱈魚",
+    "ja": "タラ",
+    "ko": "대구",
+    "es": "Bacalao",
+    "fr": "Morue",
+    "pt": "Bacalhau",
+    "de": "Kabeljau",
+    "it": "Merluzzo"
+  },
+  "Cusk": {
+    "ja": "カスク",
+    "ko": "커스크",
+    "es": "Brosme brosme",
+    "fr": "Brosme",
+    "de": "Lumb"
+  },
+  "In immediate containers weighing with their contents 6.8 kg or less each": {
+    "zh": "在每个重量不超过6.8公斤的直接容器中",
+    "zh-TW": "在每個重量不超過6.8公斤的直接容器中",
+    "ja": "重量がそれぞれ6.8kg以下の即時コンテナ内",
+    "ko": "내용물의 무게가 각각 6.8kg 이하인 즉각적인 용기에서"
+  },
+  "Described in additional U.S. note 18 to this chapter and entered pursuant to its provisions": {
+    "zh": "在本章的附加美国注释18中描述并根据其规定输入",
+    "zh-TW": "本章美國附加附註18中描述並根據其規定進行輸入"
+  },
+  "Described in additional U.S. note 19 to this chapter and entered pursuant to its provisions": {
+    "zh": "在本章的附加美国注释19中描述并根据其规定输入",
+    "zh-TW": "本章美國附加附註19中描述並根據其規定進行輸入"
+  },
+  "Described in additional U.S. note 22 to this chapter and entered pursuant to its provisions": {
+    "zh": "在本章的附加美国注释22中描述并根据其规定输入",
+    "zh-TW": "本章美國附加附註22中描述並根據其規定進行輸入"
   }
 }
