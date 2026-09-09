@@ -132,6 +132,15 @@ for (const d of ssg.details) {
   if (d.cn && d.cn.mfn !== null && (typeof d.cn.mfn !== 'number' || d.cn.mfn < 0 || d.cn.mfn > 100)) v(`SSG.details ${d.code} CN mfn 越界 (${d.cn.mfn})`);
 }
 
+// ---------- 6) 描述质量守门（防 "Other"/横线/空描述 复发）----------
+// 与 build_hs_ssg.mjs 的 composeDesc / cleanCnName 对应：SSG 输出的描述必须是清洗后的。
+const isOther = (s) => !s || String(s).trim().toLowerCase() === 'other';
+for (const r of ssg.featuredUs) if (isOther(r.desc)) v(`SSG.featuredUs ${r.code}: desc 为空或仅 "Other" — 页面会误显无描述`);
+for (const d of ssg.details) if (d.us && isOther(d.us.desc)) v(`SSG.details ${d.code} US: desc 为空或仅 "Other"`);
+for (const r of ssg.cn) if (r.name && /^[-–—]/.test(r.name)) v(`SSG.cn ${r.code}: name 含前导横线 (${r.name}) — 未清洗`);
+for (const r of ssg.featuredCn) if (r.name && /^[-–—]/.test(r.name)) v(`SSG.featuredCn ${r.code}: name 含前导横线 (${r.name})`);
+for (const d of ssg.details) if (d.cn && d.cn.name && /^[-–—]/.test(d.cn.name)) v(`SSG.details ${d.code} CN: name 含前导横线`);
+
 // ---------- 报告 ----------
 log(`\n==== 校验 ${violations.length === 0 ? 'PASS ✅' : 'FAIL ❌'} ====`);
 log(`违规 ${violations.length} 条，警告 ${warns.length} 条`);

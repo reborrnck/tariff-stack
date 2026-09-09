@@ -57,6 +57,44 @@ export function resolveKey(dict, anchor, prefixLen) {
   return withRate[0] || cands[0] || null;
 }
 
+// 组合描述：沿 HS 层级从 heading(4位) 拼到叶子，丢弃纯 "Other" 节点，去重后拼接。
+// 解决叶子节点只存 "Other"（如 6203.42.07="Other"）导致“描述看不懂”的问题；
+// 同时做截断兜底——源数据 desc 被抓取脚本按固定长度砍断（连 heading 都中招，
+// 如 "…other apparatus for the tra"），长描述且不以句末标点结尾 → 截到末空格加 …。
+export function composeDesc(dict, leafKey) {
+  if (!leafKey || !dict[leafKey]) return '';
+  const chain = [leafKey];
+  let cur = leafKey;
+  while (cur.length > 4) {
+    const i = cur.lastIndexOf('.');
+    if (i <= 0) break;
+    cur = cur.slice(0, i);
+    chain.unshift(cur);
+  }
+  const parts = [];
+  for (const k of chain) {
+    const s = cleanDescPart(dict[k] && dict[k].desc);
+    if (!s) continue;
+    if (s.toLowerCase() === 'other') continue;
+    if (parts.length && parts[parts.length - 1].toLowerCase() === s.toLowerCase()) continue;
+    parts.push(s);
+  }
+  return parts.join(' — ');
+}
+function cleanDescPart(d) {
+  let s = (d || '').replace(/:\s*$/, '').trim();
+  if (!s) return '';
+  if (s.length > 100 && !/[.!?:;'"”’)\]]$/.test(s)) {
+    const i = s.lastIndexOf(' ');
+    if (i > 20) s = s.slice(0, i) + '…';
+  }
+  return s;
+}
+// CN name 在源数据里带层级缩进横线（如 "---棉制"、"----局用电话交换机"），去前导横线/连字符。
+export function cleanCnName(name) {
+  return (name || '').replace(/^[-–—\u2013\u2014\s]+/, '').trim();
+}
+
 function main() {
   const usFull = loadJson('tariff_full.json');          // { code: {desc, base, ch99, ch99_rate} }
   const cnFull = loadJson('tariff_full_cn.json');       // { meta, by_hs8 }
@@ -69,7 +107,7 @@ function main() {
     const r = usFull[k] || {};
     return {
       code: k,
-      desc: r.desc || '',
+      desc: composeDesc(usFull, k),
       base: (r.base === undefined ? null : r.base),
       ch99: r.ch99 || '',
       ch99_rate: (r.ch99_rate === undefined ? 0 : r.ch99_rate),
@@ -81,7 +119,7 @@ function main() {
     return {
       code: k,
       ex: !!r.ex,
-      name: r.name || '',
+      name: cleanCnName(r.name),
       mfn: (r.mfn === undefined ? null : r.mfn),
       general: (r.general === undefined ? null : r.general),
     };
@@ -95,11 +133,11 @@ function main() {
   const featuredUs = US_ANCHORS
     .map(a => resolveKey(usFull, a, 6))
     .filter(Boolean)
-    .map(k => { const r = usFull[k]; return { code: k, desc: r.desc || '', base: r.base, ch99: r.ch99 || '', ch99_rate: r.ch99_rate || 0 }; });
+    .map(k => { const r = usFull[k]; return { code: k, desc: composeDesc(usFull, k), base: r.base, ch99: r.ch99 || '', ch99_rate: r.ch99_rate || 0 }; });
   const featuredCn = CN_ANCHORS
     .map(a => resolveKey(cnBy, a, 6))
     .filter(Boolean)
-    .map(k => { const r = cnBy[k]; return { code: k, ex: !!r.ex, name: r.name || '', mfn: r.mfn, general: r.general }; });
+    .map(k => { const r = cnBy[k]; return { code: k, ex: !!r.ex, name: cleanCnName(r.name), mfn: r.mfn, general: r.general }; });
 
   // 高频 HS 6 位前缀专属详情页（GEO 改造②）：Top20 高频码，各解析代表性 US 10 位 HTS + CN 8 位 HS 真值。
   const TOP_CODES = ['610910','620342','640399','851762','847130','852872','870323','392690','950300','940360','845011','420292','871120','730890','841810','940161','610610','620462','732393','854231'];
@@ -111,8 +149,8 @@ function main() {
     return {
       code,
       chapter: code.slice(0, 2),
-      us: u ? { code: usKey, desc: u.desc || '', base: (u.base === undefined ? null : u.base), ch99: u.ch99 || '', ch99_rate: (u.ch99_rate === undefined ? 0 : u.ch99_rate) } : null,
-      cn: c ? { code: cnKey, name: c.name || '', mfn: (c.mfn === undefined ? null : c.mfn), general: (c.general === undefined ? null : c.general) } : null,
+      us: u ? { code: usKey, desc: composeDesc(usFull, usKey), base: (u.base === undefined ? null : u.base), ch99: u.ch99 || '', ch99_rate: (u.ch99_rate === undefined ? 0 : u.ch99_rate) } : null,
+      cn: c ? { code: cnKey, name: cleanCnName(c.name), mfn: (c.mfn === undefined ? null : c.mfn), general: (c.general === undefined ? null : c.general) } : null,
     };
   });
 

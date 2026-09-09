@@ -323,6 +323,25 @@ const dsJsonLd = JSON.stringify({
       return { txt: (n % 1 === 0 ? n : n.toFixed(2)) + '%', free: false };
     };
 
+    // 组合描述（与 build_hs_ssg.mjs 的 composeDesc 保持一致）：沿 HS 层级从 heading 拼到叶子、丢 "Other"、去重、截断兜底
+    function composeDesc(dict, leafKey) {
+      if (!leafKey || !dict[leafKey]) return '';
+      const chain = [leafKey];
+      let cur = leafKey;
+      while (cur.length > 4) { const i = cur.lastIndexOf('.'); if (i <= 0) break; cur = cur.slice(0, i); chain.unshift(cur); }
+      const parts = [];
+      for (const k of chain) {
+        let s = (dict[k] && dict[k].desc || '').replace(/:\s*$/, '').trim();
+        if (!s) continue;
+        if (s.length > 100 && !/[.!?:;'"”')\]]$/.test(s)) { const idx = s.lastIndexOf(' '); if (idx > 20) s = s.slice(0, idx) + '…'; }
+        if (s.toLowerCase() === 'other') continue;
+        if (parts.length && parts[parts.length - 1].toLowerCase() === s.toLowerCase()) continue;
+        parts.push(s);
+      }
+      return parts.join(' — ');
+    }
+    function cleanCnName(name) { return (name || '').replace(/^[-–—\s]+/, '').trim(); }
+
     function dataset() { return TAB === 'US' ? US : CN; }
     function totalCount() { return TAB === 'US' ? (US ? Object.keys(US).length : 0) : (CN ? Object.keys(CN).length : 0); }
 
@@ -350,13 +369,13 @@ const dsJsonLd = JSON.stringify({
         const rec = ds[k];
         if (TAB === 'US') {
           const r = pct(rec.base * 100);
-          return `<tr><td class="code">${k}</td><td class="desc">${rec.desc || ''}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}&dest=US" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
+          return `<tr><td class="code">${k}</td><td class="desc">${composeDesc(US, k) || rec.desc || ''}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}&dest=US" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
         } else {
           const r = pct(rec.mfn);
           // CN data: name is a short dash-prefixed description relative to its parent heading
           // (e.g. "-棉制", "--改良种用", "---其他"). Show it as-is and add a chapter badge for context.
           const chapter = k.slice(0, 4);
-          return `<tr><td class="code">${k}</td><td class="desc"><span class="ch">${chapter}</span>${rec.name || ''}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}&dest=CN" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
+          return `<tr><td class="code">${k}</td><td class="desc"><span class="ch">${chapter}</span>${cleanCnName(rec.name)}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}&dest=CN" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
         }
       }).join('');
       if (!shown.length) {
