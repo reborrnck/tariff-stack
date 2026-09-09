@@ -922,8 +922,15 @@ const DESC_VOCAB: DescRow[] = [
 // Translate a USITC HTS description to the user's language.
 // Priority:
 //   1. Curated PRODUCTS entry for the HTS code (fully-translated product name).
-//   2. Word/phrase substitution using DESC_VOCAB (longest match wins).
-//   3. Fall back to the original English description.
+//   2. Fall back to the original English description.
+//
+// We intentionally do NOT do word-by-word vocab substitution on USITC text.
+// USITC HTS descriptions are the official English wording used on customs
+// paperwork; a 100-word vocab against thousands of technical terms produces
+// incoherent half-translations like "Wheat 和 meslin" or "T-shirts, singlets,
+// tank tops 和 similar garments" — worse than just showing the original.
+// Curated PRODUCTS entries give a clean translation for popular codes;
+// everything else stays as the authoritative USITC English.
 export function descLabel(enDesc: string, lang: Lang, hts?: string): string {
   if (lang === 'en' || !enDesc) return enDesc;
   // Priority 1: curated PRODUCTS catalog
@@ -931,13 +938,6 @@ export function descLabel(enDesc: string, lang: Lang, hts?: string): string {
     const p = PRODUCTS.find(x => x.hts === hts);
     if (p) return p.names[lang] || p.names.en || enDesc;
   }
-  // Priority 2: word/phrase substitution
-  const rows = [...DESC_VOCAB].sort((a, b) => b.en.length - a.en.length);
-  let out = enDesc;
-  for (const row of rows) {
-    const target = (row as Record<string, string>)[lang] || row.zh || row.en;
-    const esc = row.en.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    out = out.replace(new RegExp('\\b' + esc + '\\b', 'gi'), target);
-  }
-  return out;
+  // Priority 2: original English (USITC official text)
+  return enDesc;
 }
