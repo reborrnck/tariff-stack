@@ -274,6 +274,9 @@ const dsJsonLd = JSON.stringify({
     let LANG = (localStorage.getItem('ts-lang') || 'en');
     if (!LANGS.some(l => l.code === LANG)) LANG = 'en';
 
+    // HTML-escape helper (must match the frontmatter `esc` definition — needed by render()'s US row)
+    const esc = (s) => String(s);
+
     // ---- theme ----
     (function initTheme(){
       try {
