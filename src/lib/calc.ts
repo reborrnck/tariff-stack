@@ -240,7 +240,9 @@ export function computeStack(
     const duty = goods * applied / 100;
     const kind = line.prov != null ? 'provisional (暂定税率)' : 'MFN (最惠国税率)';
     const layers: Layer[] = [
-      { name: `China import duty — ${kind}`, rate: applied, amt: duty },
+      // rate 统一存小数（与 US 分支一致）：applied 是百分点，需 /100，
+      // 否则页面 pct(l.rate)=rate*100 会把 6% 显示成 600%。
+      { name: `China import duty — ${kind}`, rate: applied / 100, amt: duty },
     ];
     const parts: string[] = [`MFN ${line.mfn ?? '—'}%`];
     if (line.prov != null) parts.push(`provisional ${line.prov}%`);
