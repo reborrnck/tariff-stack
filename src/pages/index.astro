@@ -398,7 +398,7 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     import { computeStack } from '../lib/calc.ts';
     import { destLabel } from '../lib/destinations.ts';
     import { destOptionsFor } from '../lib/origins.ts';
-    import { t, layerName, originLabel, LANGS, type Lang } from '../lib/i18n.ts';
+    import { t, layerName, originLabel, descLabel, LANGS, type Lang } from '../lib/i18n.ts';
     import newsFeed from '../data/news_feed.json';
 
     const fixed = sample.fixed;
@@ -500,6 +500,7 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       document.querySelectorAll('[data-i18n-layer]').forEach(e => { e.textContent = layerName(e.getAttribute('data-i18n-layer'), lang); });
       document.querySelectorAll('[data-i18n-origin]').forEach(e => { e.textContent = originLabel(e.getAttribute('data-i18n-origin'), lang); });
       document.querySelectorAll('[data-i18n-dest]').forEach(e => { e.textContent = destLabel(e.getAttribute('data-i18n-dest'), lang); });
+      hsRenderers.forEach(fn => fn());
       updateFieldHints();
       if (window.__last) renderResult(window.__last);
       renderBatch(); renderPending(); renderTimeline();
@@ -521,6 +522,7 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
     }
 
     // ===== HS 自动补全（可输入也可点选；真实全量数据） =====
+    const hsRenderers = [];
     function hsSuggest(q) {
       const isCn = (document.getElementById('dest').value === 'CN');
       const ds = isCn ? (cnFull || {}) : (FULL || {});
@@ -541,13 +543,14 @@ const workedLeg = workedPos.map(l => `<span><i class="sw" style="background:${la
       if (!inp || !list) return;
       function render(q) {
         const items = hsSuggest(q);
-        list.innerHTML = items.length ? items.map(it => `<div class="opt" data-c="${it.code}"><span class="c">${it.code}</span><span class="d">${it.desc}</span></div>`).join('') : '<div class="opt none" data-i18n="classify_none">'+t(LANG,'classify_none')+'</div>';
+        list.innerHTML = items.length ? items.map(it => `<div class="opt" data-c="${it.code}"><span class="c">${it.code}</span><span class="d">${descLabel(it.desc, LANG, it.code)}</span></div>`).join('') : '<div class="opt none" data-i18n="classify_none">'+t(LANG,'classify_none')+'</div>';
         list.classList.add('show');
         list.querySelectorAll('.opt[data-c]').forEach(o => {
           o.addEventListener('mousedown', e => e.preventDefault());
           o.onclick = () => { inp.value = o.dataset.c; list.classList.remove('show'); if (onPick) onPick(o.dataset.c); };
         });
       }
+      hsRenderers.push(() => { if (list.classList.contains('show')) render(inp.value); });
       inp.addEventListener('focus', () => render(inp.value));
       inp.addEventListener('input', () => render(inp.value));
       inp.addEventListener('blur', () => setTimeout(() => list.classList.remove('show'), 150));

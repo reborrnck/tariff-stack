@@ -161,7 +161,7 @@ const datasetLd = JSON.stringify({
             <div class={`rate-big ${usP.free ? 'free' : ''}`}>{usP.txt}</div>
             <div class="rate-cap" data-i18n="hs_detail_us_rate">U.S. base rate</div>
             <div class="sub-code">HTS {d.us.code}</div>
-            <div class="desc">{d.us.desc}</div>
+            <div class="desc" data-i18n-desc={d.us.desc} data-hts={d.us.code}>{d.us.desc}</div>
             <a class="calc-btn" href={`/?hts=${encodeURIComponent(d.us.code)}&dest=US`} data-i18n="hs_detail_calc_us">Calculate U.S. landed cost</a>
           ) : <div class="na">No U.S. HTS match</div>}
         </div>
@@ -171,7 +171,7 @@ const datasetLd = JSON.stringify({
             <div class={`rate-big ${cnP.free ? 'free' : ''}`}>{cnP.txt}</div>
             <div class="rate-cap" data-i18n="hs_detail_cn_rate">China MFN rate</div>
             <div class="sub-code">HS {d.cn.code}</div>
-            <div class="desc">{d.cn.name}</div>
+            <div class="desc" data-i18n-desc={d.cn.name} data-hts={d.cn.code}>{d.cn.name}</div>
             <a class="calc-btn" href={`/?hts=${encodeURIComponent(d.cn.code)}&dest=CN`} data-i18n="hs_detail_calc_cn">Calculate China landed cost</a>
           ) : <div class="na">No China HS match</div>}
         </div>
@@ -231,7 +231,7 @@ const datasetLd = JSON.stringify({
   <CookieConsent />
 
   <script>
-    import { t, LANGS } from '../../lib/i18n.ts';
+    import { t, LANGS, descLabel } from '../../lib/i18n.ts';
     let LANG = (localStorage.getItem('ts-lang') || 'en');
     if (!LANGS.some(l => l.code === LANG)) LANG = 'en';
     (function initTheme(){
@@ -258,6 +258,9 @@ const datasetLd = JSON.stringify({
       document.getElementById('lang').value = lang;
       document.querySelectorAll('[data-i18n]').forEach(e => {
         const s = t(lang, e.getAttribute('data-i18n')); if (s) e.textContent = s;
+      });
+      document.querySelectorAll('[data-i18n-desc]').forEach(e => {
+        e.textContent = descLabel(e.getAttribute('data-i18n-desc') || '', lang, e.getAttribute('data-hts') || undefined);
       });
     }
     document.getElementById('lang').addEventListener('change', e => applyLang(e.target.value));

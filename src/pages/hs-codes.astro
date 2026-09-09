@@ -269,7 +269,7 @@ const dsJsonLd = JSON.stringify({
   <CookieConsent />
 
   <script>
-    import { t, LANGS } from '../lib/i18n.ts';
+    import { t, LANGS, descLabel } from '../lib/i18n.ts';
 
     let LANG = (localStorage.getItem('ts-lang') || 'en');
     if (!LANGS.some(l => l.code === LANG)) LANG = 'en';
@@ -306,6 +306,7 @@ const dsJsonLd = JSON.stringify({
       document.querySelectorAll('[data-i18n-ph]').forEach(e => {
         const k = e.getAttribute('data-i18n-ph'); if (k) e.placeholder = t(lang, k);
       });
+      render();
     }
     document.getElementById('lang').addEventListener('change', e => applyLang(e.target.value));
 
@@ -371,7 +372,7 @@ const dsJsonLd = JSON.stringify({
         const rec = ds[k];
         if (TAB === 'US') {
           const r = pct(rec.base * 100);
-          return `<tr><td class="code">${k}</td><td class="desc">${composeDesc(US, k) || rec.desc || ''}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}&dest=US" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
+          return `<tr><td class="code">${k}</td><td class="desc">${descLabel(composeDesc(US, k) || rec.desc || '', LANG, k)}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}&dest=US" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
         } else {
           const r = pct(rec.mfn);
           // CN data: name is a short dash-prefixed description relative to its parent heading
