@@ -102,13 +102,19 @@ async function main() {
   async function worker() {
     while (idx < work.length) {
       const job = work[idx++];
-      const entry = table[job.key] || (table[job.key] = {});
+      let entry = table[job.key];
+      // Only create an entry when we actually have at least one successful
+      // translation; avoids "ghost keys" that pollute the lookup table with
+      // empty {} objects (descTrans() then treats them as missing anyway,
+      // but they waste bytes shipped to every client). Existing non-empty
+      // entries are kept so we don't drop partial-coverage progress.
       for (const lang of job.missing) {
         if (budget <= 0) { skipped++; continue; }
         const cost = job.key.length;
         if (cost > budget) { skipped++; continue; }
         const tr = await translate(job.key, PAIR[lang]);
         if (tr) {
+          entry = table[job.key] = table[job.key] || {};
           entry[lang] = tr;
           budget -= cost;
           doneTrans++;
@@ -118,7 +124,7 @@ async function main() {
         await sleep(120); // gentle pacing to avoid 429
       }
       // Count fully-covered keys
-      if (LANGS.every(l => entry[l])) doneKeys++;
+      if (entry && LANGS.every(l => entry[l])) doneKeys++;
     }
   }
 

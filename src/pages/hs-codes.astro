@@ -355,14 +355,8 @@ const dsJsonLd = JSON.stringify({
       const cnt = document.getElementById('count');
       const ds = dataset();
       if (!ds) {
-        // 数据 fetch 未完成 → 保留 #results 里的 SSG 200 行真实税率；在 #count 追加轻量加载提示
-        if (cnt && !cnt.querySelector('.ts-loading-hint')) {
-          const hint = document.createElement('span');
-          hint.className = 'ts-loading-hint';
-          hint.style.cssText = 'color:var(--muted);margin-left:8px';
-          hint.textContent = '· ' + t(LANG, 'hs_enc_loading');
-          cnt.appendChild(hint);
-        }
+        // 数据 fetch 未完成：保留 #results 里的 SSG 200 行真实税率；fillDescTags 仍会回填
+        // SSG 已嵌入的 .tr-line 翻译钩子
         fillDescTags(LANG);
         return;
       }
@@ -431,7 +425,10 @@ const dsJsonLd = JSON.stringify({
     }
     function loadCN() {
       fetch('/data/tariff_full_cn.json').then(r => r.json()).then(j => { CN = (j && j.by_hs8) ? j.by_hs8 : j; render(); })
-        .catch(() => { document.getElementById('results').innerHTML = '<div class="empty">Failed to load China tariff data.</div>'; });
+        .catch((e) => {
+          // 拉取失败：与 loadUS 一致——不要清空 #results，SSG 200 行真值保留作为兜底
+          console.warn('tariff_full_cn.json failed; SSG subset remains visible', e);
+        });
     }
 
     applyLang(LANG);
