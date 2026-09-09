@@ -25,7 +25,7 @@ const pct = (x) => {
 };
 const usHead = `<tr><th data-i18n="hs_enc_code">Code</th><th data-i18n="hs_enc_desc">Description</th><th class="num" data-i18n="hs_enc_rate">Base rate</th><th></th></tr>`;
 const usRows = ssg.us.slice(0, CAP).map(r => {
-  const p = pct(r.base);
+  const p = pct(r.base * 100);
   return `<tr><td class="code">${esc(r.code)}</td><td class="desc">${esc(r.desc)}</td><td class="rate ${p.free ? 'free' : ''}">${p.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(r.code)}&dest=US" data-i18n="hs_enc_use">Use calculator</a></td></tr>`;
 }).join('');
 const cnRows = ssg.cn.slice(0, CAP).map(r => {
@@ -37,7 +37,7 @@ const usTable = `<table><thead>${usHead}</thead><tbody>${usRows}</tbody></table>
 const cnTable = `<table><thead>${usHead}</thead><tbody>${cnRows}</tbody></table>`;
 const featHead = `<tr><th data-i18n="hs_enc_code">Code</th><th data-i18n="hs_enc_desc">Description</th><th class="num" data-i18n="hs_enc_rate">Base rate</th><th></th></tr>`;
 const featUsRows = ssg.featuredUs.map(r => {
-  const p = pct(r.base);
+  const p = pct(r.base * 100);
   return `<tr><td class="code">${esc(r.code)}</td><td class="desc">${esc(r.desc)}</td><td class="rate ${p.free ? 'free' : ''}">${p.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(r.code)}&dest=US" data-i18n="hs_enc_use">Use calculator</a></td></tr>`;
 }).join('');
 const featCnRows = ssg.featuredCn.map(r => {
@@ -349,7 +349,7 @@ const dsJsonLd = JSON.stringify({
       const rows = shown.map(k => {
         const rec = ds[k];
         if (TAB === 'US') {
-          const r = pct(rec.base);
+          const r = pct(rec.base * 100);
           return `<tr><td class="code">${k}</td><td class="desc">${rec.desc || ''}</td><td class="rate ${r.free?'free':''}">${r.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(k)}&dest=US" data-i18n="hs_enc_use">${t(LANG,'hs_enc_use')}</a></td></tr>`;
         } else {
           const r = pct(rec.mfn);

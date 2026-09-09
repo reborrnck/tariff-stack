@@ -21,7 +21,7 @@ const pct = (x) => {
   if (!isFinite(n) || n === 0) return { txt: 'Free', free: true };
   return { txt: (n % 1 === 0 ? n : n.toFixed(2)) + '%', free: false };
 };
-const usP = d.us ? pct(d.us.base) : null;
+const usP = d.us ? pct(d.us.base * 100) : null;
 const cnP = d.cn ? pct(d.cn.mfn) : null;
 const usCaption = d.us ? `HTS ${d.us.code}` : 'No U.S. HTS match';
 const cnCaption = d.cn ? `HS ${d.cn.code}` : 'No China HS match';

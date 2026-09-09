@@ -58,14 +58,30 @@ const US_ANCHORS = ['6109.10.00', '6203.42.40', '6403.99.30', '8517.62.00', '847
 const CN_ANCHORS = ['61091000', '62034290', '64039900', '85176200', '84713000', '85287200', '87032300', '39269000', '95030000', '94036000', '84501100', '42029200'];
 // 锚点多为 HTS/HS 前缀（如 6203.42.40 实际键是 6203.42.40.10），精确匹配会漏；
 // 用前缀解析：先精确，再按前缀首匹配（US 8 位、CN 6 位），保证高频品类都进静态 HTML。
+// 关键修复：US HTS 的 6 位 heading（如 6203.42）本身不带税率（base=0），
+// 若按"首个 prefix 匹配"会拿到 heading → 显示 Free 错。改为：优先选最长且有真税率
+// 的子码（base>0），同长度按税率更高优先（更代表该类目），全 Free 才退化到 heading。
+// ⚠️ exact 步骤仅在 anchor 长度 > prefixLen 时启用：6 位 anchor（如 '620342'）若做
+// exact 会直接命中 6 位 heading（数字串相等），根本走不到 prefix 分支 → 又退回 heading。
 function resolveKey(dict, anchor, prefixLen) {
   if (dict[anchor]) return anchor;
   const a = anchor.replace(/\./g, '');
   const keys = Object.keys(dict);
-  const exact = keys.find(k => k.replace(/\./g, '') === a);
+  // 仅在 anchor 比 prefix 长（如 8 位 anchor 配 8 位子码）时启用 digits-only exact，
+  // 避免 6 位 anchor 误命中 6 位 heading。
+  const exact = a.length > prefixLen
+    ? keys.find(k => k.replace(/\./g, '').length === a.length && k.replace(/\./g, '') === a)
+    : null;
   if (exact) return exact;
   const pre = a.slice(0, prefixLen);
-  return keys.find(k => k.replace(/\./g, '').startsWith(pre)) || null;
+  const cands = keys.filter(k => k.replace(/\./g, '').startsWith(pre));
+  const withRate = cands
+    .filter(k => dict[k] && dict[k].base > 0)
+    .sort((x, y) => {
+      const lenDiff = y.replace(/\./g, '').length - x.replace(/\./g, '').length;
+      return lenDiff !== 0 ? lenDiff : (dict[y].base - dict[x].base);
+    });
+  return withRate[0] || cands[0] || null;
 }
 const featuredUs = US_ANCHORS
   .map(a => resolveKey(usFull, a, 6))
