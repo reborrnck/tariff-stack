@@ -26,7 +26,7 @@ const pct = (x) => {
 const usHead = `<tr><th data-i18n="hs_enc_code">Code</th><th data-i18n="hs_enc_desc">Description</th><th class="num" data-i18n="hs_enc_rate">Base rate</th><th></th></tr>`;
 const usRows = ssg.us.slice(0, CAP).map(r => {
   const p = pct(r.base * 100);
-  return `<tr><td class="code">${esc(r.code)}</td><td class="desc">${esc(r.desc)}</td><td class="rate ${p.free ? 'free' : ''}">${p.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(r.code)}&dest=US" data-i18n="hs_enc_use">Use calculator</a></td></tr>`;
+  return `<tr><td class="code">${esc(r.code)}</td><td class="desc">${esc(r.desc)}<div class="tr-line" data-i18n-desc="${esc(r.desc)}" data-hts="${esc(r.code)}" hidden></div></td><td class="rate ${p.free ? 'free' : ''}">${p.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(r.code)}&dest=US" data-i18n="hs_enc_use">Use calculator</a></td></tr>`;
 }).join('');
 const cnRows = ssg.cn.slice(0, CAP).map(r => {
   const p = pct(r.mfn);
@@ -38,7 +38,7 @@ const cnTable = `<table><thead>${usHead}</thead><tbody>${cnRows}</tbody></table>
 const featHead = `<tr><th data-i18n="hs_enc_code">Code</th><th data-i18n="hs_enc_desc">Description</th><th class="num" data-i18n="hs_enc_rate">Base rate</th><th></th></tr>`;
 const featUsRows = ssg.featuredUs.map(r => {
   const p = pct(r.base * 100);
-  return `<tr><td class="code">${esc(r.code)}</td><td class="desc">${esc(r.desc)}</td><td class="rate ${p.free ? 'free' : ''}">${p.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(r.code)}&dest=US" data-i18n="hs_enc_use">Use calculator</a></td></tr>`;
+  return `<tr><td class="code">${esc(r.code)}</td><td class="desc">${esc(r.desc)}<div class="tr-line" data-i18n-desc="${esc(r.desc)}" data-hts="${esc(r.code)}" hidden></div></td><td class="rate ${p.free ? 'free' : ''}">${p.txt}</td><td class="use"><a href="/?hts=${encodeURIComponent(r.code)}&dest=US" data-i18n="hs_enc_use">Use calculator</a></td></tr>`;
 }).join('');
 const featCnRows = ssg.featuredCn.map(r => {
   const p = pct(r.mfn);
@@ -354,7 +354,18 @@ const dsJsonLd = JSON.stringify({
       const el = document.getElementById('results');
       const cnt = document.getElementById('count');
       const ds = dataset();
-      if (!ds) { el.innerHTML = `<div class="empty" data-i18n="hs_enc_loading">${t(LANG,'hs_enc_loading')}</div>`; return; }
+      if (!ds) {
+        // 数据 fetch 未完成 → 保留 #results 里的 SSG 200 行真实税率；在 #count 追加轻量加载提示
+        if (cnt && !cnt.querySelector('.ts-loading-hint')) {
+          const hint = document.createElement('span');
+          hint.className = 'ts-loading-hint';
+          hint.style.cssText = 'color:var(--muted);margin-left:8px';
+          hint.textContent = '· ' + t(LANG, 'hs_enc_loading');
+          cnt.appendChild(hint);
+        }
+        fillDescTags(LANG);
+        return;
+      }
       const keys = Object.keys(ds);
       const total = keys.length;
       const q = norm(Q);
@@ -413,7 +424,10 @@ const dsJsonLd = JSON.stringify({
 
     function loadUS() {
       fetch('/data/tariff_full.json').then(r => r.json()).then(j => { US = j; render(); })
-        .catch(() => { document.getElementById('results').innerHTML = '<div class="empty">Failed to load U.S. tariff data.</div>'; });
+        .catch((e) => {
+          // 拉取失败：不要清空 #results，SSG 200 行真值保留作为兜底；#count 提示由 render 的 null 分支已加
+          console.warn('tariff_full.json failed; SSG subset remains visible', e);
+        });
     }
     function loadCN() {
       fetch('/data/tariff_full_cn.json').then(r => r.json()).then(j => { CN = (j && j.by_hs8) ? j.by_hs8 : j; render(); })
