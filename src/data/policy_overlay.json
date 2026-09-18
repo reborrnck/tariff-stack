@@ -2,7 +2,7 @@
   "as_of": "2026-09-16",
   "base_hts_revision": 19,
   "base_hts_date": "2026-09-15",
-  "last_checked": "2026-09-18",
+  "last_checked": "2026-09-19",
   "source": "多源实时自动应用(2026-09-16)：USITC HTS Rev19(2026-09-15) + Federal Register + Google News。refresh_daily.py 完全托管直接写回官方真值。",
   "forced_labor": {
     "CN": 0.125,
